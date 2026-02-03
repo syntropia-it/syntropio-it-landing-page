@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-samana-1: #ffd700;
+  --color-samana-2: #050505;
+  --color-samana-3: #0a0a0a;
+  
+  --font-sans: 'Inter', 'sans-serif';
+  --font-serif: 'Playfair Display', 'serif';
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
+}

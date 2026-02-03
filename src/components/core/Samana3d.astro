@@ -1,0 +1,71 @@
+<canvas id="webgl-canvas" class="fixed top-0 left-0 w-full h-full z-10 pointer-events-none"></canvas>
+
+<script>
+    import * as THREE from 'three';
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const canvas = document.querySelector('#webgl-canvas') as HTMLCanvasElement;
+    
+    if (canvas) {
+        const escena = new THREE.Scene();
+        const camara = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camara.position.z = 5;
+
+        const render = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true,
+            antialias: true,
+        });
+        
+        render.setSize(window.innerWidth, window.innerHeight);
+        render.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limitado a 2 para rendimiento
+
+        const geometrico = new THREE.IcosahedronGeometry(2, 0);
+        const material = new THREE.MeshPhysicalMaterial({
+            color: 0xffd400,
+            roughness: 0.2,
+            metalness: 1.0,
+            flatShading: true,
+        });
+        const mesh = new THREE.Mesh(geometrico, material);
+        escena.add(mesh);
+
+        // Luces... (Añade tus luces aquí igual que antes)
+        const luzAmbiente = new THREE.AmbientLight(0xffd400, 1);
+        escena.add(luzAmbiente);
+        const luzDir = new THREE.DirectionalLight(0xffd400, 1);
+        luzDir.position.set(1, 1, 1);
+        escena.add(luzDir);
+
+        const bucle = () => {
+            requestAnimationFrame(bucle);
+            mesh.rotation.x += 0.005;
+            mesh.rotation.y += 0.01;
+            render.render(escena, camara);
+        };
+        bucle();
+
+        // ScrollTrigger Integración
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 1,
+            }
+        });
+
+        tl.to(mesh.position, { x: -3.5, y: 0, z: 0, duration: 2 })
+          .to(mesh.rotation, { x: Math.PI, y: Math.PI / 2, duration: 2 }, "<")
+          .to(mesh.scale, { x: 0.8, y: 0.8, z: 0.8, duration: 2 }, "<");
+
+        window.addEventListener('resize', () => {
+            camara.aspect = window.innerWidth / window.innerHeight;
+            camara.updateProjectionMatrix();
+            render.setSize(window.innerWidth, window.innerHeight);
+        });
+    }
+</script>

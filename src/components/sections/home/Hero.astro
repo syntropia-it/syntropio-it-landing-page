@@ -1,0 +1,40 @@
+<header class="relative w-full h-screen flex items-center justify-center overflow-hidden z-20">
+    <div class="absolute inset-0 -z-10">
+        <div class="absolute inset-0 bg-linear-to-b from-black/80 via-black/40 to-black z-10"></div>
+        <img
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070"
+            alt="Samana Interior"
+            class="w-full h-full object-cover hero-bg scale-110 opacity-40 brightness-125 grayscale"
+        />
+    </div>
+
+    <div class="relative text-center px-4 mix-blend-difference text-white w-full">
+        <div class="overflow-hidden">
+            <h1 id="hero-title" class="text-[12vw] leading-[0.8] font-black tracking translate-y-full">
+                SAMANA
+            </h1>
+        </div>
+        <div class="overflow-hidden mt-2">
+            <p id="hero-subtitle" class="translate-y-full text-sm md:text-xl font-medium tracking-[0.5em] text-white/80 uppercase">
+                Transformaciones
+            </p>
+        </div>
+    </div>
+</header>
+
+<script>
+    import gsap from 'gsap';
+    
+    // Animación de entrada
+    const tl = gsap.timeline({ delay: 0.5 });
+    
+    tl.to("#hero-title", {
+        y: 0,
+        duration: 1,
+        ease: 'power4.out'
+    }).to("#hero-subtitle", {
+        y: 0,
+        duration: 1.5,
+        ease: 'power4.out'
+    }, "-=1.2");
+</script>
