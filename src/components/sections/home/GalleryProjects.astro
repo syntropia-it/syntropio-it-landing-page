@@ -1,20 +1,5 @@
 ---
-/**
- * PROJECTS PREVIEW (Home)
- * 
- * Galería horizontal de proyectos destacados.
- * 
- * Features:
- * - Scroll horizontal con GSAP
- * - Imágenes lazy-loaded
- * - Links a páginas de proyecto dedicadas
- * 
- * Performance:
- * - Solo carga proyectos featured
- * - Imágenes en WebP
- * - Intersection Observer para lazy load
- */
-
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
 // Obtener solo proyectos destacados
@@ -50,7 +35,7 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
 
       <a 
         href="/proyectos"
-        class="hidden md:inline-block border border-samana-gold text-samana-gold px-6 py-3 font-bold hover:bg-samana-gold hover:text-black transition-all hoverable"
+        class="hidden md:inline-block border border-samana-1 text-samana-1 px-6 py-3 font-bold hover:bg-samana-1 hover:text-black transition-all hoverable"
         data-cta="view-all-projects"
       >
         Ver todos →
@@ -64,49 +49,52 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
       class="flex gap-[4vw] px-[10vw] w-max"
       data-projects-track
     >
-      {proyectosParaMostrar.map((proyecto, index) => (
+      {proyectosParaMostrar.map((p, i) => (
         <article 
-          class="relative w-[35vw] md:w-[28vw] h-[50vh] shrink-0 group hoverable"
-          data-project-card={index}
+          class="relative w-[70vw] md:w-[28vw] h-[50vh] shrink-0 group hoverable"
+          data-project-card={i}
         >
           <!-- Número grande de fondo -->
           <div 
-            class="absolute -top-16 -left-10 text-[8rem] leading-none font-bold text-transparent opacity-20 z-0 font-serif pointer-events-none"
-            style={`-webkit-text-stroke: 1px #ffd700;`}
+            class="absolute -top-20 z-50 -left-15 text-[8rem] leading-none font-bold text-transparent opacity-20  font-serif pointer-events-none"
+            style={`-webkit-text-stroke:2px #ffd700;`}
             aria-hidden="true"
           >
-            {String(index + 1).padStart(2, '0')}
+            {String(i + 1).padStart(2, '0')}
           </div>
 
           <!-- Link al proyecto -->
           <a 
-            href={`/proyectos/${proyecto.slug}`}
+            href={`/proyectos/${String(p.slug)}`}
             class="block w-full h-full"
-            data-cta={`project-${proyecto.slug}`}
+            data-cta={`project-${p.slug}`}
           >
             <!-- Imagen -->
             <div class="w-full h-[85%] overflow-hidden relative z-10 border border-white/10 group-hover:border-samana-gold transition-colors duration-500">
-              <img 
-                src={proyecto.data.image}
-                alt={proyecto.data.title}
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                loading="lazy"
-                decoding="async"
-              />
+              <Image
+                    src={p.data.image}
+                    alt={p.data.title}
+                    width={1200}
+                    height={800}
+                    sizes="(min-width: 768px) 35vw, 60vw"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    priority={i === 0}
+                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
             </div>
 
             <!-- Info -->
             <div class="mt-6 flex justify-between items-end">
               <div>
                 <h3 class="text-xl md:text-2xl font-bold text-white group-hover:text-samana-gold transition-colors">
-                  {proyecto.data.title}
+                  {p.data.title}
                 </h3>
                 <p class="text-xs font-mono text-gray-500 uppercase mt-2">
-                  {proyecto.data.category}
+                  {p.data.category}
                 </p>
               </div>
               <div class="text-samana-gold font-mono text-sm">
-                {proyecto.data.year}
+                {p.data.year}
               </div>
             </div>
           </a>
@@ -116,10 +104,10 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
   </div>
 
   <!-- CTA mobile -->
-  <div class="md:hidden text-center mt-12 px-6">
+  <div class="md:hidden text-center mt-20 md:mt-12 px-6">
     <a 
       href="/proyectos"
-      class="inline-block border border-samana-gold text-samana-gold px-6 py-3 font-bold hover:bg-samana-gold hover:text-black transition-all w-full max-w-sm"
+      class="inline-block border border-samana-1 text-samana-1 px-6 py-3 font-bold hover:bg-samana-1 hover:text-black transition-all w-full max-w-sm"
     >
       Ver todos los proyectos →
     </a>

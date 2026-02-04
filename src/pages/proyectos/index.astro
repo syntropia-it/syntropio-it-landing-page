@@ -1,130 +1,153 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/Layout.astro';
-import { Image } from 'astro:assets';
+export const prerender = true;
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/Layout.astro";
+import { Image } from "astro:assets";
 
-const allProjects = await getCollection('projects');
+const allProjects = await getCollection("projects");
 allProjects.sort((a, b) => b.data.year - a.data.year);
 
-const pageTitle = 'Nuestros Proyectos — Samana';
+const pageTitle = "Nuestros Proyectos — Samana";
 ---
 
 <BaseLayout title={pageTitle} schemaType="projects">
-    <main class="bg-black relative mt-18 text-white overflow-hidden">
-        <header class="fixed top-24 left-12 z-20">
-            <h1
-                class="text-[12vw] font-bold leading-none tracking-tighter uppercase select-none opacity-90"
-            >
-                Works
-            </h1>
-        </header>
+  <main class="bg-black relative mt-18 text-white overflow-hidden">
+    <header class="fixed top-24 left-12 z-20">
+      <h1
+        class="text-[12vw] font-bold leading-none tracking-tighter uppercase select-none opacity-90"
+      >
+        Works
+      </h1>
+    </header>
 
-        <section id="horizontal-wrapper" class="h-screen flex items-center relative">
-            <div id="projects-container" class="flex gap-[10vw] px-[15vw] items-center">
-                {
-                    allProjects.map(p => (
-                        <article class="project-item shrink-0 w-[60vw] md:w-[35vw] group">
-                            <a href={`/proyectos/${p.slug}`} class="block">
-                                <div class="relative h-[60vh] overflow-hidden bg-neutral-900 mb-6">
-                                    <Image
-                                        src={p.data.image}
-                                        alt={p.data.title}
-                                        width={600}
-                                        height={600}
-                                        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                                    />
-                                </div>
-                                <div class="flex justify-between z-30 items-start pt-4 border-t border-white/10">
-                                    <h2 class="text-2xl font-bold uppercase tracking-tighter">
-                                        {p.data.title}
-                                    </h2>
-                                    <span class="text-sm font-mono text-gray-500">
-                                        {p.data.year}
-                                    </span>
-                                    <span class="text-[11px] text-gray-500 uppercase tracking-widest">
-                                        {' '}
-                                        {p.data.area}m²
-                                    </span>
-                                </div>
-                            </a>
-                        </article>
-                    ))
-                }
-            </div>
-        </section>
+    <section
+      id="horizontal-wrapper"
+      class="h-screen flex items-center relative"
+    >
+      <div
+        id="projects-container"
+        class="flex gap-[10vw] px-[10vw] items-center"
+      >
+        {
+          allProjects.map((p, i) => (
+            <article class="project-item shrink-0 w-[80vw] md:w-[35vw] group">
+              <a href={`/proyectos/${String(p.slug)}`} class="block">
+                <div class="relative h-[60vh] overflow-hidden bg-neutral-900 mb-6">
+                  <Image
+                    src={p.data.image}
+                    alt={p.data.title}
+                    width={1200}
+                    height={800}
+                    sizes="(min-width: 768px) 35vw, 60vw"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    priority={i === 0}
+                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </div>
+                <div class="flex flex-col md:flex-row justify-between z-30 items-start pt-4 border-t border-white/10">
+                  <h2 class="text-2xl font-bold uppercase tracking-tighter">
+                    {p.data.title}
+                  </h2>
+                  <div class="mt-2 md:mt-0 flex gap-4 items-center">
+                    <span class="text-sm font-mono text-gray-500">
+                      {p.data.year}
+                    </span>
+                    <span class="text-[11px] text-gray-500 uppercase tracking-widest">
+                      {" "}
+                      {p.data.area}m²
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </section>
 
-        <footer class="fixed bottom-12 left-0 w-full px-12 flex justify-between items-end z-20">
-            <div class="flex flex-col gap-1">
-                <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500">
-                    Scroll down to explore
-                </p>
-                <div class="text-4xl font-light font-mono" id="scroll-percentage">00%</div>
-            </div>
+    <footer
+      class="fixed bottom-2 left-0 w-full px-12 flex justify-between items-end z-20"
+    >
+      <div class="flex flex-col bg-black/50 rounded-br-3xl p-3 gap-1">
+        <p class="text-[10px] uppercase tracking-[0.4em] text-gray-1 00">
+          Desplácese hacia abajo para explorar
+        </p>
+        <div class="text-4xl font-light font-mono" id="scroll-percentage">
+          00%
+        </div>
+      </div>
 
-            <div class="hidden md:flex gap-12 text-[10px] uppercase tracking-widest text-gray-400">
-                <span>Buenos Aires / AR</span>
-                <a href="/proyectos" class="hover:text-samana-gold transition-colors">Archive ↗</a>
-            </div>
-        </footer>
-    </main>
+      <div
+        class="hidden md:flex gap-12 p-3 text-[10px] uppercase tracking-widest text-gray-400"
+      >
+        <span>Buenos Aires / AR</span>
+        <a href="/proyectos" class="hover:text-samana-gold transition-colors"
+          >Archive ↗</a
+        >
+      </div>
+    </footer>
+  </main>
 </BaseLayout>
 
 <script>
-    import gsap from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-    gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger);
 
-    function initHorizontalScroll() {
-        const container = document.getElementById('projects-container');
-        const wrapper = document.getElementById('horizontal-wrapper');
-        const percentageText = document.getElementById('scroll-percentage');
+  function initHorizontalScroll() {
+    const container = document.getElementById("projects-container");
+    const wrapper = document.getElementById("horizontal-wrapper");
+    const percentageText = document.getElementById("scroll-percentage");
 
-        if (!container || !wrapper) return;
+    if (!container || !wrapper) return;
 
-        // Calculamos cuánto debe moverse (ancho total del container menos el ancho de la pantalla)
-        const scrollWidth = container.offsetWidth - window.innerWidth;
+    // Calculamos cuánto debe moverse (ancho total del container menos el ancho de la pantalla)
+    const scrollWidth = container.offsetWidth - window.innerWidth;
 
-        gsap.to(container, {
-            x: () => -(container.scrollWidth - window.innerWidth),
-            ease: 'none',
-            scrollTrigger: {
-                trigger: wrapper,
-                pin: true, // Bloquea la pantalla mientras scrolleas
-                scrub: 1, // Suavizado del movimiento
-                start: 'top top',
-                end: () => '+=' + container.scrollWidth,
-                onUpdate: self => {
-                    // Cálculo del porcentaje de progreso
-                    const progress = Math.round(self.progress * 100);
-                    if (percentageText) {
-                        percentageText.innerText = `${progress.toString().padStart(2, '0')}%`;
-                    }
-                },
-            },
-        });
-    }
+    gsap.to(container, {
+      x: () => -(container.scrollWidth - window.innerWidth),
+      ease: "none",
+      scrollTrigger: {
+        trigger: wrapper,
+        pin: true, // Bloquea la pantalla mientras scrolleas
+        scrub: 0.5, // Suavizado del movimiento
+        anticipatePin: 1,
+        start: "top top",
+        invalidateOnRefresh: true,
+        end: () => "+=" + container.scrollWidth,
+        onUpdate: (self) => {
+          // Cálculo del porcentaje de progreso
+          const progress = Math.round(self.progress * 100);
+          if (percentageText) {
+            percentageText.innerText = `${progress.toString().padStart(2, "0")}%`;
+          }
+        },
+      },
+    });
+  }
 
-    // Soporte para ViewTransitions de Astro
-    document.addEventListener('astro:page-load', initHorizontalScroll);
+  // Soporte para ViewTransitions de Astro
+  document.addEventListener("astro:page-load", initHorizontalScroll);
 </script>
 
 <style>
-    /* Personalización para ocultar scrollbars */
-    :global(body) {
-        overflow-x: hidden;
-    }
+  /* Personalización para ocultar scrollbars */
+  :global(body) {
+    overflow-x: hidden;
+  }
 
-    #projects-container {
-        will-change: transform;
-    }
+  #projects-container {
+    contain: layout paint;
+    will-change: transform;
+  }
 
-    .project-item {
-        transition: filter 0.5s ease;
-    }
+  .project-item {
+    transition: filter 0.5s ease;
+  }
 
-    /* Efecto opcional: desenfoque en los que no están en el centro */
-    #projects-container:hover .project-item:not(:hover) {
-        filter: grayscale(1) opacity(0.5);
-    }
+  /* Efecto opcional: desenfoque en los que no están en el centro */
+  #projects-container:hover .project-item:not(:hover) {
+    filter: grayscale(1) opacity(0.5);
+  }
 </style>

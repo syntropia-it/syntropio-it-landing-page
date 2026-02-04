@@ -1,18 +1,22 @@
-
-
-<div 
+<div
   id="custom-cursor"
-  class="fixed top-0 left-0 pointer-events-none z-9999 -translate-x-1/2 -translate-y-1/2 
-         transition-[width,height,background-color,border-color] duration-300 ease-out mix-blend-difference
-         w-5 h-5 border border-[rgb(255,215,0)] bg-transparent rounded-full"
+  class="fixed top-0 left-0 pointer-events-none z-9999 -translate-x-1/2 -translate-y-1/2
+         transition-[width,height,background-color,border-color] duration-300 ease-out mix-blend-difference flex items-center justify-center
+         w-6 h-6 border border-[rgb(255,215,0)] bg-transparent rounded-full"
 >
+  <span
+    id="cursor-text"
+    class="text-[13px] font-bold text-center text-black opacity-0 uppercase tracking-tighter transition-opacity duration-300"
+  >
+    Click
+  </span>
 </div>
 
 <script>
-  import gsap from 'gsap';
+  import gsap from "gsap";
 
   // 1. Referencias al DOM
-  const cursor = document.getElementById('custom-cursor');
+  const cursor = document.getElementById("custom-cursor");
 
   // Aseguramos que el cursor empiece oculto o centrado para evitar parpadeos
   gsap.set(cursor, { xPercent: -50, yPercent: -50 });
@@ -23,9 +27,9 @@
     gsap.to(cursor, {
       x: e.clientX,
       y: e.clientY,
-      duration: 0.5, 
+      duration: 0.5,
       ease: "power2.out",
-      overwrite: "auto" 
+      overwrite: "auto",
     });
   };
 
@@ -34,34 +38,38 @@
     const target = e.target as HTMLElement;
 
     // Tu lógica exacta de detección
-    const isInteractable = 
-      target.tagName.toLowerCase() === 'a' ||
-      target.tagName.toLowerCase() === 'button' ||
-      target.tagName.toLowerCase() === 'article' ||
-      target.closest('a') ||
-      target.closest('button') ||
-      target.closest('article') ||
-      target.closest('.hoverable');
+    const isInteractable =
+      target.tagName.toLowerCase() === "a" ||
+      target.tagName.toLowerCase() === "button" ||
+      target.tagName.toLowerCase() === "article" ||
+      target.closest("a") ||
+      target.closest("button") ||
+      target.closest("article") ||
+      target.closest(".hoverable");
 
     if (isInteractable) {
       // Estado: Hovering (w-12 h-12 bg-white)
-      cursor?.classList.add('is-hovering');
+      cursor?.classList.add("is-hovering");
     } else {
       // Estado: Normal (w-5 h-5 border-color bg-transparent)
-      cursor?.classList.remove('is-hovering');
+      cursor?.classList.remove("is-hovering");
     }
   };
 
   // Event Listeners (Globales, igual que en tu useEffect)
-  window.addEventListener('mousemove', moveCursor);
-  window.addEventListener('mouseover', handleMouseOver);
+  window.addEventListener("mousemove", moveCursor);
+  window.addEventListener("mouseover", handleMouseOver);
 </script>
 
 <style>
- @reference "tailwindcss";
+  @reference "tailwindcss";
 
   #custom-cursor.is-hovering {
     @apply w-12 h-12 bg-white border-transparent;
+  }
+
+  #custom-cursor.is-hovering #cursor-text {
+    @apply opacity-100;
   }
 
   #custom-cursor:not(.is-hovering) {
