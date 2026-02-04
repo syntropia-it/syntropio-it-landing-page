@@ -17,90 +17,255 @@ interface Props {
 
 const { proyecto } = Astro.props;
 const { Content } = await proyecto.render();
-const { title, description, category, year, image, location, area } = proyecto.data;
+const { title, description, year, image, location, area } = proyecto.data;
 
 const site = Astro.site?.href ?? 'https://www.samanatransformaciones.com';
 const canonicalURL = new URL(`/proyectos/${proyecto.slug}`, site);
 ---
 
-<BaseLayout 
-    title={`${title} — Samana`} 
-    description={description}    
-    schemaType="projects"
->
+<BaseLayout title={`${title} — Samana`} description={description} schemaType="projects">
+    <main class="bg-linear-to-b from-transparent via-black to-amber-900/20 text-white">
+        <!-- HERO -->
+        <header
+            data-hero
+            class="relative min-h-[80vh] flex flex-col justify-between py-12 overflow-hidden"
+        >
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="px-6 mt-16 mb-2 animate-fadeIn z-20">
+                <ol
+                    class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400"
+                >
+                    <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
+                    <li>/</li>
+                    <li><a href="/proyectos" class="hover:text-samana-1">Proyectos</a></li>
+                    <li>/</li>
+                    <li class="text-samana-1">{title}</li>
+                </ol>
+            </nav>
 
-    <main class="bg-linear-to-b from-transparent via-black to-amber-900/20 text-white selection:bg-white selection:text-black">
-        
-        <header class="relative  flex flex-col justify-between  py-12">
-            <nav aria-label="Breadcrumb" class="px-6 mt-14 animate-fade-in z-20">
-                    <ol class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-500">
-                        <li><a href="/" class="hover:text-samana-1 transition-colors">Inicio</a></li>
-                        <li class="opacity-50">/</li>
-                        <li><a href="/proyectos" class="hover:text-samana-1 transition-colors">Proyectos</a></li>
-                        <li class="opacity-50">/</li>
-                        <li class="text-samana-1">{title}</li>
-                    </ol>
-                </nav>
-            <div class=" lg:mt-8 pt-4 md:pt-8 px-10 z-20 border-t mix-blend-difference border-white/20">
-                <h1 class="text-[12vw] lg:text-[10vw] font-serif  font-black tracking leading-[0.85] tracking-tighter uppercase wrap-break-words ">
+            <!-- Título -->
+            <div class="px-10 z-20 border-t border-white/20 pt-6 mix-blend-difference">
+                <h1
+                    class="hero-title text-[12vw] lg:text-[10vw] font-serif font-black leading-[0.85] uppercase tracking-tighter"
+                >
                     {title}
                 </h1>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 border-t border-white/20 pt-8 mt-4 md:mt-12 px-10 z-20">
-                <div class="md:col-span-4 lg:col-span-3">
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 mb-2">Ubicación</p>
+            <!-- Meta -->
+            <div
+                class="grid grid-cols-1 md:grid-cols-12 gap-8 px-10 pt-8 z-20 border-t border-white/20 mt-4 md:mt-12"
+            >
+                <div class="md:col-span-3">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-400">Ubicación</p>
                     <p class="text-lg uppercase">{location}</p>
                 </div>
-                <div class="md:col-span-4 lg:col-span-3">
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 mb-2">Año</p>
+                <div class="md:col-span-3">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-400">Año</p>
                     <p class="text-lg uppercase">{year}</p>
                 </div>
-                <div class="md:col-span-4 lg:col-span-3">
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 mb-2">Superficie</p>
+                <div class="md:col-span-3">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-400">Superficie</p>
                     <p class="text-lg uppercase">{area} m²</p>
                 </div>
-                <div class="md:col-span-12 lg:col-span-3">
-                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 mb-2">Descripción</p>
-                    <p class="text-gray-200 leading-relaxed text-sm max-w-sm">{description}</p>
+                <div class="md:col-span-3">
+                    <p class="text-[10px] uppercase tracking-widest text-gray-400">Descripción</p>
+                    <p class="text-sm text-gray-300">{description}</p>
                 </div>
             </div>
-            <div class="absolute inset-0 bg-linear-to-b from-black/90 via-black/70 to-black z-10"></div>
-            <div class="w-full absolute top-0 h-full overflow-hidden">
-                <Image 
-                    src={image} 
+
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-linear-to-b from-black/90 via-black/70 to-black z-10">
+            </div>
+
+            <!-- Imagen Parallax (WRAPPER) -->
+            <div id="hero-parallax-img" class="absolute inset-0 z-0 h-[130%] will-change-transform">
+                <Image
+                    src={image}
                     alt={title}
-                    class="w-full h-full object-cover object-center animate-reveal-img"
+                    class="w-full h-full object-cover object-center"
                     loading="eager"
                 />
             </div>
         </header>
 
-
-        <section class="py-32 px-6">
+        <!-- CONTENIDO -->
+        <section class="py-32 px-6 relative z-20">
             <div class="container mx-auto max-w-4xl prose prose-invert prose-samana">
                 <Content />
             </div>
         </section>
-
     </main>
 </BaseLayout>
 
+<!-- GSAP -->
+<script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import Lenis from 'lenis';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    function initSmoothScroll() {
+        // 1. Inicializar Lenis
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing suave profesional
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+        });
+
+        // 2. Sincronizar Lenis con ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+
+        // 3. Integrar el ticker de GSAP para que ambos corran en el mismo frame
+        gsap.ticker.add(time => {
+            lenis.raf(time * 1000);
+        });
+
+        // Desactivar el suavizado de lag de GSAP para que no compita con Lenis
+        gsap.ticker.lagSmoothing(0);
+
+        return lenis;
+    }
+
+    function initHeroParallax() {
+        const hero = document.querySelector('[data-hero]');
+        const image = document.getElementById('hero-parallax-img');
+
+        if (!hero || !image) return;
+
+        ScrollTrigger.getAll().forEach(t => t.kill());
+
+        gsap.fromTo(
+            image,
+            { yPercent: -15 }, // Un poco más de recorrido para notar la fluidez
+            {
+                yPercent: 15,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: hero,
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true, // El scrub ahora será mucho más suave gracias a Lenis
+                },
+            }
+        );
+    }
+
+    // Manejo de ciclo de vida de Astro
+    document.addEventListener('astro:page-load', () => {
+        const lenisInstance = initSmoothScroll();
+        initHeroParallax();
+
+        // Limpieza al cambiar de página para evitar duplicados
+        document.addEventListener(
+            'astro:before-swap',
+            () => {
+                lenisInstance.destroy();
+            },
+            { once: true }
+        );
+    });
+    function initScrollReveals() {
+        // 1. Revelado para encabezados y párrafos del contenido (Staggered)
+        const contentElements = document.querySelectorAll(
+            '.prose-samana h2, .prose-samana p, .prose-samana li'
+        );
+
+        contentElements.forEach(el => {
+            gsap.from(el, {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 90%', // Empieza cuando el elemento está cerca del fondo
+                    toggleActions: 'play none none none', // Solo se ejecuta una vez
+                },
+            });
+        });
+
+        // 2. Revelado para imágenes con efecto de escala (Estilo Galería)
+        const images = document.querySelectorAll('.prose-samana img');
+
+        images.forEach(img => {
+            // Creamos un wrapper para la imagen si queremos un efecto de "clip-path" pro
+            // Pero para mantenerlo simple y efectivo:
+            gsap.from(img, {
+                scale: 1.1,
+                opacity: 0,
+                y: 30,
+                duration: 1.5,
+                ease: 'expo.out',
+                scrollTrigger: {
+                    trigger: img,
+                    start: 'top 85%',
+                    scrub: false,
+                },
+            });
+        });
+    }
+
+    // Actualizamos el listener de Astro
+    document.addEventListener('astro:page-load', () => {
+        const lenisInstance = initSmoothScroll();
+        initHeroParallax();
+        initScrollReveals(); // <-- Invocamos los revelados
+
+        document.addEventListener(
+            'astro:before-swap',
+            () => {
+                lenisInstance.destroy();
+            },
+            { once: true }
+        );
+    });
+</script>
+
 <style is:global>
-    /* Estilo "Samana" para el contenido de Markdown */
-    .prose-samana {
-        @reference prose-h2:text-5xl prose-h2:font-serif prose-h2:uppercase prose-h2:tracking-tighter;
-        @reference prose-p:text-xl prose-p:text-gray-400 prose-p:leading-relaxed;
-        @reference prose-img:rounded-none prose-img:w-full prose-img:my-24;
+    .prose-samana h2,
+    .prose-samana p,
+    .prose-samana img {
+        will-change: transform, opacity;
+    }
+    .prose-samana h2 {
+        font-size: 3rem;
+        font-family: serif;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
     }
 
-    /* Animación de entrada para la imagen hero */
-    .animate-reveal-img {
-        animation: reveal 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    .prose-samana p {
+        font-size: 1.25rem;
+        line-height: 1.8;
+        color: #9ca3af;
     }
 
-    @keyframes reveal {
-        0% { transform: scale(1.1); opacity: 0; }
-        100% { transform: scale(1); opacity: 1; }
+    .prose-samana img {
+        margin: 6rem 0;
+        width: 100%;
+    }
+    html.lenis,
+    html.lenis body {
+        height: auto;
+    }
+
+    .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+    }
+
+    .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+    }
+
+    .lenis.lenis-stopped {
+        overflow: hidden;
+    }
+
+    .lenis.lenis-scrolling iframe {
+        pointer-events: none;
     }
 </style>

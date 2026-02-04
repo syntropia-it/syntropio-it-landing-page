@@ -115,97 +115,71 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
 </section>
 
 <script>
-  /**
-   * HORIZONTAL SCROLL CON GSAP
-   * 
-   * Scroll horizontal sincronizado con scroll vertical.
-   * Crea una experiencia inmersiva similar a Awwwards.
-   */
-
   import gsap from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const track = document.querySelector('[data-projects-track]') as HTMLElement;
+  function initHorizontalScroll() {
+    const track = document.querySelector('[data-projects-track]');
+    const section = document.querySelector('#proyectos-preview');
 
-  if (track) {
-    // Calcular cuánto scrollear horizontalmente
-    const scrollAmount = track.scrollWidth - window.innerWidth;
+    if (!track || !section) return;
 
-    gsap.to(track, {
-      x: -scrollAmount,
+    const getScrollAmount = () => -(track.scrollWidth - window.innerWidth);
+
+    const tween = gsap.to(track, {
+      x: getScrollAmount,
       ease: 'none',
       scrollTrigger: {
-        trigger: '#proyectos-preview',
+        trigger: section,
+        start: 'top top',
+        end: () => `+=${track.scrollWidth}`, 
         pin: true,
-        scrub: 1, // Suaviza el scroll
-        end: `+=${scrollAmount}`,
-        invalidateOnRefresh: true, // Recalcula en resize
+        scrub: 1,
+        invalidateOnRefresh: true, 
       },
+    });
+
+    
+    const images = track.querySelectorAll('img');
+    images.forEach(img => {
+      gsap.to(img, {
+        x: -40, 
+        ease: 'none',
+        scrollTrigger: {
+          trigger: img,
+          containerAnimation: tween, 
+          start: 'left right',
+          end: 'right left',
+          scrub: true,
+        }
+      });
     });
   }
 
-  /**
-   * LAZY LOAD DE IMÁGENES
-   * 
-   * Carga imágenes solo cuando entran en viewport.
-   */
-
-  const projectCards = document.querySelectorAll('[data-project-card]');
-
-  const imageObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const img = entry.target.querySelector('img');
-          if (img && img.dataset.src) {
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-          }
-          imageObserver.unobserve(entry.target);
-        }
-      });
-    },
-    { rootMargin: '50px' }
-  );
-
-  projectCards.forEach((card) => imageObserver.observe(card));
-
-
-  projectCards.forEach((card) => {
-    card.addEventListener('click', () => {
-      const projectTitle = card.querySelector('h3')?.textContent;
-      
-      if (typeof gtag !== 'undefined') {
-
-        // @ts-ignore
-        gtag('event', 'project_view', {
-          event_category: 'Projects',
-          event_label: projectTitle,
-        });
-      }
-    });
-  });
+  // Astro Lifecycle: Sincronizado con el Layout
+  document.addEventListener('astro:page-load', initHorizontalScroll);
 </script>
 
 <style>
-  /**
-   * PREVENT HORIZONTAL SCROLLBAR
-   * 
-   * Esconde la scrollbar horizontal nativa.
-   */
+  /* Optimizaciones de rendimiento */
   #proyectos-preview {
-    overflow-x: hidden;
+    /* Evitamos layout shifts durante el pinning */
+    will-change: transform;
   }
 
-  /* Smooth grayscale transition */
+  [data-projects-track] {
+    will-change: transform;
+  }
+
   img {
-    filter: grayscale(100%);
-    transition: filter 0.7s ease, transform 0.7s ease;
+    filter: grayscale(1);
+    transform: translateZ(0); 
+    transition: filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .group:hover img {
-    filter: grayscale(0%);
+    filter: grayscale(0);
   }
 </style>
