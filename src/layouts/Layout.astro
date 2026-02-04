@@ -1,21 +1,22 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
-import CustomCursor from '../components/core/customCursor.astro'; 
+import { ClientRouter } from 'astro:transitions';
+import CustomCursor from '../components/core/customCursor.astro';
 import Navbar from '../components/layout/Navbar.astro';
 import '../styles/global.css';
+import Footer from '../components/layout/Footer.astro';
 
 interface Props {
-  title: string;
-  description?: string;
-  image?: string;
-  schemaType?: 'home' | 'service' | 'faq';
+    title: string;
+    description?: string;
+    image?: string;
+    schemaType?: 'home'|'projects' | 'service' | 'faq';
 }
 
 const {
-  title,
-  description = 'Samana Transformaciones - Reformas integrales y construcción de alta gama.',
-  image = '/iso.png',
-  schemaType = 'home'
+    title,
+    description = 'Samana Transformaciones - Reformas integrales y construcción de alta gama.',
+    image = '/iso.png',
+    schemaType = 'home',
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL('https://www.samanatransformaciones.com');
@@ -25,104 +26,102 @@ const socialImageURL = new URL(image, siteUrl);
 let schemaData;
 
 if (schemaType === 'home') {
-  schemaData = {
-    "@context": "https://schema.org",
-    "@type": "HomeAndConstructionBusiness",
-    "name": "Samana Transformaciones",
-    "image": "https://www.samanatransformaciones.com/iso.png",
-    "description": description,
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Defensa 767",
-      "addressLocality": "Buenos Aires",
-      "addressRegion": "CABA",
-      "postalCode": "1065",
-      "addressCountry": "AR"
-    },
-	"openingHoursSpecification": { 
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
-      ],
-      "opens": "08:00",
-      "closes": "19:00"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": -34.6158,
-      "longitude": -58.3689
-    },
-    "priceRange": "$$$",
-    "telephone": "+5491112345678",
-    "url": "https://www.samanatransformaciones.com"
-  };
+    schemaData = {
+        '@context': 'https://schema.org',
+        '@type': 'HomeAndConstructionBusiness',
+        name: 'Samana Transformaciones',
+        image: 'https://www.samanatransformaciones.com/iso.png',
+        description: description,
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'Defensa 767',
+            addressLocality: 'Buenos Aires',
+            addressRegion: 'CABA',
+            postalCode: '1065',
+            addressCountry: 'AR',
+        },
+        openingHoursSpecification: {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            opens: '08:00',
+            closes: '19:00',
+        },
+        geo: {
+            '@type': 'GeoCoordinates',
+            latitude: -34.6158,
+            longitude: -58.3689,
+        },
+        priceRange: '$$$',
+        telephone: '+5491112345678',
+        url: 'https://www.samanatransformaciones.com',
+    };
 }
 ---
 
 <!doctype html>
 <html lang="es-AR" class="scroll-smooth">
     <head>
-     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/iso.png" />
-    <meta name="generator" content={Astro.generator} />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="/iso.png" />
+        <meta name="generator" content={Astro.generator} />
 
-  <title>{title}</title>
-  <meta name="description" content={description} />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href={canonicalURL} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href={canonicalURL} />
 
-  <!-- SEO regional -->
-  <link rel="alternate" hreflang="es-ar" href="https://www.samanatransformaciones.com/" />
-  <link rel="alternate" hreflang="x-default" href="https://www.samanatransformaciones.com/" />
+        <!-- SEO regional -->
+        <link rel="alternate" hreflang="es-ar" href="https://www.samanatransformaciones.com/" />
+        <link rel="alternate" hreflang="x-default" href="https://www.samanatransformaciones.com/" />
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={canonicalURL} />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-  <meta property="og:image" content={socialImageURL} />
-  <meta property="og:site_name" content="Samana Transformaciones" />
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={socialImageURL} />
+        <meta property="og:site_name" content="Samana Transformaciones" />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title} />
-  <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={socialImageURL} />
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={socialImageURL} />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
 
-  <!-- Schema -->
-  {schemaData && (
-    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
-  )}
+        <!-- Schema -->
+        {schemaData && <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />}
 
-  <ViewTransitions />
-        
+        <ClientRouter />
     </head>
-    
-    <body class="bg-black min-h-screen text-white selection:bg-[rgb(255,215,0)] selection:text-black overflow-x-hidden">
-        <div class="fixed inset-0 z-9000 pointer-events-none opacity-[0.07] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
+    <body
+        class="bg-black min-h-screen text-white selection:bg-[rgb(255,215,0)] selection:text-black overflow-x-hidden"
+    >
+        <div
+            class="fixed inset-0 z-9000 pointer-events-none opacity-[0.07] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"
+        >
+        </div>
         <Navbar />
         <slot />
-        
+        <Footer />
+
         <CustomCursor />
-    </body>
-    
-    <script>
+    </body><script>
         // Registrar GSAP globalmente para que esté disponible en toda la app
-        import gsap from 'gsap';        
+        import gsap from 'gsap';
         import { ScrollTrigger } from 'gsap/ScrollTrigger';
-        
+
         gsap.registerPlugin(ScrollTrigger);
-        
+
         // Fix para ViewTransitions: Reiniciar ScrollTrigger al cambiar de página
         document.addEventListener('astro:page-load', () => {
             ScrollTrigger.refresh();
@@ -137,7 +136,7 @@ if (schemaType === 'home') {
         margin: 0;
         width: 100%;
         height: 100%;
-        background-color: #000; 
-		overscroll-behavior: none; 
+        background-color: #000;
+        overscroll-behavior: none;
     }
 </style>

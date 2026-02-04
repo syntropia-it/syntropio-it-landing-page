@@ -1,0 +1,106 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+export async function getStaticPaths() {
+    const proyectos = await getCollection('projects');
+    return proyectos.map(proyecto => ({
+        params: { slug: proyecto.slug },
+        props: { proyecto },
+    }));
+}
+
+interface Props {
+    proyecto: CollectionEntry<'projects'>;
+}
+
+const { proyecto } = Astro.props;
+const { Content } = await proyecto.render();
+const { title, description, category, year, image, location, area } = proyecto.data;
+
+const site = Astro.site?.href ?? 'https://www.samanatransformaciones.com';
+const canonicalURL = new URL(`/proyectos/${proyecto.slug}`, site);
+---
+
+<BaseLayout 
+    title={`${title} — Samana`} 
+    description={description}    
+    schemaType="projects"
+>
+
+    <main class="bg-linear-to-b from-transparent via-black to-amber-900/20 text-white selection:bg-white selection:text-black">
+        
+        <header class="relative  flex flex-col justify-between  py-12">
+            <nav aria-label="Breadcrumb" class="px-6 mt-14 animate-fade-in z-20">
+                    <ol class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-500">
+                        <li><a href="/" class="hover:text-samana-1 transition-colors">Inicio</a></li>
+                        <li class="opacity-50">/</li>
+                        <li><a href="/proyectos" class="hover:text-samana-1 transition-colors">Proyectos</a></li>
+                        <li class="opacity-50">/</li>
+                        <li class="text-samana-1">{title}</li>
+                    </ol>
+                </nav>
+            <div class=" lg:mt-8 pt-4 md:pt-8 px-10 z-20 border-t mix-blend-difference border-white/20">
+                <h1 class="text-[12vw] lg:text-[10vw] font-serif  font-black tracking leading-[0.85] tracking-tighter uppercase wrap-break-words ">
+                    {title}
+                </h1>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 border-t border-white/20 pt-8 mt-4 md:mt-12 px-10 z-20">
+                <div class="md:col-span-4 lg:col-span-3">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 mb-2">Ubicación</p>
+                    <p class="text-lg uppercase">{location}</p>
+                </div>
+                <div class="md:col-span-4 lg:col-span-3">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 mb-2">Año</p>
+                    <p class="text-lg uppercase">{year}</p>
+                </div>
+                <div class="md:col-span-4 lg:col-span-3">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 mb-2">Superficie</p>
+                    <p class="text-lg uppercase">{area} m²</p>
+                </div>
+                <div class="md:col-span-12 lg:col-span-3">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-300 mb-2">Descripción</p>
+                    <p class="text-gray-200 leading-relaxed text-sm max-w-sm">{description}</p>
+                </div>
+            </div>
+            <div class="absolute inset-0 bg-linear-to-b from-black/90 via-black/70 to-black z-10"></div>
+            <div class="w-full absolute top-0 h-full overflow-hidden">
+                <Image 
+                    src={image} 
+                    alt={title}
+                    class="w-full h-full object-cover object-center animate-reveal-img"
+                    loading="eager"
+                />
+            </div>
+        </header>
+
+
+        <section class="py-32 px-6">
+            <div class="container mx-auto max-w-4xl prose prose-invert prose-samana">
+                <Content />
+            </div>
+        </section>
+
+    </main>
+</BaseLayout>
+
+<style is:global>
+    /* Estilo "Samana" para el contenido de Markdown */
+    .prose-samana {
+        @reference prose-h2:text-5xl prose-h2:font-serif prose-h2:uppercase prose-h2:tracking-tighter;
+        @reference prose-p:text-xl prose-p:text-gray-400 prose-p:leading-relaxed;
+        @reference prose-img:rounded-none prose-img:w-full prose-img:my-24;
+    }
+
+    /* Animación de entrada para la imagen hero */
+    .animate-reveal-img {
+        animation: reveal 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    }
+
+    @keyframes reveal {
+        0% { transform: scale(1.1); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+</style>

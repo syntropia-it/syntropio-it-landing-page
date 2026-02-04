@@ -1,0 +1,215 @@
+---
+/**
+ * FOOTER COMPONENT
+ * 
+ * Pie de página con:
+ * - Email de contacto destacado
+ * - Links de navegación
+ * - Redes sociales
+ * - Copyright
+ * 
+ * SEO:
+ * - Links internos refuerzan arquitectura del sitio
+ * - Señales de autoridad (redes, email)
+ */
+
+import { Instagram, Linkedin, Mail, Phone } from 'lucide-astro';
+
+const currentYear = new Date().getFullYear();
+
+const footerLinks = {
+  servicios: [
+    { name: 'Reformas Integrales', href: '/servicios#reformas' },
+    { name: 'Proyectos Inmobiliarios', href: '/servicios#proyectos' },
+    { name: 'Diseño y Renderizado', href: '/servicios#diseno' },
+    { name: 'Provisión de Materiales', href: '/servicios#materiales' },
+  ],
+  empresa: [
+    { name: 'Sobre Nosotros', href: '/nosotros' },
+    { name: 'Proyectos', href: '/proyectos' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Contacto', href: '/contacto' },
+  ],
+  legal: [
+    { name: 'Aviso Legal', href: '/legal' },
+    { name: 'Privacidad', href: '/privacidad' },
+    { name: 'Términos', href: '/terminos' },
+  ],
+};
+
+const socialLinks = [
+  { name: 'Instagram', href: 'https://instagram.com/samana', icon: Instagram },
+  { name: 'LinkedIn', href: 'https://linkedin.com/company/samana', icon: Linkedin },
+];
+---
+
+<footer class="bg-black text-gray-500 py-8 px-6 relative z-30 border-t border-dashed border-white/15">
+  <!-- Glow Effect -->
+  <div class="absolute inset-0 bg-linear-to-t from-transparent to-amber-900/20 pointer-events-none"></div>
+
+  <div class="relative z-10 container mx-auto max-w-7xl">
+    <!-- CTA Principal -->
+    <div class="text-center mb-16">
+      <p class="text-sm font-mono tracking-[0.3em] mb-8 text-samana-1/60 uppercase">
+        Samana Transformaciones
+      </p>
+      
+      <a 
+        href="mailto:cotizaciones@samana.com.ar" 
+        class="text-base md:text-2xl lg:text-4xl font-bold text-white hover:text-samana-gold transition-colors duration-500 font-serif leading-none hoverable inline-block"
+        data-cta="footer-email"
+      >
+        cotizaciones@samana.com.ar
+      </a>
+
+      <div class="flex gap-6 justify-center mt-8 text-gray-400">
+        <a 
+          href="tel:+5411XXXXXXXX" 
+          class="flex items-center gap-2 hover:text-white transition-colors hoverable"
+          aria-label="Llamar a Samana"
+        >
+          <Phone size={20} />
+          <span>+54 11 XXXX-XXXX</span>
+        </a>
+        <a 
+          href="mailto:cotizaciones@samana.com.ar" 
+          class="flex items-center gap-2 hover:text-white transition-colors hoverable"
+          aria-label="Enviar email a Samana"
+        >
+          <Mail size={20} />
+          <span>Escribinos</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Links Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 border-t border-white/10 pt-12">
+      <!-- Servicios -->
+      <div>
+        <h3 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">
+          Servicios
+        </h3>
+        <ul class="space-y-2">
+          {footerLinks.servicios.map((link) => (
+            <li>
+              <a 
+                href={link.href}
+                class="hover:text-white transition-colors text-sm hoverable"
+              >
+                {link.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Empresa -->
+      <div>
+        <h3 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">
+          Empresa
+        </h3>
+        <ul class="space-y-2">
+          {footerLinks.empresa.map((link) => (
+            <li>
+              <a 
+                href={link.href}
+                class="hover:text-white transition-colors text-sm hoverable"
+              >
+                {link.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h3 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">
+          Legal
+        </h3>
+        <ul class="space-y-2">
+          {footerLinks.legal.map((link) => (
+            <li>
+              <a 
+                href={link.href}
+                class="hover:text-white transition-colors text-sm hoverable"
+              >
+                {link.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div>
+        <h3 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">
+          Newsletter
+        </h3>
+        <p class="text-sm mb-4">
+          Recibe tendencias y tips de diseño.
+        </p>
+        <form class="flex gap-2">
+          <input 
+            type="email" 
+            placeholder="Tu email"
+            class="flex-1 bg-white/5 border border-white/10 px-4 py-2 text-sm focus:outline-none focus:border-samana-1 text-white transition-colors rounded"
+            required
+          />
+          <button 
+            type="submit"
+            class="bg-samana-1 text-black px-4 py-2 text-sm font-bold hover:bg-samana-gold transition-colors rounded"
+          >
+            OK
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="flex flex-col md:flex-row gap-8 justify-between items-center border-t border-white/10 pt-8 text-xs font-mono text-gray-600 uppercase">
+      <span>© {currentYear} Samana Transformaciones. Buenos Aires, Argentina.</span>
+      
+      <!-- Social Links -->
+      <div class="flex gap-4">
+        {socialLinks.map((social) => (
+          <a 
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-white transition-colors hoverable"
+            aria-label={`Visitar ${social.name} de Samana`}
+          >
+            <social.icon size={20} />
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /**
+   * NEWSLETTER TRACKING
+   * 
+   * Trackea suscripciones al newsletter.
+   */
+
+  const newsletterForm = document.querySelector('footer form');
+
+  newsletterForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Track evento
+    if (typeof gtag !== 'undefined') {
+      // @ts-ignore
+      gtag('event', 'newsletter_signup', {
+        event_category: 'Engagement',
+        event_label: 'Footer Newsletter',
+      });
+    }
+
+    // Aquí iría la lógica de integración con Mailchimp, ConvertKit, etc.
+    alert('¡Gracias por suscribirte! (Integrar con API)');
+  });
+</script>

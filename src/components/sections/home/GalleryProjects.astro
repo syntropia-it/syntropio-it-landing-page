@@ -1,0 +1,223 @@
+---
+/**
+ * PROJECTS PREVIEW (Home)
+ * 
+ * Galería horizontal de proyectos destacados.
+ * 
+ * Features:
+ * - Scroll horizontal con GSAP
+ * - Imágenes lazy-loaded
+ * - Links a páginas de proyecto dedicadas
+ * 
+ * Performance:
+ * - Solo carga proyectos featured
+ * - Imágenes en WebP
+ * - Intersection Observer para lazy load
+ */
+
+import { getCollection } from 'astro:content';
+
+// Obtener solo proyectos destacados
+const proyectosDestacados = await getCollection('projects', ({ data }) => {
+  return data.featured === true;
+});
+
+// Ordenar por año (más reciente primero)
+proyectosDestacados.sort((a, b) => b.data.year - a.data.year);
+
+// Limitar a 6 proyectos
+const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
+---
+
+<section 
+  id="proyectos-preview"
+  class="bg-black/60 relative z-30 border-t border-white/10 overflow-hidden py-24"
+>
+  <!-- Header fijo -->
+  <div class="px-6 container mx-auto mb-12">
+    <div class="flex justify-between items-end">
+      <div>
+        <span class="text-xs font-bold tracking-[0.3em] text-samana-gold uppercase block mb-4">
+          Portfolio
+        </span>
+        <h2 class="text-4xl md:text-6xl font-bold text-white font-serif">
+          Proyectos Destacados
+        </h2>
+        <p class="text-gray-400 max-w-md mt-4">
+          Desliza para ver nuestras transformaciones más emblemáticas.
+        </p>
+      </div>
+
+      <a 
+        href="/proyectos"
+        class="hidden md:inline-block border border-samana-gold text-samana-gold px-6 py-3 font-bold hover:bg-samana-gold hover:text-black transition-all hoverable"
+        data-cta="view-all-projects"
+      >
+        Ver todos →
+      </a>
+    </div>
+  </div>
+
+  <!-- Track de proyectos (scroll horizontal) -->
+  <div class="relative">
+    <div 
+      class="flex gap-[4vw] px-[10vw] w-max"
+      data-projects-track
+    >
+      {proyectosParaMostrar.map((proyecto, index) => (
+        <article 
+          class="relative w-[35vw] md:w-[28vw] h-[50vh] shrink-0 group hoverable"
+          data-project-card={index}
+        >
+          <!-- Número grande de fondo -->
+          <div 
+            class="absolute -top-16 -left-10 text-[8rem] leading-none font-bold text-transparent opacity-20 z-0 font-serif pointer-events-none"
+            style={`-webkit-text-stroke: 1px #ffd700;`}
+            aria-hidden="true"
+          >
+            {String(index + 1).padStart(2, '0')}
+          </div>
+
+          <!-- Link al proyecto -->
+          <a 
+            href={`/proyectos/${proyecto.slug}`}
+            class="block w-full h-full"
+            data-cta={`project-${proyecto.slug}`}
+          >
+            <!-- Imagen -->
+            <div class="w-full h-[85%] overflow-hidden relative z-10 border border-white/10 group-hover:border-samana-gold transition-colors duration-500">
+              <img 
+                src={proyecto.data.image}
+                alt={proyecto.data.title}
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <!-- Info -->
+            <div class="mt-6 flex justify-between items-end">
+              <div>
+                <h3 class="text-xl md:text-2xl font-bold text-white group-hover:text-samana-gold transition-colors">
+                  {proyecto.data.title}
+                </h3>
+                <p class="text-xs font-mono text-gray-500 uppercase mt-2">
+                  {proyecto.data.category}
+                </p>
+              </div>
+              <div class="text-samana-gold font-mono text-sm">
+                {proyecto.data.year}
+              </div>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <!-- CTA mobile -->
+  <div class="md:hidden text-center mt-12 px-6">
+    <a 
+      href="/proyectos"
+      class="inline-block border border-samana-gold text-samana-gold px-6 py-3 font-bold hover:bg-samana-gold hover:text-black transition-all w-full max-w-sm"
+    >
+      Ver todos los proyectos →
+    </a>
+  </div>
+</section>
+
+<script>
+  /**
+   * HORIZONTAL SCROLL CON GSAP
+   * 
+   * Scroll horizontal sincronizado con scroll vertical.
+   * Crea una experiencia inmersiva similar a Awwwards.
+   */
+
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const track = document.querySelector('[data-projects-track]') as HTMLElement;
+
+  if (track) {
+    // Calcular cuánto scrollear horizontalmente
+    const scrollAmount = track.scrollWidth - window.innerWidth;
+
+    gsap.to(track, {
+      x: -scrollAmount,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#proyectos-preview',
+        pin: true,
+        scrub: 1, // Suaviza el scroll
+        end: `+=${scrollAmount}`,
+        invalidateOnRefresh: true, // Recalcula en resize
+      },
+    });
+  }
+
+  /**
+   * LAZY LOAD DE IMÁGENES
+   * 
+   * Carga imágenes solo cuando entran en viewport.
+   */
+
+  const projectCards = document.querySelectorAll('[data-project-card]');
+
+  const imageObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target.querySelector('img');
+          if (img && img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+          imageObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: '50px' }
+  );
+
+  projectCards.forEach((card) => imageObserver.observe(card));
+
+
+  projectCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      const projectTitle = card.querySelector('h3')?.textContent;
+      
+      if (typeof gtag !== 'undefined') {
+
+        // @ts-ignore
+        gtag('event', 'project_view', {
+          event_category: 'Projects',
+          event_label: projectTitle,
+        });
+      }
+    });
+  });
+</script>
+
+<style>
+  /**
+   * PREVENT HORIZONTAL SCROLLBAR
+   * 
+   * Esconde la scrollbar horizontal nativa.
+   */
+  #proyectos-preview {
+    overflow-x: hidden;
+  }
+
+  /* Smooth grayscale transition */
+  img {
+    filter: grayscale(100%);
+    transition: filter 0.7s ease, transform 0.7s ease;
+  }
+
+  .group:hover img {
+    filter: grayscale(0%);
+  }
+</style>
