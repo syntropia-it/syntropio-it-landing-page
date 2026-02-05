@@ -1,0 +1,125 @@
+---
+const team = [
+    {
+        name: 'Ignacio Iglesias',
+        role: 'CEO - CoFounder',
+        image: 'https://static.vecteezy.com/system/resources/previews/016/237/389/non_2x/man-architect-or-businessman-wearing-hard-hat-and-holding-blueprints-on-a-construction-site-photo.jpg',
+    },
+    {
+        name: 'Juan Iglesias',
+        role: 'CEO - CoFounder',
+        image: 'https://previews.123rf.com/images/dotshock/dotshock1109/dotshock110900107/10540605-business-man-architect-engineer-manager-at-construction-site-project.jpg',
+    },
+    {
+        name: 'Brian',
+        role: 'Desarrollos',
+        image: 'https://img.freepik.com/foto-gratis/confiado-su-nuevo-proyecto-joven-ingeniero-arquitecto-hombre-que-trabaja-computadora-portatil-mirando-camara-sonrisa-mientras-esta-pie-su-oficina_1258-80513.jpg?semt=ais_hybrid&w=740&q=80',
+    },
+];
+---
+
+<section class="py-14 border-t border-white/5">
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+            <div class="md:col-span-4">
+                <h2
+                    class="text-6xl md:text-7xl font-bold tracking-tighter uppercase leading-[0.8]"
+                    data-reveal-text
+                >
+                    Equipo <br />
+                    <span class="text-samana-1 italic font-serif lowercase">detrás de</span>
+                    <br /> la obra
+                </h2>
+                <p class="mt-12 text-neutral-200 max-w-xs font-light leading-relaxed" data-reveal>
+                    Contamos con personal altamente capacitado para brindar una solución integral,
+                    eficiente y personalizada.
+                </p>
+            </div>
+
+            <div class="md:col-span-7 md:offset-1">
+                <div class="border-t border-white/10">
+                    {
+                        team.map(member => (
+                            <div
+                                class="team-row group relative border-b border-white/10 py-10 flex justify-between items-center cursor-none overflow-visible"
+                                data-team-item
+                            >
+                                <div class="z-10 transition-transform duration-500 group-hover:translate-x-4">
+                                    <h3 class="text-4xl md:text-5xl font-bold uppercase tracking-tighter transition-colors duration-300 group-hover:text-samana-1">
+                                        {member.name}
+                                    </h3>
+                                    <p class="text-neutral-400 font-serif italic text-lg group-hover:text-white transition-colors duration-300">
+                                        {member.role}
+                                    </p>
+                                </div>
+
+                                <div
+                                    class="team-image-wrapper fixed pointer-events-none opacity-0 scale-75 z-9999 w-64 h-80 overflow-hidden shadow-2xl"
+                                    style="will-change: transform, opacity; top: 0; left: 0;"
+                                >
+                                    <img
+                                        src={member.image}
+                                        alt={member.name}
+                                        class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                    />
+                                </div>
+
+                                <span class="text-3xl font-light opacity-10 group-hover:opacity-100 transition-all duration-500 group-hover:rotate-45">
+                                    ↗
+                                </span>
+                            </div>
+                        ))
+                    }
+                </div>
+
+                <p class="mt-12 text-sm uppercase tracking-[0.3em] text-neutral-100">
+                    Compromiso con excelencia, responsabilidad y paz.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    import gsap from 'gsap';
+
+    function initTeamHover() {
+        // Tipamos como HTMLElement para acceder a propiedades de estilo y eventos
+        const rows = document.querySelectorAll<HTMLElement>('[data-team-item]');
+
+        rows.forEach(row => {
+            const imageWrapper = row.querySelector('.team-image-wrapper') as HTMLElement;
+            if (!imageWrapper) return;
+
+            row.addEventListener('mouseenter', () => {
+                gsap.to(imageWrapper, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.5,
+                    ease: 'expo.out',
+                });
+            });
+
+            row.addEventListener('mousemove', ((e: MouseEvent) => {
+                gsap.to(imageWrapper, {
+                    x: e.clientX + 30, // Offset para no pisar el cursor
+                    y: e.clientY - imageWrapper.offsetHeight / 2,
+                    duration: 0.8,
+                    ease: 'power3.out',
+                    overwrite: 'auto',
+                });
+            }) as EventListener); // El casting final para evitar el error de TypeScript
+
+            row.addEventListener('mouseleave', () => {
+                gsap.to(imageWrapper, {
+                    opacity: 0,
+                    scale: 0.75,
+                    duration: 0.5,
+                    ease: 'expo.in',
+                });
+            });
+        });
+    }
+
+    document.addEventListener('astro:page-load', initTeamHover);
+</script>

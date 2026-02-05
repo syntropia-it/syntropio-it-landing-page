@@ -1,0 +1,13 @@
+---
+const { number, title } = Astro.props;
+---
+
+<div data-reveal>
+  <span class="text-samana-1 font-serif text-3xl block mb-2">
+    {number}
+  </span>
+  <h3 class="uppercase tracking-widest text-sm mb-2 text-white">
+    {title}
+  </h3>
+  <slot />
+</div>
