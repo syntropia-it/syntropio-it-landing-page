@@ -1,0 +1,39 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props as Props;
+const { Content } = await post.render();
+const { title, description, image } = post.data;
+const canonical = new URL(
+  `/blog/${post.slug}`,
+  Astro.site ?? "https://www.samanatransformaciones.com",
+);
+---
+
+<Layout
+  title={`${title} | Samana Transformaciones`}
+  description={description}
+  image={image}
+  schemaType="projects"
+  canonical={canonical.toString()}
+>
+  <main class="container mx-auto py-20 px-6">
+    <article class="prose prose-invert prose-samana max-w-3xl mx-auto">
+      <h1>{title}</h1>
+      <Content />
+    </article>
+  </main>
+</Layout>

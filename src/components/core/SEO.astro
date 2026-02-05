@@ -1,0 +1,142 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  schemaType?: "home" | "projects" | "service" | "faq";
+  canonical?: string;
+  alternates?: Record<string, string>;
+  additionalSchema?: Array<Record<string, any>>;
+  ratings?: {
+    ratingValue: number;
+    ratingCount: number;
+  } | null;
+}
+
+const {
+  title,
+  description = "",
+  image = "/iso.png",
+  schemaType = "home",
+  canonical,
+  alternates = undefined,
+  additionalSchema = undefined,
+  ratings = null,
+} = Astro.props as Props;
+
+const siteUrl = Astro.site?.href ?? "https://www.samanatransformaciones.com";
+const canonicalURL =
+  canonical ?? new URL(Astro.url.pathname, siteUrl).toString();
+const socialImageURL = new URL(image, siteUrl).toString();
+
+let schemaData: Record<string, any> | null = null;
+
+if (schemaType === "home") {
+  schemaData = {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    name: "Samana Transformaciones",
+    image: socialImageURL,
+    description: description,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Defensa 767",
+      addressLocality: "Buenos Aires",
+      addressRegion: "CABA",
+      postalCode: "1065",
+      addressCountry: "AR",
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "08:00",
+      closes: "19:00",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: -34.6158,
+      longitude: -58.3689,
+    },
+    priceRange: "$$$",
+    telephone: "+5491112345678",
+    url: siteUrl,
+  };
+} else if (schemaType === "projects") {
+  schemaData = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: title,
+    description: description,
+    image: socialImageURL,
+    url: canonicalURL,
+  };
+} else if (schemaType === "service") {
+  schemaData = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: title,
+    description: description,
+    provider: {
+      "@type": "Organization",
+      name: "Samana Transformaciones",
+      url: siteUrl,
+    },
+  };
+}
+
+// Inject aggregateRating into schemaData if provided via props
+if (schemaData && ratings) {
+  schemaData.aggregateRating = {
+    "@type": "AggregateRating",
+    ratingValue: String(ratings.ratingValue),
+    reviewCount: Number(ratings.ratingCount),
+    bestRating: "5",
+  };
+}
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href={canonicalURL} />
+
+<!-- hreflang -->
+{
+  alternates ? (
+    Object.entries(alternates).map(([lang, url]) => (
+      <link rel="alternate" hreflang={lang} href={url} />
+    ))
+  ) : (
+    <>
+      <link rel="alternate" hreflang="es-AR" href={siteUrl} />
+      <link rel="alternate" hreflang="x-default" href={siteUrl} />
+    </>
+  )
+}
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={socialImageURL} />
+<meta property="og:site_name" content="Samana Transformaciones" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialImageURL} />
+
+{
+  schemaData && (
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  )
+}
+
+{
+  additionalSchema &&
+    additionalSchema.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))
+}
