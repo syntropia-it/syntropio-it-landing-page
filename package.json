@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "auto:add-ratings": "node scripts/auto-add-ratings.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
