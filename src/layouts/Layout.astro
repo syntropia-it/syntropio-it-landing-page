@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import CustomCursor from '../components/core/customCursor.astro';
-import BtnWhatsApp from '../components/core/ButtonWhatsApp.astro'
+import BtnWhatsApp from '../components/core/ButtonWhatsApp.astro';
 import Navbar from '../components/layout/Navbar.astro';
 import Footer from '../components/layout/Footer.astro';
 import SEO from '../components/core/SEO.astro';
@@ -84,8 +84,9 @@ if (!ratingsProp) {
         />
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
         <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
             rel="stylesheet"
@@ -107,7 +108,7 @@ if (!ratingsProp) {
         <Footer />
 
         <CustomCursor />
-        <BtnWhatsApp/>
+        <BtnWhatsApp />
     </body><script>
         import Lenis from 'lenis';
         import gsap from 'gsap';

@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 const cycleData = [
     {
         id: '01',
@@ -22,7 +24,7 @@ const cycleData = [
 ---
 
 <section id="ciclo-maestria" class="bg-neutral-900 relative z-30">
-    <div class="relative w-full h-[300vh] scroll-container">
+    <div class="relative w-full h-screen scroll-container">
         <div class="sticky top-0 h-screen w-full flex flex-col md:flex-row overflow-hidden">
             <div
                 class="w-full md:w-1/2 h-full flex items-center justify-center bg-neutral-900 px-8 border-r border-white/5 z-20"
@@ -40,7 +42,7 @@ const cycleData = [
                                 <h3 class="text-4xl md:text-6xl font-bold mt-4 mb-6 font-serif uppercase leading-tight text-white">
                                     {item.title}
                                 </h3>
-                                <p class="text-gray-400 text-lg font-light leading-relaxed">
+                                <p class="text-gray-300 text-lg font-light leading-relaxed">
                                     {item.desc}
                                 </p>
                             </div>
@@ -56,11 +58,16 @@ const cycleData = [
                 </div>
                 {
                     cycleData.map((item, i) => (
-                        <img
-                            src={item.img}
+                        <Image                            
+                            src={`${item.img}&w=900&q=70&auto=format&fit=crop`}
                             alt={item.title}
+                            width={900}
+                            height={600}
+                            format="webp"
+                            quality="mid"
                             data-cycle-img={i}
-                            class="cycle-img absolute inset-0 w-full h-full object-cover opacity-0 scale-110 transition-all duration-1000 ease-in-out"
+                            class="cycle-img absolute inset-0 w-full h-full object-cover opacity-0 scale-110 transition-all duration-1000 ease-in-out will-change-transform"
+                            loading={i === 0 ? 'eager' : 'lazy'}                           
                         />
                     ))
                 }
@@ -77,61 +84,92 @@ const cycleData = [
 
     function initCycleScroll() {
         const container = document.querySelector('.scroll-container');
-        const textItems = document.querySelectorAll('.cycle-text-item');
-        const imgItems = document.querySelectorAll('.cycle-img');
         const section = document.querySelector('#ciclo-maestria');
+        const textItems = gsap.utils.toArray('.cycle-text-item');
+        const imgItems = gsap.utils.toArray('.cycle-img');
 
-        if (!container || !section || textItems.length === 0) return;
+        if (!container || !section || !textItems.length) return;
 
-        // Limpieza total antes de re-inicializar
+        // Limpieza quirúrgica
         ScrollTrigger.getAll().forEach(st => {
-            if (st.trigger === section || st.vars.trigger === "#ciclo-maestria") st.kill();
+            if (st.trigger === container) st.kill();
         });
 
         const totalItems = textItems.length;
 
-        ScrollTrigger.create({
-            trigger: "#ciclo-maestria",
-            start: "top top",
-            end: "+=100%", // Reducimos un poco el final para evitar el espacio muerto
-            scrub: 1,
-            pin: true,
-            anticipatePin: 1,
-            onUpdate: (self) => {
-                const progress = self.progress;
-                
-                // MEJORA: Umbral de seguridad. Si el progreso es > 0.98, forzamos el último item.
-                // Esto evita que al final del scroll todo desaparezca.
-                let activeIndex;
-                if (progress >= 0.95) {
-                    activeIndex = totalItems - 1;
-                } else {
-                    activeIndex = Math.floor(progress * totalItems);
-                }
+        // Estado inicial explícito (nada al azar)
+        gsap.set(textItems, { opacity: 0, y: 40 });
+        gsap.set(imgItems, { opacity: 0, scale: 1.1 });
 
-                textItems.forEach((item, i) => {
-                    const text = item as HTMLElement;
-                    const img = imgItems[i] as HTMLElement;
-                    
-                    if (i === activeIndex) {
-                        gsap.to(text, { opacity: 1, y: 0, duration: 0.3, overwrite: "auto", ease: "power2.out" });
-                        gsap.to(img, { opacity: 0.6, scale: 1, duration: 0.4, overwrite: "auto" });
-                    } else {
-                        // Direccionalidad elegante: los que ya pasaron suben, los que vienen esperan abajo
-                        const yPos = i < activeIndex ? -40 : 40;
-                        gsap.to(text, { opacity: 0, y: yPos, duration: 0.3, overwrite: "auto", ease: "power2.in" });
-                        gsap.to(img, { opacity: 0, scale: 1.1, duration: 0.4, overwrite: "auto" });
-                    }
-                });
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: container,
+                start: 'top top',
+                end: () => `+=${window.innerHeight * totalItems}`,
+                scrub: true,
+                pin: true,
+                anticipatePin: 1,
+            },
+        });
+
+        textItems.forEach((text, i) => {
+            const img = imgItems[i];
+            if (!text || !img) return;
+
+            // ENTRADA
+            tl.to(
+                text,
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.2,
+                    ease: 'power2.out',
+                },
+                i
+            );
+
+            tl.to(
+                img,
+                {
+                    opacity: 0.6,
+                    scale: 1,
+                    duration: 0.2,
+                    ease: 'power2.out',
+                },
+                i
+            );
+
+            // SALIDA (excepto el último)
+            if (i < totalItems - 1) {
+                tl.to(
+                    text,
+                    {
+                        opacity: 0,
+                        y: -40,
+                        duration: 0.2,
+                        ease: 'power2.in',
+                    },
+                    i + 0.7
+                );
+
+                tl.to(
+                    img,
+                    {
+                        opacity: 0,
+                        scale: 1.1,
+                        duration: 0.2,
+                        ease: 'power2.in',
+                    },
+                    i + 0.7
+                );
             }
         });
 
-        // Refresco manual de métricas
         ScrollTrigger.refresh();
     }
 
     document.addEventListener('astro:page-load', () => {
-        setTimeout(initCycleScroll, 100);
+        requestAnimationFrame(initCycleScroll);
     });
 </script>
 
