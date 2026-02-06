@@ -1,0 +1,83 @@
+<section
+    id="filosofia"
+    class="philosophy-container relative w-full min-h-[80vh] flex items-center justify-start px-6 py-24 z-20 bg-black/30 overflow-hidden"
+>
+    <div class="max-w-3xl w-full ml-auto md:mr-24 relative z-10 philosophy-text">
+        <div class="overflow-hidden">
+            <span
+                class="philosophy-item block text-xs font-bold tracking-[0.3em] mb-6 text-samana-gold uppercase"
+            >
+                Nuestra Filosofía
+            </span>
+        </div>
+
+        <h2
+            class="text-5xl md:text-7xl leading-[0.9] font-serif font-bold mb-12 uppercase tracking-tighter"
+        >
+            <div class="overflow-hidden">
+                <span class="philosophy-item block text-white">La obra a tu</span>
+            </div>
+            <div class="overflow-hidden">
+                <span class="philosophy-item block text-samana-gold italic">servicio. </span>
+            </div>
+        </h2>
+
+        <div class="overflow-hidden">
+            <div
+                class="philosophy-item bg-white/5 backdrop-blur-xl p-8 border-l-2 border-samana-gold/30"
+            >
+                <p class="text-lg md:text-xl leading-relaxed text-gray-300 font-light">
+                    Nos dedicamos a profundizar en tu <span class="text-white font-medium"
+                        >proyecto de vida</span
+                    > y plasmarlo en tu hogar ideal. Transmitimos nuestro compromiso total con la <span
+                        class="text-white">excelencia, responsabilidad y paz</span
+                    >, para que logres la vida que te mereces.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    function initPhilosophy() {
+        const items = document.querySelectorAll('.philosophy-item');
+        if (items.length === 0) return;
+
+        gsap.set(items, { opacity: 0, yPercent: 100 });
+
+        ScrollTrigger.refresh();
+
+        gsap.to(items, {
+            yPercent: 0,
+            opacity: 1,
+            duration: 1.5,
+            stagger: 0.2,
+            ease: 'expo.out',
+            scrollTrigger: {
+                trigger: '#filosofia',
+                start: 'top 80%',
+                toggleActions: 'play none none none',                
+            },
+        });
+    }
+
+    // Usamos un pequeño delay para que Lenis y el Hero no bloqueen la ejecución
+    document.addEventListener('astro:page-load', () => {
+        setTimeout(initPhilosophy, 150);
+    });
+</script>
+
+<style>
+    .philosophy-item {
+        opacity: 0; /* Oculto por defecto para evitar parpadeo */
+        will-change: transform, opacity;
+    }
+    .text-samana-gold {
+        color: rgb(255, 215, 0);
+    }
+</style>

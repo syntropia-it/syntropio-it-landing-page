@@ -3,37 +3,32 @@ import heroImg from "../../../assets/haedo.jpg";
 import { Image } from "astro:assets";
 ---
 
-<header
-  class="relative w-full h-screen flex items-center justify-center overflow-hidden z-20"
->
-  <div class="absolute inset-0 -z-10">
-    <div
-      class="absolute inset-0 bg-linear-to-b from-black/80 via-black/40 to-black z-10"
-    >
-    </div>
+<header class="relative w-full h-screen flex items-center justify-center overflow-hidden z-20">
+  <div class="absolute inset-0 -z-10 overflow-hidden">
+    <div class="absolute inset-0 bg-linear-to-b from-black/80 via-black/20 to-black z-10"></div>
     <Image
       src={heroImg}
       alt="Samana Interior"
-      class="w-full h-full object-cover hero-bg scale-110 opacity-40 brightness-125 grayscale"
-      sizes="(max-width: 768px) 100vw, 50vw"
+      class="hero-img w-full h-full object-cover scale-125 opacity-0 grayscale brightness-110"
       widths={[400, 800, 1200, 2000]}
       loading="eager"
+      fetchpriority="high"
     />
   </div>
 
-  <div class="relative text-center px-4 mix-blend-difference text-white w-full">
-    <div class="overflow-hidden">
+  <div class="relative text-center px-4 mix-blend-difference text-white w-full select-none">
+    <div class="overflow-hidden py-2">
       <h1
         id="hero-title"
-        class="text-[12vw] leading-[0.8] font-black tracking translate-y-full"
+        class="text-[14vw] md:text-[12vw] leading-[0.8] font-black tracking-tighter will-change-transform"
       >
         SAMANA
       </h1>
     </div>
-    <div class="overflow-hidden mt-2">
+    <div class="overflow-hidden">
       <p
         id="hero-subtitle"
-        class="translate-y-full text-sm md:text-xl font-medium tracking-[0.5em] text-white/80 uppercase"
+        class="text-sm md:text-xl font-medium tracking-[0.6em] text-white/90 uppercase will-change-transform"
       >
         Transformaciones
       </p>
@@ -44,20 +39,29 @@ import { Image } from "astro:assets";
 <script>
   import gsap from "gsap";
 
-  // Animación de entrada
-  const tl = gsap.timeline({ delay: 0.5 });
+  function initHeroAnimation() {
+    const tl = gsap.timeline({ 
+      defaults: { ease: "expo.out" } 
+    });
 
-  tl.to("#hero-title", {
-    y: 0,
-    duration: 1,
-    ease: "power4.out",
-  }).to(
-    "#hero-subtitle",
-    {
-      y: 0,
+    // Seteamos estado inicial para evitar flashes (FOUC)
+    gsap.set(["#hero-title", "#hero-subtitle"], { yPercent: 100 });
+
+    tl.to(".hero-img", {
+      scale: 1,
+      opacity: 0.5,
+      duration: 2.5,
+    })
+    .to("#hero-title", {
+      yPercent: 0,
+      duration: 1.8,
+    }, "-=2") // Solapamiento elegante
+    .to("#hero-subtitle", {
+      yPercent: 0,
       duration: 1.5,
-      ease: "power4.out",
-    },
-    "-=1.2",
-  );
+    }, "-=1.4");
+  }
+
+  // Escuchamos el evento de Astro para que funcione siempre, incluso al navegar
+  document.addEventListener("astro:page-load", initHeroAnimation);
 </script>

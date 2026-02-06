@@ -1,0 +1,148 @@
+---
+const cycleData = [
+    {
+        id: '01',
+        title: 'Diseño y Renderizado',
+        desc: 'Asesoramiento en el diseño de los ambientes para que se adapten a tu estilo, ayudando a plasmar e imaginar la idea final.', // Basado en texto oficial [cite: 10]
+        img: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2000&auto=format&fit=crop',
+    },
+    {
+        id: '02',
+        title: 'Reformas y Proyectos',
+        desc: 'Planificación, dirección y ejecución de remodelaciones integrales con personal certificado y altamente capacitado.', // Basado en texto oficial [cite: 8, 11]
+        img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2000&auto=format&fit=crop',
+    },
+    {
+        id: '03',
+        title: 'Provisión de Materiales',
+        desc: 'Venta y suministro de materiales de primera línea con logística propia, mejorando los costos de tu refacción.', // Basado en texto oficial [cite: 9, 14]
+        img: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2000&auto=format&fit=crop',
+    },
+];
+---
+
+<section id="ciclo-maestria" class="bg-neutral-900 relative z-30">
+    <div class="relative w-full h-[300vh] scroll-container">
+        <div class="sticky top-0 h-screen w-full flex flex-col md:flex-row overflow-hidden">
+            <div
+                class="w-full md:w-1/2 h-full flex items-center justify-center bg-neutral-900 px-8 border-r border-white/5 z-20"
+            >
+                <div class="relative w-full max-w-lg h-64 text-wrapper">
+                    {
+                        cycleData.map((item, i) => (
+                            <div
+                                data-cycle-index={i}
+                                class="cycle-text-item absolute top-0 left-0 w-full opacity-0 translate-y-8 transition-all duration-700 ease-out"
+                            >
+                                <span class="text-samana-1 tracking-[0.3em] text-xs font-mono uppercase italic">
+                                    {item.id} / Solución Integral
+                                </span>
+                                <h3 class="text-4xl md:text-6xl font-bold mt-4 mb-6 font-serif uppercase leading-tight text-white">
+                                    {item.title}
+                                </h3>
+                                <p class="text-gray-400 text-lg font-light leading-relaxed">
+                                    {item.desc}
+                                </p>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 h-full relative bg-black overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-linear-to-r from-neutral-900 to-transparent z-10 pointer-events-none"
+                >
+                </div>
+                {
+                    cycleData.map((item, i) => (
+                        <img
+                            src={item.img}
+                            alt={item.title}
+                            data-cycle-img={i}
+                            class="cycle-img absolute inset-0 w-full h-full object-cover opacity-0 scale-110 transition-all duration-1000 ease-in-out"
+                        />
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    function initCycleScroll() {
+        const container = document.querySelector('.scroll-container');
+        const textItems = document.querySelectorAll('.cycle-text-item');
+        const imgItems = document.querySelectorAll('.cycle-img');
+        const section = document.querySelector('#ciclo-maestria');
+
+        if (!container || !section || textItems.length === 0) return;
+
+        // Limpieza total antes de re-inicializar
+        ScrollTrigger.getAll().forEach(st => {
+            if (st.trigger === section || st.vars.trigger === "#ciclo-maestria") st.kill();
+        });
+
+        const totalItems = textItems.length;
+
+        ScrollTrigger.create({
+            trigger: "#ciclo-maestria",
+            start: "top top",
+            end: "+=100%", // Reducimos un poco el final para evitar el espacio muerto
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+                const progress = self.progress;
+                
+                // MEJORA: Umbral de seguridad. Si el progreso es > 0.98, forzamos el último item.
+                // Esto evita que al final del scroll todo desaparezca.
+                let activeIndex;
+                if (progress >= 0.95) {
+                    activeIndex = totalItems - 1;
+                } else {
+                    activeIndex = Math.floor(progress * totalItems);
+                }
+
+                textItems.forEach((item, i) => {
+                    const text = item as HTMLElement;
+                    const img = imgItems[i] as HTMLElement;
+                    
+                    if (i === activeIndex) {
+                        gsap.to(text, { opacity: 1, y: 0, duration: 0.3, overwrite: "auto", ease: "power2.out" });
+                        gsap.to(img, { opacity: 0.6, scale: 1, duration: 0.4, overwrite: "auto" });
+                    } else {
+                        // Direccionalidad elegante: los que ya pasaron suben, los que vienen esperan abajo
+                        const yPos = i < activeIndex ? -40 : 40;
+                        gsap.to(text, { opacity: 0, y: yPos, duration: 0.3, overwrite: "auto", ease: "power2.in" });
+                        gsap.to(img, { opacity: 0, scale: 1.1, duration: 0.4, overwrite: "auto" });
+                    }
+                });
+            }
+        });
+
+        // Refresco manual de métricas
+        ScrollTrigger.refresh();
+    }
+
+    document.addEventListener('astro:page-load', () => {
+        setTimeout(initCycleScroll, 100);
+    });
+</script>
+
+<style>
+    .font-serif {
+        font-family: 'Playfair Display', serif;
+    }
+
+    /* Optimización de hardware para animaciones fluidas */
+    .cycle-text-item,
+    .cycle-img {
+        will-change: transform, opacity;
+    }
+</style>

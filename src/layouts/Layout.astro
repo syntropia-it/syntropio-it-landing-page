@@ -1,184 +1,179 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import CustomCursor from "../components/core/customCursor.astro";
-import Navbar from "../components/layout/Navbar.astro";
-import "../styles/global.css";
-import Footer from "../components/layout/Footer.astro";
-import SEO from "../components/core/SEO.astro";
-import { getCollection } from "astro:content";
+import { ClientRouter } from 'astro:transitions';
+import CustomCursor from '../components/core/customCursor.astro';
+import BtnWhatsApp from '../components/core/ButtonWhatsApp.astro'
+import Navbar from '../components/layout/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
+import SEO from '../components/core/SEO.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import '../styles/global.css';
 
 interface Props {
-  title: string;
-  description?: string;
-  image?: string;
-  schemaType?: "home" | "projects" | "service" | "faq";
-  canonical?: string;
-  alternates?: Record<string, string>;
-  additionalSchema?: Array<Record<string, any>>;
-  ratings?: { ratingValue: number; ratingCount: number } | null;
+    title: string;
+    description?: string;
+    image?: string;
+    schemaType?: 'home' | 'projects' | 'service' | 'faq';
+    canonical?: string;
+    alternates?: Record<string, string>;
+    additionalSchema?: Array<Record<string, any>>;
+    ratings?: { ratingValue: number; ratingCount: number } | null;
 }
 
 const {
-  title,
-  description = "Samana Transformaciones - Reformas integrales y construcción de alta gama.",
-  image = "/iso.png",
-  schemaType = "home",
+    title,
+    description = 'Samana Transformaciones - Reformas integrales y construcción de alta gama.',
+    image = '/iso.png',
+    schemaType = 'home',
+    canonical,
+    alternates,
+    additionalSchema,
 } = Astro.props;
-const siteUrl = Astro.site ?? new URL("https://www.samanatransformaciones.com");
-const canonicalProp = (Astro.props as any).canonical as string | undefined;
-const alternatesProp = (Astro.props as any).alternates as
-  | Record<string, string>
-  | undefined;
-const additionalSchemaProp = (Astro.props as any).additionalSchema as
-  | Array<Record<string, any>>
-  | undefined;
-let ratingsProp = (Astro.props as any).ratings as
-  | { ratingValue: number; ratingCount: number }
-  | undefined;
+
+// 1. Configuración de URLs seguras
+const siteUrl = Astro.site?.origin ?? 'https://www.samanatransformaciones.com';
+const canonicalURL = canonical ?? new URL(Astro.url.pathname, siteUrl).toString();
+
+// 2. Lógica de Ratings con tipado estricto
+let ratingsProp = Astro.props.ratings;
 
 if (!ratingsProp) {
-  try {
-    const projects = await getCollection("projects");
-    const services = await getCollection("services");
-    const blog = await getCollection("blog");
-    const all = [...projects, ...services, ...blog];
-    const numericRatings = all
-      .map((i) => (i.data as any).rating)
-      .filter((r) => typeof r === "number");
-    if (numericRatings.length > 0) {
-      const sum = numericRatings.reduce((s: number, v: number) => s + v, 0);
-      const avg = sum / numericRatings.length;
-      ratingsProp = {
-        ratingValue: Number(avg.toFixed(2)),
-        ratingCount: numericRatings.length,
-      };
+    try {
+        const [projects, services, blog] = await Promise.all([
+            getCollection('projects'),
+            getCollection('services'),
+            getCollection('blog'),
+        ]);
+
+        const allEntries = [...projects, ...services, ...blog];
+
+        // Extraemos ratings asegurando que existan en el esquema de content
+        const numericRatings = allEntries
+            .map(entry => (entry.data as { rating?: number }).rating)
+            .filter((r): r is number => typeof r === 'number');
+
+        if (numericRatings.length > 0) {
+            const sum = numericRatings.reduce((acc, val) => acc + val, 0);
+            ratingsProp = {
+                ratingValue: Number((sum / numericRatings.length).toFixed(2)),
+                ratingCount: numericRatings.length,
+            };
+        }
+    } catch (error) {
+        console.error('Error fetching ratings for SEO:', error);
     }
-  } catch (e) {
-    // ignore: collections may not exist or have rating fields
-  }
 }
-const canonicalURL =
-  canonicalProp ?? new URL(Astro.url.pathname, siteUrl).toString();
 ---
 
 <!doctype html>
 <html lang="es-AR" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/iso.png" />
-    <meta name="generator" content={Astro.generator} />
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="/iso.png" />
+        <meta name="generator" content={Astro.generator} />
 
-    <SEO
-      title={title}
-      description={description}
-      image={image}
-      schemaType={schemaType}
-      canonical={canonicalURL}
-      alternates={alternatesProp}
-      additionalSchema={additionalSchemaProp}
-      ratings={ratingsProp}
-    />
+        <SEO
+            title={title}
+            description={description}
+            image={image}
+            schemaType={schemaType}
+            canonical={canonicalURL}
+            alternates={alternates}
+            additionalSchema={additionalSchema}
+            ratings={ratingsProp}
+        />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
 
-    <!-- Schema handled in SEO component -->
+        <ClientRouter />
+    </head>
 
-    <ClientRouter />
-  </head>
-
-  <body
-    class="bg-black min-h-screen text-white selection:bg-[rgb(255,215,0)] selection:text-black overflow-x-hidden"
-  >
-    <div
-      class="fixed inset-0 z-9000 pointer-events-none opacity-[0.07] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"
+    <body
+        class="bg-black min-h-screen text-white selection:bg-[rgb(255,215,0)] selection:text-black overflow-x-hidden"
     >
-    </div>
-    <Navbar />
-    <slot />
-    <Footer />
+        <div
+            class="fixed inset-0 z-9999 pointer-events-none opacity-[0.04] bg-repeat"
+            style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.80%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');"
+        >
+        </div>
+        <Navbar />
+        <slot />
+        <Footer />
 
-    <CustomCursor />
-  </body><script>
-    import Lenis from "lenis";
-    import gsap from "gsap";
-    import { ScrollTrigger } from "gsap/ScrollTrigger";
+        <CustomCursor />
+        <BtnWhatsApp/>
+    </body><script>
+        import Lenis from 'lenis';
+        import gsap from 'gsap';
+        import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-    gsap.registerPlugin(ScrollTrigger);
+        gsap.registerPlugin(ScrollTrigger);
 
-    let lenis: Lenis | null = null;
+        let lenis: Lenis | null = null;
 
-    function initScroll() {
-      if (lenis) {
-        lenis.destroy();
-      }
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+        const initScroll = () => {
+            // Limpieza de instancias previas para evitar memory leaks en View Transitions
+            if (lenis) lenis.destroy();
+            ScrollTrigger.getAll().forEach(t => t.kill());
 
-      lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: "vertical",
-        gestureOrientation: "vertical",
-        smoothWheel: true,
-        // No suavizamos en táctil para mantener el 100/100 en Mobile Performance
-        touchMultiplier: 0,
-      });
+            lenis = new Lenis({
+                duration: 1.2,
+                easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smoothWheel: true,
+                touchMultiplier: 0, // Optimización Performance Mobile
+            });
 
-      lenis.on("scroll", ScrollTrigger.update);
+            lenis.on('scroll', ScrollTrigger.update);
 
-      gsap.ticker.add((time) => {
-        lenis?.raf(time * 1000);
-      });
+            gsap.ticker.add(time => {
+                lenis?.raf(time * 1000);
+            });
 
-      gsap.ticker.lagSmoothing(0);
+            gsap.ticker.lagSmoothing(0);
+            ScrollTrigger.refresh();
+        };
 
-      ScrollTrigger.refresh();
-    }
+        // Ciclo de vida de Astro View Transitions
+        document.addEventListener('astro:page-load', initScroll);
+        document.addEventListener('astro:before-swap', () => {
+            lenis?.destroy();
+        });
+    </script>
 
-    document.addEventListener("astro:page-load", initScroll);
+    <style is:global>
+        html.lenis {
+            height: auto;
+        }
 
-    document.addEventListener("astro:before-swap", () => {
-      if (lenis) {
-        lenis.destroy();
-        lenis = null;
-      }
-    });
-  </script>
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
 
-  <style is:global>
-    html.lenis {
-      height: auto;
-    }
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
 
-    .lenis.lenis-smooth {
-      scroll-behavior: auto !important;
-    }
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
 
-    .lenis.lenis-smooth [data-lenis-prevent] {
-      overscroll-behavior: contain;
-    }
+        .lenis.lenis-scrolling iframe {
+            pointer-events: none;
+        }
 
-    .lenis.lenis-stopped {
-      overflow: hidden;
-    }
+        html {
+            scroll-behavior: auto !important;
+        }
 
-    .lenis.lenis-scrolling iframe {
-      pointer-events: none;
-    }
-
-    html {
-      scroll-behavior: auto !important;
-    }
-
-    .noise-overlay {
-      will-change: transform;
-      transform: translateZ(0);
-    }
-  </style>
+        .noise-overlay {
+            will-change: transform;
+            transform: translateZ(0);
+        }
+    </style>
 </html>

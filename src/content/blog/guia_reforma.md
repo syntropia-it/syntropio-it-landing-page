@@ -1,7 +1,7 @@
 ---
 title: "Guía Completa: Reforma Integral de Baños en 2025 [+Precios]"
 description: "Descubre cómo renovar tu baño paso a paso. Costos, materiales y tendencias actualizadas."
-image: "./haedo.jpg"
+image: "../../assets/haedo.jpg"
 category: "Guías"
 publishDate: 2025-01-15
 tags: ["reformas", "baños", "guía"]

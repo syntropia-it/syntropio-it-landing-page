@@ -132,11 +132,11 @@ const navLinks = [
             'scroll',
             () => {
                 if (!navbar) return;
-                if (window.scrollY > 100 || isOpen) {
-                    navbar.classList.add('bg-black/90', 'backdrop-blur-md', 'py-4');
+                if (window.scrollY > 200 || isOpen) {
+                    navbar.classList.add('bg-black/70', 'backdrop-blur-md', 'py-4');
                     navbar.classList.remove('mix-blend-difference', 'py-6');
                 } else {
-                    navbar.classList.remove('bg-black/90', 'backdrop-blur-md', 'py-4');
+                    navbar.classList.remove('bg-black/70', 'backdrop-blur-md', 'py-4');
                     navbar.classList.add('mix-blend-difference', 'py-6');
                 }
             },
