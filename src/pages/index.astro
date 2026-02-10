@@ -1,27 +1,26 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Samana3d from '../components/core/Samana3d.astro';
-import Hero from '../components/sections/home/Hero.astro';
-import GalleryProjects from '../components/sections/home/GalleryProjects.astro';
-import Philosophy from '../components/sections/home/Philosophy.astro';
-import Cycle from '../components/sections/home/Cycle.astro';
-import Contact from '../components/sections/home/Contact.astro';
+import Layout from "../layouts/Layout.astro";
+import Samana3d from "../components/core/Samana3d.astro";
+import Hero from "../components/sections/home/Hero.astro";
+import GalleryProjects from "../components/sections/home/GalleryProjects.astro";
+import Philosophy from "../components/sections/home/Philosophy.astro";
+import Cycle from "../components/sections/home/Cycle.astro";
+import Contact from "../components/sections/home/Contact.astro";
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout
-    title="Samana Transformaciones | Reformas integrales en Buenos Aires"
-    description="Empresa especializada en reformas integrales, remodelaciones y construcción de alta gama en Buenos Aires."
-    schemaType="home"
+  title="Samana Transformaciones | Reformas integrales en Buenos Aires"
+  description="Empresa especializada en reformas integrales, remodelaciones y construcción de alta gama en Buenos Aires."
+  schemaType="home"
 >
-   
-    <Samana3d client:idle />
-    <main>
-        <Hero />
-        <Philosophy client:visible />
-        <Cycle client:visible />
-        <GalleryProjects client:visible />
-        <Contact client:visible />
-    </main>
+  <Samana3d />
+  <main>
+    <Hero />
+    <Philosophy />
+    <Cycle />
+    <GalleryProjects />
+    <Contact />
+  </main>
 </Layout>
