@@ -1,14 +1,142 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Services from "../components/shared/Services.astro";
+import Layout from '../layouts/Layout.astro';
+import Services from '../components/shared/Services.astro';
+import HeroServices from '../components/sections/services/HeroServices.astro';
+import ProcessServices from '../components/sections/services/ProcessServices.astro';
+import GridServices from '../components/sections/services/GridServices.astro';
+import MetricServices from '../components/sections/services/MetricServices.astro';
+import CTAServices from '../components/sections/services/CTAServices.astro';
 
-const title = "Servicios — Samana Transformaciones";
+const title = 'Servicios — Samana Transformaciones';
 const description =
-  "Servicios premium de reformas integrales, construcción y diseño para proyectos residenciales y comerciales.";
+    'Servicios premium de reformas integrales, construcción y diseño para proyectos residenciales y comerciales.';
+
+const services = [
+    {
+        id: '01',
+        title: 'Reformas Integrales',
+        desc: 'Asesoramiento, planificación y ejecución de remodelaciones con personal certificado.',
+        detail: 'Transformamos espacios completos con una visión arquitectónica unificada.',
+    },
+    {
+        id: '02',
+        title: 'Venta de Materiales',
+        desc: 'Provisión directa con logística propia para optimizar costos y tiempos de obra.',
+        detail: 'Acceso exclusivo a materiales de primera línea sin intermediarios.',
+    },
+    {
+        id: '03',
+        title: 'Proyectos Inmobiliarios',
+        desc: 'Búsqueda de inversores y desarrollo conjunto para maximizar el valor de la propiedad.',
+        detail: 'Alianzas estratégicas para desarrollos de alto potencial.',
+    },
+    {
+        id: '04',
+        title: 'Diseño y Renderizado',
+        desc: 'Visualización 3D fotorrealista para prever cada detalle antes de construir.',
+        detail: 'Tecnología de vanguardia para que seas el autor de tu propio proyecto.',
+    },
+];
 ---
 
 <Layout title={title} description={description} schemaType="service">
-  <main>
-    <Services />
-  </main>
+    <main>
+        <HeroServices />
+        <ProcessServices />
+        <GridServices />
+        <MetricServices />
+        <CTAServices />
+        <!-- <section id="servicios" class="relative py-32 bg-black overflow-hidden">
+            <div
+                class="absolute top-20 left-0 w-full overflow-hidden pointer-events-none select-none z-0"
+            >
+                <h2
+                    class="text-[20vw] font-bold leading-none tracking-tighter uppercase text-white opacity-[0.03] translate-x-[-5%] whitespace-nowrap"
+                >
+                    Soluciones
+                </h2>
+            </div>
+
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="grid lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+                    <div class="lg:col-span-5 lg:sticky lg:top-32">
+                        <span
+                            class="text-samana-1 text-xs font-mono tracking-[0.5em] uppercase mb-8 block animate-fadeIn"
+                        >
+                            Nuestra Maestría
+                        </span>
+
+                        <h2
+                            class="text-5xl md:text-7xl font-serif font-bold text-white leading-[0.9] mb-10"
+                        >
+                            Tu Visión, <br />
+                            <span class="text-samana-1 italic font-light">Nuestra</span> Ejecución.
+                        </h2>
+
+                        <div class="w-20 h-[1px] bg-samana-1 mb-10"></div>
+
+                        <p class="text-xl text-gray-300 font-light leading-relaxed max-w-md">
+                            Brindamos una solución integral, eficiente y personalizada. Desde el
+                            primer boceto hasta el último detalle de terminación.
+                        </p>
+
+                        <a
+                            href="/contacto"
+                            class="inline-flex items-center gap-2 mt-12 text-white hover:text-samana-1 transition-colors group uppercase tracking-widest text-sm border-b border-transparent hover:border-samana-1 pb-1"
+                        >
+                            Iniciar Consulta
+                            <span class="group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                    </div>
+
+                    <div class="lg:col-span-7">
+                        <div class="flex flex-col">
+                            {
+                                services.map(service => (
+                                    <div class="group border-b border-white/10 py-12 hover:border-samana-1/50 transition-colors duration-500">
+                                        <div class="flex flex-col md:flex-row gap-6 md:gap-10 items-baseline">
+                                            <span class="text-samana-1/50 font-mono text-sm tracking-widest">
+                                                /{service.id}
+                                            </span>
+                                            <div class="flex-1">
+                                                <h3 class="text-3xl md:text-4xl font-bold text-white mb-4 group-hover:text-samana-1 transition-colors duration-300">
+                                                    {service.title}
+                                                </h3>
+                                                <p class="text-gray-400 font-light text-lg leading-relaxed mb-4 group-hover:text-white transition-colors duration-300">
+                                                    {service.desc}
+                                                </p>
+                                                <div class="h-0 overflow-hidden group-hover:h-auto transition-all duration-500 opacity-0 group-hover:opacity-100">
+                                                    <p class="text-sm text-samana-1/80 mt-2 font-mono tracking-wide">
+                                                        + {service.detail}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="hidden md:block opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500 text-samana-1">
+                                                ↗
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+    </main>
 </Layout>
+<style>
+    /* Efecto suave para la revelación de detalles */
+    .group:hover h3 {
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+</style>
+<script>
+    import { initAnimations } from '../scripts/animation';
+
+    document.addEventListener('astro:page-load', () => {
+        requestAnimationFrame(() => {
+            initAnimations();
+        });
+    });
+</script>
