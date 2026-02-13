@@ -18,38 +18,3 @@ import MeetTheTeam from '../components/sections/about/MeetTheTeam.astro';
         <FinalCTA />
     </section>
 </Layout>
-<script>
-    import gsap from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
-    gsap.registerPlugin(ScrollTrigger);
-
-    function initNosotrosAnimations() {
-    // Revelado del título con efecto de "máscara"
-    gsap.from('[data-reveal-text]', {
-        y: "100%",
-        rotate: 2,
-        opacity: 0,
-        duration: 2,
-        ease: 'expo.out', // El easing expo es más "limpio" y premium
-        scrollTrigger: {
-            trigger: '[data-reveal-text]',
-            start: 'top 95%',
-        },
-    });
-
-    // Revelado sutil de párrafos
-    gsap.from('[data-reveal]', {
-        y: 30,
-        opacity: 0,
-        duration: 1.5,
-        stagger: 0.3,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: '[data-reveal]',
-          start: 'top 90%',
-        }
-    });
-}
-
-    document.addEventListener('astro:page-load', initNosotrosAnimations);
-</script>

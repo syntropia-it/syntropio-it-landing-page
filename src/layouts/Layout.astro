@@ -173,6 +173,16 @@ if (!ratingsProp) {
   });
 </script>
 
+<script>
+  import { initAnimations } from "../scripts/animation";
+
+  document.addEventListener("astro:page-load", () => {
+    requestAnimationFrame(() => {
+      initAnimations();
+    });
+  });
+</script>
+
 <style is:global>
   html.lenis {
     height: auto;
