@@ -1,180 +1,176 @@
 ---
 export const prerender = true;
-import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/Layout.astro";
-import { Image } from "astro:assets";
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 
-const allProjects = await getCollection("projects");
+const allProjects = await getCollection('projects');
 allProjects.sort((a, b) => b.data.year - a.data.year);
 
-const pageTitle = "Nuestros Proyectos — Samana";
+const pageTitle = 'Nuestros Proyectos — Samana';
 ---
 
 <BaseLayout title={pageTitle} schemaType="projects">
-  <main class="bg-black relative mt-18 text-white overflow-hidden">
-    <header class="fixed top-24 left-12 z-20">
-      <h1
-        class="text-[12vw] font-bold leading-none tracking-tighter uppercase select-none opacity-90"
-      >
-        Works
-      </h1>
-    </header>
+    <main class="bg-black relative mt-18 text-white overflow-hidden">
+        <header class="fixed top-20 w-full pointer-events-none select-none">
+            <span
+                class="text-samana-1 top-14 px-[10vw] text-xs font-mono tracking-[0.5em] uppercase block"
+            >
+                Proyectos Samana
+            </span>
 
-    <section
-      id="horizontal-wrapper"
-      class="h-screen flex items-center relative"
-    >
-      <div
-        id="projects-container"
-        class="flex gap-[10vw] px-[10vw] items-center"
-      >
-        {
-          allProjects.map((p, i) => (
-            <article class="project-item shrink-0 w-[80vw] md:w-[35vw] group">
-              <a href={`/proyectos/${String(p.slug)}`} class="block">
-                <div class="relative h-[60vh] overflow-hidden bg-neutral-900 mb-6">
-                  <Image
-                    src={p.data.image}
-                    alt={p.data.title}
-                    width={1200}
-                    height={800}
-                    sizes="(min-width: 768px) 35vw, 60vw"
-                    loading={i === 0 ? "eager" : "lazy"}
-                    priority={i === 0}
-                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                </div>
-                <div class="flex flex-col md:flex-row justify-between z-30 items-start pt-4 border-t border-white/10">
-                  <h2 class="text-2xl font-bold uppercase tracking-tighter">
-                    {p.data.title}
-                  </h2>
-                  <div class="mt-2 md:mt-0 flex gap-4 items-center">
-                    <span class="text-sm font-mono text-gray-300">
-                      {p.data.year}
-                    </span>
-                    <span class="text-[11px] text-gray-300 uppercase tracking-widest">
-                      {" "}
-                      {p.data.area}m²
-                    </span>
-                  </div>
-                </div>
-              </a>
-            </article>
-          ))
-        }
-      </div>
-    </section>
+            <h1
+                class="text-[25vw] font-bold leading-none tracking-tighter uppercase opacity-[0.3] translate-x-[-5%]"
+            >
+                Proyectos
+            </h1>
+        </header>
 
-    <footer
-      class="fixed bottom-2 left-0 w-full px-12 flex justify-between items-end z-20"
-    >
-      <div class="flex flex-col bg-black/50 rounded-br-3xl p-3 gap-1">
-        <p class="text-[10px] uppercase tracking-[0.4em] text-gray-1 00">
-          Desplácese hacia abajo para explorar
-        </p>
-        <div class="text-4xl font-light font-mono" id="scroll-percentage">
-          00%
-        </div>
-      </div>
+        <section id="horizontal-wrapper" class="h-screen flex items-center relative">
+            <div id="projects-container" class="flex gap-[10vw] px-[10vw] items-center">
+                {
+                    allProjects.map((p, i) => (
+                        <article class="project-item shrink-0 w-[80vw] md:w-[35vw] group">
+                            <a href={`/proyectos/${String(p.slug)}`} class="block">
+                                <div class="relative h-[60vh] overflow-hidden bg-neutral-900 mb-6">
+                                    <Image
+                                        src={p.data.image}
+                                        alt={p.data.title}
+                                        width={1200}
+                                        height={800}
+                                        sizes="(min-width: 768px) 35vw, 60vw"
+                                        loading={i === 0 ? 'eager' : 'lazy'}
+                                        priority={i === 0}
+                                        class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                    />
+                                </div>
+                                <div class="flex flex-col md:flex-row justify-between z-30 items-start pt-4 border-t border-white/10">
+                                    <h2 class="text-2xl font-bold uppercase tracking-tighter">
+                                        {p.data.title}
+                                    </h2>
+                                    <div class="mt-2 md:mt-0 flex gap-4 items-center">
+                                        <span class="text-sm font-mono text-gray-300">
+                                            {p.data.year}
+                                        </span>
+                                        <span class="text-[11px] text-gray-300 uppercase tracking-widest">
+                                            {' '}
+                                            {p.data.area}m²
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                    ))
+                }
+            </div>
+        </section>
 
-      <div
-        class="hidden md:flex gap-12 p-3 text-[10px] uppercase tracking-widest text-gray-400"
-      >
-        <span>Buenos Aires / AR</span>
-        <a href="/blog" class="hover:text-samana-1 transition-colors"
-          >Blog ↗</a
-        >
-      </div>
-    </footer>
-  </main>
+        <footer class="fixed bottom-2 left-0 w-full px-12 flex justify-between items-end z-20">
+            <div class="flex flex-col bg-black/50 rounded-br-3xl p-3 gap-1">
+                <p class="text-[10px] uppercase tracking-[0.4em] text-gray-1 00">
+                    Desplácese hacia abajo para explorar
+                </p>
+                <div class="text-4xl font-light font-mono" id="scroll-percentage">00%</div>
+            </div>
+
+            <div
+                class="hidden md:flex gap-12 p-3 text-[10px] uppercase tracking-widest text-gray-400"
+            >
+                <span>Buenos Aires / AR</span>
+                <a href="/blog" class="hover:text-samana-1 transition-colors">Blog ↗</a>
+            </div>
+        </footer>
+    </main>
 </BaseLayout>
 
 <script>
-  import gsap from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-  gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger);
 
-  function initProjectsShowcase() {
-    const container = document.getElementById("projects-container");
-    const wrapper = document.getElementById("horizontal-wrapper");
-    const percentageText = document.getElementById("scroll-percentage");
-    const projectItems = document.querySelectorAll(".project-item");
+    function initProjectsShowcase() {
+        const container = document.getElementById('projects-container');
+        const wrapper = document.getElementById('horizontal-wrapper');
+        const percentageText = document.getElementById('scroll-percentage');
+        const projectItems = document.querySelectorAll('.project-item');
 
-    if (!container || !wrapper) return;
+        if (!container || !wrapper) return;
 
-    // 1. Scroll Horizontal Principal
-    const scrollTween = gsap.to(container, {
-      x: () => -(container.scrollWidth - window.innerWidth),
-      ease: "none",
-      scrollTrigger: {
-        trigger: wrapper,
-        pin: true,
-        scrub: 1, // Sincronizado con Lenis
-        start: "top top",
-        end: () => "+=" + container.scrollWidth,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const progress = Math.round(self.progress * 100);
-          if (percentageText) percentageText.innerText = `${progress.toString().padStart(2, "0")}%`;
-        },
-      },
-    });
+        // 1. Scroll Horizontal Principal
+        const scrollTween = gsap.to(container, {
+            x: () => -(container.scrollWidth - window.innerWidth),
+            ease: 'none',
+            scrollTrigger: {
+                trigger: wrapper,
+                pin: true,
+                scrub: 1, // Sincronizado con Lenis
+                start: 'top top',
+                end: () => '+=' + container.scrollWidth,
+                invalidateOnRefresh: true,
+                onUpdate: self => {
+                    const progress = Math.round(self.progress * 100);
+                    if (percentageText)
+                        percentageText.innerText = `${progress.toString().padStart(2, '0')}%`;
+                },
+            },
+        });
 
-    // 2. Parallax de Imágenes (El Wow Factor)
-    projectItems.forEach((item) => {
-      const img = item.querySelector("img");
-      gsap.fromTo(img, 
-        { x: "-10%" }, 
-        {
-          x: "10%",
-          ease: "none",
-          scrollTrigger: {
-            trigger: item,
-            containerAnimation: scrollTween, // Se activa con el scroll horizontal
-            start: "left right",
-            end: "right left",
-            scrub: true,
-          },
-        }
-      );
+        // 2. Parallax de Imágenes (El Wow Factor)
+        projectItems.forEach(item => {
+            const img = item.querySelector('img');
+            gsap.fromTo(
+                img,
+                { x: '-10%' },
+                {
+                    x: '10%',
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: item,
+                        containerAnimation: scrollTween, // Se activa con el scroll horizontal
+                        start: 'left right',
+                        end: 'right left',
+                        scrub: true,
+                    },
+                }
+            );
 
-      // 3. Cursor Dinámico: Cambiar texto al entrar a un proyecto
-      item.addEventListener("mouseenter", () => {
-        const globalCursorText = document.getElementById("cursor-text");
-        if (globalCursorText) globalCursorText.innerText = "VER";
-      });
-      
-      item.addEventListener("mouseleave", () => {
-        const globalCursorText = document.getElementById("cursor-text");
-        if (globalCursorText) globalCursorText.innerText = "CLICK";
-      });
-    });
-  }
+            // 3. Cursor Dinámico: Cambiar texto al entrar a un proyecto
+            item.addEventListener('mouseenter', () => {
+                const globalCursorText = document.getElementById('cursor-text');
+                if (globalCursorText) globalCursorText.innerText = 'VER';
+            });
 
-  document.addEventListener("astro:page-load", initProjectsShowcase);
+            item.addEventListener('mouseleave', () => {
+                const globalCursorText = document.getElementById('cursor-text');
+                if (globalCursorText) globalCursorText.innerText = 'CLICK';
+            });
+        });
+    }
+
+    document.addEventListener('astro:page-load', initProjectsShowcase);
 </script>
 
 <style>
-  /* Optimizaciones de renderizado nivel Awwwards */
-  #projects-container {
-    will-change: transform;
-     contain: layout paint;
-  }
+    /* Optimizaciones de renderizado nivel Awwwards */
+    #projects-container {
+        will-change: transform;
+        contain: layout paint;
+    }
 
-  .project-item img {
-    /* El contenedor debe ser más pequeño que la imagen para que el parallax funcione */
-    width: 120%; 
-    height: 100%;
-    object-fit: cover;
-    margin-left: 10%; /* Centramos la imagen expandida */
-    will-change: transform;
-  }
+    .project-item img {
+        /* El contenedor debe ser más pequeño que la imagen para que el parallax funcione */
+        width: 120%;
+        height: 100%;
+        object-fit: cover;
+        margin-left: 10%; /* Centramos la imagen expandida */
+        will-change: transform;
+    }
 
-  /* Efecto de foco sutil */
-  #projects-container:hover .project-item:not(:hover) {
-    filter: blur(2px) grayscale(0.8);
-    opacity: 0.7;
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
+    /* Efecto de foco sutil */
+    #projects-container:hover .project-item:not(:hover) {
+        filter: blur(2px) grayscale(0.8);
+        opacity: 0.7;
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 </style>
