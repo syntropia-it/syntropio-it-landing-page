@@ -71,7 +71,7 @@ function revealGroups() {
         gsap.from(items, {
             y: 60,
             opacity: 0,
-            duration: 1.2,
+            duration: 1.5,
             stagger: 0.2, // Efecto cascada entre el 01 y el 04
             ease: 'expo.out',
             scrollTrigger: {
