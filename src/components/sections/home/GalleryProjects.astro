@@ -120,66 +120,106 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
 
   gsap.registerPlugin(ScrollTrigger);
 
+  let ctx; // Variable para almacenar el contexto de GSAP
+
   function initHorizontalScroll() {
+    // 1. Limpieza preventiva: Si existe una instancia previa, la matamos
+    if (ctx) ctx.revert();
+
+    // 2. Selección de elementos
     const track = document.querySelector('[data-projects-track]');
     const section = document.querySelector('#proyectos-preview');
 
     if (!track || !section) return;
 
-    const getScrollAmount = () => -(track.scrollWidth - window.innerWidth);
+    // 3. Contexto de GSAP (Encapsula todas las animaciones para limpieza fácil)
+    ctx = gsap.context(() => {
+      
+      // Cálculo del ancho real (ScrollAmount)
+      const getScrollAmount = () => {
+        let trackWidth = track.scrollWidth;
+        return -(trackWidth - window.innerWidth);
+      };
 
-    const tween = gsap.to(track, {
-      x: getScrollAmount,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${track.scrollWidth}`, 
-        pin: true,
-        scrub: 1,
-        invalidateOnRefresh: true, 
-      },
-    });
-
-    
-    const images = track.querySelectorAll('img');
-    images.forEach(img => {
-      gsap.to(img, {
-        x: -40, 
+      // Animación Principal del Track
+      const tween = gsap.to(track, {
+        x: getScrollAmount,
         ease: 'none',
         scrollTrigger: {
-          trigger: img,
-          containerAnimation: tween, 
-          start: 'left right',
-          end: 'right left',
-          scrub: true,
-        }
+          trigger: section,
+          start: 'top top',
+          // Calculamos la duración basada en el ancho real
+          end: () => `+=${track.scrollWidth - window.innerWidth}`, 
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true, // Recalcula si cambia el tamaño de ventana
+          anticipatePin: 1, // Suaviza el inicio del pin
+        },
       });
-    });
+
+      // Efecto Parallax en las imágenes internas
+      const images = track.querySelectorAll('img');
+      images.forEach(img => {
+        gsap.to(img, {
+          x: -40, // Aumenté el parallax para que sea más notable y fluido
+          ease: 'none',
+          scrollTrigger: {
+            trigger: img,
+            containerAnimation: tween, // Vinculado al scroll horizontal
+            start: 'left right',
+            end: 'right left',
+            scrub: true,
+          }
+        });
+      });
+
+    }, section); // Scopeamos el contexto a la sección
   }
 
-  // Astro Lifecycle: Sincronizado con el Layout
-  document.addEventListener('astro:page-load', initHorizontalScroll);
+  // 4. Ciclo de Vida de Astro (Manejo de Transiciones)
+  
+  // Al cargar la página (inicial o navegación)
+  document.addEventListener('astro:page-load', () => {
+    // Usamos requestAnimationFrame para asegurar que el DOM esté pintado
+    requestAnimationFrame(() => {
+       initHorizontalScroll();
+       // Forzamos un refresh después de un pequeño delay para asegurar carga de imágenes
+       setTimeout(() => ScrollTrigger.refresh(), 500); 
+    });
+  });
+
+  // Antes de cambiar de página (Limpieza CRÍTICA)
+  document.addEventListener('astro:before-swap', () => {
+    if (ctx) ctx.revert(); // Elimina pin-spacers y eventos
+    ScrollTrigger.getAll().forEach(t => t.kill());
+  });
 </script>
 
 <style>
-  /* Optimizaciones de rendimiento */
+  /* Fix para evitar parpadeos en Safari/Mobile */
   #proyectos-preview {
-    /* Evitamos layout shifts durante el pinning */
     will-change: transform;
+    overflow: hidden; /* Mantenemos hidden para recortar bordes */
   }
 
+  /* El track debe tener ancho dinámico */
   [data-projects-track] {
+    display: flex;
+    width: max-content; /* Asegura que tome el ancho de los hijos */
+    height: 100%;
     will-change: transform;
   }
 
+  /* Estilos de imagen */
   img {
-    filter: grayscale(1);
-    transform: translateZ(0); 
-    transition: filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    filter: grayscale(100%);
+    transform: translateZ(0); /* Aceleración GPU */
+    transition: filter 0.6s ease-out, transform 1s ease-out;
+    backface-visibility: hidden;
   }
 
   .group:hover img {
-    filter: grayscale(0);
+    filter: grayscale(0%);
+    transform: scale(1.05); /* Efecto zoom sutil */
   }
 </style>
