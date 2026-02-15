@@ -18,7 +18,7 @@ const navLinks = [
 >
     <a
         href="/"
-        class="text-2xl sm:text-4xl font-bold tracking-tighter flex items-center gap-2 group z-100"
+        class="text-2xl sm:text-3xl font-bold tracking-tighter flex items-center gap-2 group z-100"
     >
         <Image src={iso} alt="Samana Logo" width={150} height={150} loading="eager" fetchpriority="high" class="w-12 h-12" />
         <span class="transition-colors duration-300 group-hover:text-[rgb(255,215,0)]">SAMANA</span>
@@ -45,7 +45,7 @@ const navLinks = [
         />
     </button>
 
-    <div class="hidden md:flex gap-8 text-lg font-medium items-center tracking-wide text-gray-300">
+    <div class="hidden md:flex gap-6 text-lg font-medium items-center tracking-wide text-gray-300">
         {
             navLinks.map(link => (
                 <a href={link.href} class="hover:text-white transition-colors duration-300">
