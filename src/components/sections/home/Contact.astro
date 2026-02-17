@@ -62,134 +62,10 @@
     </div>
 
     <div
-      class="form-card bg-neutral-900/40 backdrop-blur-2xl border border-white/5 p-8 md:p-12 shadow-2xl min-h-550px flex flex-col justify-center relative overflow-hidden group"
+      class="form-card bg-neutral-900/40 backdrop-blur-2xl border border-white/5 p-8 md:p-12 shadow-2xl min-h-600px flex flex-col justify-center relative overflow-hidden group"
     >
-      <form id="samana-form" data-current-step="1" class="relative">
-        <div class="step-content" data-step="1">
-          <h3
-            class="text-2xl font-bold mb-8 text-white uppercase tracking-tight"
-          >
-            ¿Qué solución requieres?
-          </h3>
-          <div class="grid gap-3">
-            {
-              [
-                "Reformas Integrales",
-                "Proyectos Inmobiliarios",
-                "Diseño y Renderizado",
-                "Provisión de Materiales",
-              ].map((opt) => (
-                <button
-                  type="button"
-                  data-value={opt}
-                  data-key="type"
-                  class="form-option group border border-white/5 p-5 hover:bg-white/5 text-left transition-all border-l-2 border-l-transparent hover:border-l-samana-1 translate-x-0"
-                >
-                  <span class="text-sm tracking-widest uppercase text-gray-400 group-hover:text-white transition-colors">
-                    {opt}
-                  </span>
-                </button>
-              ))
-            }
-          </div>
-        </div>
-
-        <div class="step-content hidden" data-step="2">
-          <button
-            type="button"
-            class="prev-step text-[10px] tracking-widest text-gray-300 hover:text-samana-1 mb-8 uppercase flex items-center gap-2 transition-colors"
-          >
-            <span class="text-lg">←</span> Volver
-          </button>
-          <h3
-            class="text-2xl font-bold mb-8 text-white uppercase tracking-tight"
-          >
-            Tipo de Propiedad
-          </h3>
-          <div class="grid grid-cols-2 gap-3">
-            {
-              ["Casa", "Departamento", "Oficina", "Local"].map((prop) => (
-                <button
-                  type="button"
-                  data-value={prop}
-                  data-key="property"
-                  class="form-option border border-white/5 p-8 hover:bg-white/5 flex flex-col items-center gap-4 transition-all group"
-                >
-                  <span class="text-xs tracking-widest uppercase text-gray-400 group-hover:text-white">
-                    {prop}
-                  </span>
-                </button>
-              ))
-            }
-          </div>
-        </div>
-
-        <div class="step-content hidden" data-step="3">
-          <button
-            type="button"
-            class="prev-step text-[10px] tracking-widest text-gray-300 hover:text-samana-1 mb-8 uppercase flex items-center gap-2"
-          >
-            <span class="text-lg">←</span> Volver
-          </button>
-          <h3
-            class="text-2xl font-bold mb-8 text-white uppercase tracking-tight text-area-title"
-          >
-            Área a Intervenir
-          </h3>
-          <div id="area-options" class="grid gap-3"></div>
-        </div>
-
-        <div class="step-content hidden" data-step="4">
-          <button
-            type="button"
-            class="prev-step text-[10px] tracking-widest text-gray-300 hover:text-samana-1 mb-8 uppercase flex items-center gap-2"
-          >
-            <span class="text-lg">←</span> Volver
-          </button>
-          <h3
-            class="text-2xl font-bold mb-8 text-white uppercase tracking-tight"
-          >
-            Detalles Finales
-          </h3>
-          <div class="space-y-4">
-            <div class="relative">
-              <input
-                type="text"
-                name="name"
-                required
-                placeholder="NOMBRE COMPLETO"
-                class="form-input focus:outline-none focus:ring-0 w-full p-2 peer"
-              />
-              <div
-                class="absolute bottom-0 left-0 w-0 h-1px bg-samana-1 transition-all duration-500 peer-focus:w-full"
-              >
-              </div>
-            </div>
-            <div class="relative">
-              <input
-                type="email"
-                name="email"
-                required
-                placeholder="EMAIL DE CONTACTO"
-                class="form-input w-full focus:outline-none focus:ring-0 p-2 peer"
-              />
-              <div
-                class="absolute bottom-0 left-0 w-0 h-1px bg-samana-1 transition-all duration-500 peer-focus:w-full"
-              >
-              </div>
-            </div>
-            <textarea
-              name="vision"
-              placeholder="CUÉNTANOS TU VISIÓN..."
-              class="form-input h-32 w-full p-2 resize-none"></textarea>
-            <button
-              type="submit"
-              class="w-full bg-samana-1 text-black font-bold py-5 mt-6 tracking-[0.2em] uppercase hover:bg-white transition-all duration-500 shadow-lg shadow-samana-1/10"
-            >
-              Enviar Proyecto
-            </button>
-          </div>
-        </div>
+      <form id="samana-form" class="relative">
+        <div id="step-container"></div>
       </form>
     </div>
   </div>
@@ -197,194 +73,256 @@
   <script>
     import gsap from "gsap";
 
-    interface SamanaData {
-      type: string;
-      property: string;
-      area: string;
-      [key: string]: string;
-    }
+    // Definición de la estructura del árbol basada en el diagrama [cite: 1, 20]
+    const FLOW_TREE = {
+      start: {
+        question: "¿QUÉ ESTÁS PENSANDO?", // [cite: 13]
+        options: [
+          {
+            label: "QUIERO REMODELAR",
+            next: "remodelar_tipo",
+            value: "remodelar",
+          }, //
+          {
+            label: "QUIERO CONSTRUIR",
+            next: "construir_inicio",
+            value: "construir",
+          }, //
+        ],
+      },
+      // RAMA REMODELAR
+      remodelar_tipo: {
+        question: "¿QUÉ TIPO DE PROPIEDAD NECESITAS REFORMAR?", //
+        options: [
+          {
+            label: "DEPARTAMENTO",
+            next: "remodelar_m2",
+            value: "departamento",
+          }, // [cite: 3]
+          { label: "CASA", next: "remodelar_m2", value: "casa" }, // [cite: 4]
+        ],
+      },
+      remodelar_m2: {
+        question: "¿CUÁNTOS M2 TIENE LA PROPIEDAD?", // [cite: 7]
+        options: [
+          { label: "-100 m²", next: "zona", value: "-100" }, // [cite: 6]
+          { label: "100 a 200 m²", next: "zona", value: "100-200" }, // [cite: 8]
+          { label: "+200 m²", next: "zona", value: "+200" }, // [cite: 10]
+        ],
+      },
+      // RAMA CONSTRUIR
+      construir_inicio: {
+        question: "CONTANOS", // [cite: 21]
+        options: [
+          {
+            label: "YA TENGO TERRENO",
+            next: "terreno_m2",
+            value: "con_terreno",
+          }, // [cite: 18]
+          {
+            label: "QUIERO COMPRAR",
+            next: "terreno_m2_buscar",
+            value: "buscar_terreno",
+          }, // [cite: 22]
+        ],
+      },
+      terreno_m2: {
+        question: "¿CUÁNTOS M2 TIENE TU TERRENO?", // [cite: 19]
+        options: [
+          { label: "100 a 200 m²", next: "zona", value: "100-200" }, // [cite: 14]
+          { label: "200 a 500 m²", next: "zona", value: "200-500" }, //
+          { label: "+500 m²", next: "zona", value: "+500" }, // [cite: 25]
+        ],
+      },
+      terreno_m2_buscar: {
+        question: "¿DE CUÁNTOS M2 ESTÁS BUSCANDO?", // [cite: 23]
+        options: [
+          { label: "100 a 200 m²", next: "zona", value: "100-200" }, // [cite: 26]
+          { label: "200 a 500 m²", next: "zona", value: "200-500" }, // [cite: 27]
+          { label: "-500 m²", next: "zona", value: "-500" }, // [cite: 28]
+        ],
+      },
+      // PASO FINAL COMÚN
+      zona: {
+        question: "¿EN QUÉ ZONA SE ENCUENTRA / TE INTERESA?", // [cite: 30, 31]
+        isFinal: true,
+      },
+    };
 
     class SamanaForm {
-      private form: HTMLFormElement | null;
-      private steps: NodeListOf<HTMLElement>;
-      private indicators: NodeListOf<HTMLElement>;
-      private label: HTMLElement | null;
-      private progressBar: HTMLElement | null;
-      private formData: SamanaData;
-      private currentStep: number;
-      private areaOpts: Record<string, string[]>;
-      private stepLabels: string[] = [
-        "Servicio",
-        "Propiedad",
-        "Área",
-        "Contacto",
-      ];
+      private container = document.getElementById("step-container");
+      private progressBar = document.getElementById("progress-bar-line");
+      private label = document.getElementById("step-label");
+      private form = document.getElementById("samana-form") as HTMLFormElement;
+      private history: string[] = ["start"];
+      private formData: any = {};
 
       constructor() {
-        this.form = document.getElementById("samana-form") as HTMLFormElement;
-        this.steps = document.querySelectorAll(".step-content");
-        this.indicators = document.querySelectorAll("[data-step-indicator]");
-        this.progressBar = document.getElementById("progress-bar-line");
-        this.label = document.getElementById("step-label");
-        this.formData = { type: "", property: "", area: "" };
-        this.currentStep = 1;
-
-        this.areaOpts = {
-          Casa: [
-            "Baño Principal",
-            "Cocina Integral",
-            "Jardín / Exterior",
-            "Fachada",
-          ],
-          Departamento: ["Baño", "Cocina", "Living Comedor", "Integral"],
-          Oficina: ["Sala de Juntas", "Recepción", "Open Space"],
-          Local: ["Vidriera", "Interior", "Probadores"],
-        };
-
         this.init();
       }
 
-      private init(): void {
-        if (!this.form) return;
-        this.updateProgress();
-        this.setupListeners();
+      private init() {
+        if (!this.form || !this.container) return;
+        this.renderStep("start");
+
+        this.form.addEventListener("submit", (e) => this.handleSubmit(e));
       }
 
-      private setupListeners(): void {
-        // Click en opciones iniciales
-        if (!this.form) return;
-        document.querySelectorAll(".form-option").forEach((btn) => {
-          const button = btn as HTMLButtonElement;
-          button.addEventListener("click", () => {
-            const key = button.dataset.key || "";
-            const value = button.dataset.value || "";
-            this.handleTransition(1, () => this.handleSelection(key, value));
+      private renderStep(stepKey: string) {
+        const step = (FLOW_TREE as any)[stepKey];
+        if (!this.container) return;
+
+        // Actualizar progreso (estimado 4 pasos)
+        const progress = (this.history.length / 4) * 100;
+        gsap.to(this.progressBar, { width: `${progress}%`, duration: 0.5 });
+        if (this.label) this.label.innerText = `Paso ${this.history.length}`;
+
+        let html = "";
+
+        // Botón volver
+        if (this.history.length > 1) {
+          html += `<button type="button" id="prev-btn" class="text-[10px] tracking-widest text-gray-300 hover:text-samana-1 mb-8 uppercase flex items-center gap-2"><span class="text-lg">←</span> Volver</button>`;
+        }
+
+        html += `<h3 class="text-2xl font-bold mb-8 text-white uppercase tracking-tight">${step.question}</h3>`;
+
+        if (step.isFinal) {
+          html += this.renderFinalForm();
+        } else {
+          html += `<div class="grid gap-3">`;
+          step.options.forEach((opt: any) => {
+            html += `
+            <button 
+            type="button" 
+            data-next="${opt.next}" 
+            data-value="${opt.value}" 
+            class="step-opt group border border-white/5 p-8 hover:bg-white/5 text-left transition-all border-l-2 border-l-transparent hover:border-l-samana-1"
+            >
+              <span 
+              class="text-sm tracking-widest uppercase text-gray-400 group-hover:text-white"
+              >${opt.label}</span>
+            </button>`;
+          });
+          html += `</div>`;
+        }
+
+        this.container.innerHTML = html;
+        this.setupListeners(stepKey);
+      }
+
+      private renderFinalForm() {
+        return `
+    <div class="space-y-6">
+      <div class="relative group">
+        <input 
+          type="text" 
+          name="zona" 
+          required 
+          placeholder="ZONA O BARRIO (EJM: NORDELTA)" 
+          class="form-input w-full p-2 focus:outline-none bg-transparent peer" 
+        />
+        <div class="absolute bottom-0 left-0 w-0 h-[1px] bg-samana-1 transition-all duration-500 peer-focus:w-full"></div>
+      </div>
+
+      <div class="relative group">
+        <input 
+          type="text" 
+          name="name" 
+          required 
+          placeholder="NOMBRE COMPLETO" 
+          class="form-input w-full p-2 focus:outline-none bg-transparent peer" 
+        />
+        <div class="absolute bottom-0 left-0 w-0 h-[1px] bg-samana-1 transition-all duration-500 peer-focus:w-full"></div>
+      </div>
+
+      <div class="relative group">
+        <input 
+          type="email" 
+          name="email" 
+          required 
+          placeholder="EMAIL DE CONTACTO" 
+          class="form-input w-full p-2 focus:outline-none bg-transparent peer" 
+        />
+        <div class="absolute bottom-0 left-0 w-0 h-[1px] bg-samana-1 transition-all duration-500 peer-focus:w-full"></div>
+      </div>
+
+      <div class="relative group">
+        <input 
+          type="tel" 
+          name="phone" 
+          required 
+          placeholder="TELÉFONO DE CONTACTO" 
+          class="form-input w-full p-2 focus:outline-none bg-transparent peer" 
+        />
+        <div class="absolute bottom-0 left-0 w-0 h-[1px] bg-samana-1 transition-all duration-500 peer-focus:w-full"></div>
+      </div>
+
+      <div class="relative group">
+        <textarea 
+          name="vision" 
+          placeholder="CUÉNTANOS TU VISIÓN..." 
+          class="form-input h-32 w-full p-2 resize-none focus:outline-none bg-transparent peer"
+        ></textarea>
+        <div class="absolute bottom-0 left-0 w-0 h-[1px] bg-samana-1 transition-all duration-500 peer-focus:w-full"></div>
+      </div>
+
+      <button type="submit" class="w-full bg-samana-1 text-black font-bold py-5 mt-6 tracking-[0.2em] uppercase hover:bg-white transition-all duration-500 shadow-lg shadow-samana-1/10">
+        Enviar Proyecto
+      </button>
+    </div>`;
+      }
+
+      private setupListeners(stepKey: string) {
+        // Opciones
+        this.container?.querySelectorAll(".step-opt").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const target = e.currentTarget as HTMLButtonElement;
+            this.formData[stepKey] = target.dataset.value;
+            this.history.push(target.dataset.next!);
+            this.transition(() => this.renderStep(target.dataset.next!));
           });
         });
 
-        // Botones de retroceso
-        document.querySelectorAll(".prev-step").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            this.handleTransition(-1, () =>
-              this.goToStep(this.currentStep - 1),
-            );
-          });
+        // Volver
+        document.getElementById("prev-btn")?.addEventListener("click", () => {
+          this.history.pop();
+          this.transition(() =>
+            this.renderStep(this.history[this.history.length - 1]),
+          );
         });
 
-        this.form.addEventListener("submit", (e) => {
-          e.preventDefault();
-          this.handleSubmit(e);
-        });
       }
 
-      // Maneja la dirección de la animación (entrada/salida)
-      private handleTransition(direction: number, callback: Function): void {
-        const xOffset = direction > 0 ? -40 : 40;
-        gsap.to(this.form, {
+      private transition(cb: Function) {
+        gsap.to(this.container, {
           opacity: 0,
-          x: xOffset,
-          duration: 0.4,
-          ease: "power2.in",
+          x: -20,
+          duration: 0.3,
           onComplete: () => {
-            callback();
-            gsap.fromTo(
-              this.form,
-              { opacity: 0, x: -xOffset },
-              { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" },
-            );
+            cb();
+            gsap.to(this.container, { opacity: 1, x: 0, duration: 0.3 });
           },
         });
       }
 
-      private handleSelection(key: string, value: string): void {
-        this.formData[key] = value;
-        if (key === "property") this.renderAreaOptions(value);
-        this.goToStep(this.currentStep + 1);
-      }
-
-      private renderAreaOptions(property: string): void {
-        const container = document.getElementById("area-options");
-        if (!container) return;
-
-        const options = this.areaOpts[property] || this.areaOpts["Casa"];
-        container.innerHTML = options
-          .map(
-            (opt) => `
-                <button type="button" data-value="${opt}" class="form-option-dynamic border border-white/5 p-5 hover:bg-white/5 text-left transition-all border-l-2 border-l-transparent hover:border-l-samana-1 uppercase text-[10px] tracking-widest text-gray-400 hover:text-white">
-                    ${opt}
-                </button>
-            `,
-          )
-          .join("");
-
-        container.querySelectorAll(".form-option-dynamic").forEach((btn) => {
-          const button = btn as HTMLButtonElement;
-          button.addEventListener("click", () => {
-            this.handleTransition(1, () => {
-              this.formData.area = button.dataset.value || "";
-              this.goToStep(this.currentStep + 1);
-            });
-          });
-        });
-      }
-
-      private goToStep(step: number): void {
-        this.steps.forEach((s) => s.classList.add("hidden"));
-        const next = document.querySelector(
-          `[data-step="${step}"]`,
-        ) as HTMLElement;
-        if (next) {
-          next.classList.remove("hidden");
-          this.currentStep = step;
-          this.updateProgress();
-        }
-      }
-
-      private updateProgress(): void {
-        if (this.label)
-          this.label.innerText = `Paso ${this.currentStep}: ${this.stepLabels[this.currentStep - 1]}`;
-
-        const progressPercentage =
-          ((this.currentStep - 1) / (this.indicators.length - 1)) * 100;
-        gsap.to(this.progressBar, {
-          width: `${progressPercentage}%`,
-          duration: 0.8,
-          ease: "expo.out",
-        });
-
-        this.indicators.forEach((ind, i) => {
-          const indicator = ind as HTMLElement;
-          const isActive = i + 1 <= this.currentStep;
-          gsap.to(indicator, {
-            backgroundColor: isActive ? "#FFD700" : "rgba(255,255,255,0.1)",
-            scaleX: isActive ? 1.2 : 1,
-            duration: 0.8,
-            ease: "expo.out",
-          });
-        });
-      }
-
-      private async handleSubmit(e: Event): Promise<void> {
+      private async handleSubmit(e: Event) {
         e.preventDefault();
         const formElement = e.target as HTMLFormElement;
         const submitBtn = formElement.querySelector(
           'button[type="submit"]',
         ) as HTMLButtonElement;
 
-        // UI Feedback
-        submitBtn.disabled = true;
-        const originalText = submitBtn.innerText;
-        submitBtn.innerText = "PROCESANDO TU VISIÓN...";
+        if (!submitBtn) return;
 
+        submitBtn.disabled = true;
+        submitBtn.innerText = "PROCESANDO TU VISIÓN...";
         try {
-          // Collect form data
           const formData = new FormData(formElement);
           const payload = {
             ...this.formData,
             ...Object.fromEntries(formData),
           };
 
-          // Track form submission in GA4
           if ((window as any).gtag) {
             (window as any).gtag("event", "form_submit", {
               form_name: "samana_contact",
@@ -395,7 +333,6 @@
             });
           }
 
-          // Send to Formspree
           const response = await fetch("https://formspree.io/f/mykdzvoy", {
             method: "POST",
             headers: {
@@ -408,7 +345,7 @@
           if (response.ok) {
             this.showSuccessState();
           } else {
-            throw new Error("Form submission failed");
+            throw new Error("Error en la respuesta del servidor");
           }
         } catch (error) {
           console.error("Form submission error:", error);

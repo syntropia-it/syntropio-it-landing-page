@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -16,23 +17,261 @@ interface Props {
 
 const { post } = Astro.props as Props;
 const { Content } = await post.render();
-const { title, description, image } = post.data;
-const canonical = new URL(
-  `/blog/${post.slug}`,
-  Astro.site ?? "https://www.samanatransformaciones.com",
-);
+const {
+  title,
+  description,
+  image,
+  author,
+  publishDate,
+  category,
+  draft,
+  featured,
+  tags,
+} = post.data;
+const site = Astro.site?.origin ?? "https://www.samanatransformaciones.com";
+const canonicalURL = new URL(`/blog/${post.slug}`, site).toString();
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Inicio", item: site },
+    { "@type": "ListItem", position: 2, name: "Blog", item: `${site}/blog` },
+    { "@type": "ListItem", position: 3, name: title, item: canonicalURL },
+  ],
+};
+const additionalSchema = [breadcrumbSchema];
 ---
 
 <Layout
   title={`${title} | Samana Transformaciones`}
   description={description}
-  schemaType="projects"
-  canonical={canonical.toString()}
+  schemaType="blog"
+  canonical={canonicalURL}
+  additionalSchema={additionalSchema}
 >
-  <main class="container mx-auto py-20 px-6">
-    <article class="prose prose-invert prose-samana max-w-3xl mx-auto">
-      <h1>{title}</h1>
-      <Content />
-    </article>
+  <main
+    class="bg-linear-to-b from-transparent via-black to-amber-900/20 text-white"
+  >
+    <header
+      data-hero
+      class="relative min-h-[80vh] flex flex-col justify-between py-12 overflow-hidden"
+    >
+      <nav aria-label="breadcrumb" class="px-6 mt-16 mb-2 animate-fadeIn z-20">
+        <ol
+          class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400"
+        >
+          <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
+          <li>/</li>
+          <li>
+            <a href="/blog" class="hover:text-samana-1">Articulos</a>
+          </li>
+          <li>/</li>
+          <li class="text-samana-1">{title}</li>
+        </ol>
+      </nav>
+
+      <!-- Título -->
+      <div
+        class="px-10 z-20 border-t border-white/20 pt-6 mix-blend-difference"
+      >
+        <h1
+          class="hero-title text-[12vw] lg:text-[8vw] font-serif font-black leading-[0.9] uppercase tracking-tighter"
+        >
+          {title}
+        </h1>
+      </div>
+
+      <!-- Meta -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-12 gap-8 px-10 pt-8 z-20 border-t border-white/20 mt-4 md:mt-12"
+      >
+        <div class="md:col-span-3">
+          <p class="text-[10px] uppercase tracking-widest text-gray-400">
+            Autor
+          </p>
+          <p class="text-lg uppercase">{author}</p>
+        </div>
+        <div class="md:col-span-3">
+          <p class="text-[10px] uppercase tracking-widest text-gray-400">
+            Fecha
+          </p>
+          <p class="text-lg uppercase">
+            {
+              publishDate.toLocaleDateString("es-ES", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })
+            }
+          </p>
+        </div>
+        <div class="md:col-span-3">
+          <p class="text-[10px] uppercase tracking-widest text-gray-400">
+            Categoria
+          </p>
+          <p class="text-lg uppercase">{category}</p>
+        </div>
+        <div class="md:col-span-3">
+          <p class="text-[10px] uppercase tracking-widest text-gray-400">
+            Descripción
+          </p>
+          <p class="text-sm text-gray-300">{description}</p>
+        </div>
+      </div>
+
+      <!-- Overlay -->
+      <div
+        class="absolute inset-0 bg-linear-to-b from-black/90 via-black/70 to-black z-10"
+      >
+      </div>
+
+      <!-- Imagen Parallax (WRAPPER) -->
+      <div
+        id="hero-parallax-img"
+        class="absolute inset-0 z-0 h-[130%] will-change-transform"
+      >
+        <Image
+          src={image}
+          alt={title}
+          class="w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </header>
+    <section class="py-32 px-6 relative z-20">
+      <article
+        class="container mx-auto max-w-4xl prose prose-invert prose-samana"
+      >
+        <Content />
+      </article>
+    </section>
   </main>
 </Layout>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import Lenis from "lenis";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initSmoothScroll() {
+    // 1. Inicializar Lenis
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing suave profesional
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+    });
+
+    // 2. Sincronizar Lenis con ScrollTrigger
+    lenis.on("scroll", ScrollTrigger.update);
+
+    // 3. Integrar el ticker de GSAP para que ambos corran en el mismo frame
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    // Desactivar el suavizado de lag de GSAP para que no compita con Lenis
+    gsap.ticker.lagSmoothing(0);
+
+    return lenis;
+  }
+
+  function initHeroParallax() {
+    const hero = document.querySelector("[data-hero]");
+    const image = document.getElementById("hero-parallax-img");
+
+    if (!hero || !image) return;
+
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+
+    gsap.fromTo(
+      image,
+      { yPercent: -15 }, // Un poco más de recorrido para notar la fluidez
+      {
+        yPercent: 15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "bottom top",
+          scrub: true, // El scrub ahora será mucho más suave gracias a Lenis
+        },
+      },
+    );
+  }
+
+  // Manejo de ciclo de vida de Astro
+  document.addEventListener("astro:page-load", () => {
+    const lenisInstance = initSmoothScroll();
+    initHeroParallax();
+
+    // Limpieza al cambiar de página para evitar duplicados
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        lenisInstance.destroy();
+      },
+      { once: true },
+    );
+  });
+  function initScrollReveals() {
+    // 1. Revelado para encabezados y párrafos del contenido (Staggered)
+    const contentElements = document.querySelectorAll(
+      ".prose-samana h2, .prose-samana p, .prose-samana li",
+    );
+
+    contentElements.forEach((el) => {
+      gsap.from(el, {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 90%", // Empieza cuando el elemento está cerca del fondo
+          toggleActions: "play none none none", // Solo se ejecuta una vez
+        },
+      });
+    });
+
+    // 2. Revelado para imágenes con efecto de escala (Estilo Galería)
+    const images = document.querySelectorAll(".prose-samana img");
+
+    images.forEach((img) => {
+      // Creamos un wrapper para la imagen si queremos un efecto de "clip-path" pro
+      // Pero para mantenerlo simple y efectivo:
+      gsap.from(img, {
+        scale: 1.1,
+        opacity: 0,
+        y: 30,
+        duration: 1.5,
+        ease: "expo.out",
+        scrollTrigger: {
+          trigger: img,
+          start: "top 85%",
+          scrub: false,
+        },
+      });
+    });
+  }
+
+  // Actualizamos el listener de Astro
+  document.addEventListener("astro:page-load", () => {
+    const lenisInstance = initSmoothScroll();
+    initHeroParallax();
+    initScrollReveals(); // <-- Invocamos los revelados
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        lenisInstance.destroy();
+      },
+      { once: true },
+    );
+  });
+</script>

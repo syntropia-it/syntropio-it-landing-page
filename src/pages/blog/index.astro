@@ -1,0 +1,188 @@
+---
+export const prerender = true;
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/Layout.astro";
+import { Image } from "astro:assets";
+
+const allArticles = await getCollection("blog");
+allArticles.sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
+);
+
+const pageTitle = "Articulos — Samana";
+---
+
+<BaseLayout title={pageTitle} schemaType="blog">
+  <main class="bg-black relative mt-18 text-white overflow-hidden">
+    <header class="fixed top-20 w-full pointer-events-none select-none">
+      <span
+        class="text-samana-1 pt-8 px-[10vw] text-xs font-mono tracking-[0.5em] uppercase block"
+        data-reveal-text
+      >
+        Blog Samana
+      </span>
+
+      <h1
+        class="text-[20vw] font-bold leading-none tracking-tighter uppercase opacity-[0.3] translate-x-[-5%]"
+        data-reveal
+      >
+        Articulos
+      </h1>
+    </header>
+
+    <section
+      id="horizontal-wrapper"
+      class="h-screen flex items-center relative"
+    >
+      <div id="blog-container" class="flex gap-[10vw] px-[10vw] items-center">
+        {
+          allArticles.map((p, i) => (
+            <article class="blog-item shrink-0 w-[80vw] sm:w-[50vw] lg:w-[35vw] group">
+              <a href={`/blog/${String(p.slug)}`} class="block">
+                <div class="relative h-[40vh] overflow-hidden bg-neutral-900 mb-2">
+                  <Image
+                    src={p.data.image}
+                    alt={p.data.title}
+                    width={900}
+                    height={600}
+                    sizes="(min-width: 768px) 35vw, 60vw"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    priority={i === 0}
+                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </div>
+                <div class="flex flex-col md:flex-row justify-between z-30 items-start pt-4 border-t border-white/10">
+                  <h2 class="text-lg md:text-xl font-bold uppercase tracking-tighter">
+                    {p.data.title}
+                  </h2>
+                  <div class="mt-2 md:mt-0 flex gap-4 items-center">
+                    <span class="text-[11px] text-gray-300 uppercase tracking-widest">
+                      {" "}
+                      {p.data.category}
+                    </span>
+                    <span class="text-sm font-mono text-gray-300">
+                      {p.data.publishDate.toLocaleDateString("es-AR", {
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <footer
+      class="fixed bottom-2 left-0 w-full px-12 flex justify-between items-end z-20"
+    >
+      <div class="flex flex-col bg-black/50 rounded-br-3xl p-3 gap-1">
+        <p class="text-[10px] uppercase tracking-[0.4em] text-gray-1 00">
+          Desplácese hacia abajo
+        </p>
+        <div class="text-4xl font-light font-mono" id="scroll-percentage">
+          00%
+        </div>
+      </div>
+
+      <div
+        class="hidden md:flex gap-12 p-3 text-[10px] uppercase tracking-widest text-gray-400"
+      >
+        <span>Buenos Aires / AR</span>
+        <a href="/proyectos" class="hover:text-samana-1 transition-colors"
+          >Proyectos ↗</a
+        >
+      </div>
+    </footer>
+  </main>
+</BaseLayout>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initProjectsShowcase() {
+    const container = document.getElementById("blog-container");
+    const wrapper = document.getElementById("horizontal-wrapper");
+    const percentageText = document.getElementById("scroll-percentage");
+    const projectItems = document.querySelectorAll(".blog-item");
+
+    if (!container || !wrapper) return;
+
+    // 1. Scroll Horizontal Principal
+    const scrollTween = gsap.to(container, {
+      x: () => -(container.scrollWidth - window.innerWidth),
+      ease: "none",
+      scrollTrigger: {
+        trigger: wrapper,
+        pin: true,
+        scrub: 1, // Sincronizado con Lenis
+        start: "top top",
+        end: () => "+=" + container.scrollWidth,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const progress = Math.round(self.progress * 100);
+          if (percentageText)
+            percentageText.innerText = `${progress.toString().padStart(2, "0")}%`;
+        },
+      },
+    });
+
+    // 2. Parallax de Imágenes (El Wow Factor)
+    projectItems.forEach((item) => {
+      const img = item.querySelector("img");
+      gsap.fromTo(
+        img,
+        { x: "-10%" },
+        {
+          x: "10%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: item,
+            containerAnimation: scrollTween, // Se activa con el scroll horizontal
+            start: "left right",
+            end: "right left",
+            scrub: true,
+          },
+        },
+      );
+
+      // 3. Cursor Dinámico: Cambiar texto al entrar a un proyecto
+      item.addEventListener("mouseenter", () => {
+        const globalCursorText = document.getElementById("cursor-text");
+        if (globalCursorText) globalCursorText.innerText = "VER";
+      });
+
+      item.addEventListener("mouseleave", () => {
+        const globalCursorText = document.getElementById("cursor-text");
+        if (globalCursorText) globalCursorText.innerText = "CLICK";
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initProjectsShowcase);
+</script>
+
+<style>
+  #blog-container {
+    will-change: transform;
+    contain: layout paint;
+  }
+
+  .blog-item img {
+    width: 120%;
+    height: 100%;
+    object-fit: cover;
+    margin-left: 10%;
+    will-change: transform;
+  }
+
+  #blog-container:hover .blog-item:not(:hover) {
+    filter: blur(2px) grayscale(0.8);
+    opacity: 0.7;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+</style>
