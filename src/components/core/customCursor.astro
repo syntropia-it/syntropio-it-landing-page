@@ -14,6 +14,9 @@
   import gsap from "gsap";
 
   function initCursor() {
+    // No ejecutar en dispositivos táctiles (móviles/tablets)
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
     const cursor = document.getElementById("custom-cursor");
     const cursorText = document.getElementById("cursor-text");
     if (!cursor || !cursorText) return;

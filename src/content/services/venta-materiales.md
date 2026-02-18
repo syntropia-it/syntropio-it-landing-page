@@ -1,0 +1,35 @@
+---
+title: "Venta de Materiales"
+description: "Provisión directa de materiales de construcción y terminación de primera línea, sin intermediarios y con logística propia hasta tu obra."
+icon: "package"
+order: 2
+image: "../../assets/haedo.jpg"
+features:
+  - "Cerámicos y porcelanatos importados"
+  - "Sanitarios y griferías premium"
+  - "Adhesivos, pastinas y morteros"
+  - "Pinturas y revestimientos"
+  - "Logística y entrega en obra"
+  - "Asesoramiento en selección de materiales"
+priceRange: "Precios mayoristas"
+---
+
+## Materiales de primera línea, directo a tu obra
+
+En **Samana Transformaciones** proveemos materiales de construcción y terminación con precios competitivos, sin pasar por intermediarios.
+
+### Nuestro catálogo
+
+Trabajamos con las mejores marcas del mercado para ofrecer:
+
+- **Cerámicos y porcelanatos**: Amplia variedad de formatos, texturas y colores para pisos y paredes.
+- **Sanitarios y griferías**: Líneas premium con diseño contemporáneo y durabilidad garantizada.
+- **Adhesivos y pastinas**: Productos profesionales para una colocación perfecta y duradera.
+- **Pinturas**: Interior, exterior, látex, sintético y líneas especiales.
+
+### Ventajas de comprar con nosotros
+
+- **Sin intermediarios**: Accedés a precios de fábrica.
+- **Logística propia**: Entregamos en tu obra sin costos ocultos.
+- **Asesoramiento técnico**: Te ayudamos a elegir el material correcto para cada aplicación.
+- **Stock permanente**: Disponibilidad inmediata de los productos más demandados.

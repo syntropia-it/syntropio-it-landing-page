@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Services from '../components/shared/Services.astro';
 import HeroServices from '../components/sections/services/HeroServices.astro';
 import ProcessServices from '../components/sections/services/ProcessServices.astro';
 import GridServices from '../components/sections/services/GridServices.astro';
@@ -10,33 +9,6 @@ import CTAServices from '../components/sections/services/CTAServices.astro';
 const title = 'Servicios — Samana Transformaciones';
 const description =
     'Servicios premium de reformas integrales, construcción y diseño para proyectos residenciales y comerciales.';
-
-const services = [
-    {
-        id: '01',
-        title: 'Reformas Integrales',
-        desc: 'Asesoramiento, planificación y ejecución de remodelaciones con personal certificado.',
-        detail: 'Transformamos espacios completos con una visión arquitectónica unificada.',
-    },
-    {
-        id: '02',
-        title: 'Venta de Materiales',
-        desc: 'Provisión directa con logística propia para optimizar costos y tiempos de obra.',
-        detail: 'Acceso exclusivo a materiales de primera línea sin intermediarios.',
-    },
-    {
-        id: '03',
-        title: 'Proyectos Inmobiliarios',
-        desc: 'Búsqueda de inversores y desarrollo conjunto para maximizar el valor de la propiedad.',
-        detail: 'Alianzas estratégicas para desarrollos de alto potencial.',
-    },
-    {
-        id: '04',
-        title: 'Diseño y Renderizado',
-        desc: 'Visualización 3D fotorrealista para prever cada detalle antes de construir.',
-        detail: 'Tecnología de vanguardia para que seas el autor de tu propio proyecto.',
-    },
-];
 ---
 
 <Layout title={title} description={description} schemaType="service">
@@ -48,10 +20,4 @@ const services = [
         <CTAServices />       
     </section>
 </Layout>
-<style>
-    /* Efecto suave para la revelación de detalles */
-    .group:hover h3 {
-        text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-    }
-</style>
 

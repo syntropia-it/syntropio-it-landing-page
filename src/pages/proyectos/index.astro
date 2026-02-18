@@ -10,7 +10,11 @@ allProjects.sort((a, b) => b.data.year - a.data.year);
 const pageTitle = 'Nuestros Proyectos — Samana';
 ---
 
-<BaseLayout title={pageTitle} schemaType="projects">
+<BaseLayout
+    title={pageTitle}
+    description="Proyectos de reformas integrales, remodelaciones y construcción de alta gama realizados por Samana Transformaciones en Buenos Aires."
+    schemaType="projects"
+>
     <main class="bg-black relative mt-18 text-white overflow-hidden">
         <header class="fixed top-20 w-full pointer-events-none select-none">
             <span

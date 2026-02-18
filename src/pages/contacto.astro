@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Contact from '../components/sections/home/Contact.astro';
+
+const title = 'Contacto | Samana Transformaciones — Presupuesto sin Compromiso';
+const description =
+  'Contactá a Samana Transformaciones para solicitar un presupuesto personalizado de reformas integrales, construcción o diseño. Respuesta en 24hs.';
+
+const site = Astro.site?.origin ?? 'https://www.samanatransformaciones.com';
+const canonicalURL = new URL('/contacto', site).toString();
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: site },
+    { '@type': 'ListItem', position: 2, name: 'Contacto', item: canonicalURL },
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  canonical={canonicalURL}
+  additionalSchema={[breadcrumbSchema]}
+>
+  <section class="bg-black text-white pt-24 overflow-hidden">
+    <!-- Hero mínimo -->
+    <div class="container mx-auto px-6 pt-12 pb-8">
+      <nav aria-label="breadcrumb" class="mb-8">
+        <ol
+          class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400"
+        >
+          <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
+          <li>/</li>
+          <li class="text-samana-1">Contacto</li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Formulario de contacto (reusamos el componente de la home) -->
+    <Contact />
+
+    <!-- Info de contacto adicional -->
+    <div class="border-t border-white/10 bg-linear-to-t from-amber-900/10 to-transparent">
+      <div class="container mx-auto px-6 py-20">
+        <div class="grid md:grid-cols-3 gap-12">
+          <div>
+            <span class="text-samana-1 text-xs font-mono tracking-[0.4em] uppercase block mb-4">
+              Ubicación
+            </span>
+            <p class="text-white/80 text-lg">Nicaragua 4817</p>
+            <p class="text-white/60">Palermo Soho, CABA</p>
+            <p class="text-white/60">C1414BWM · Argentina</p>
+          </div>
+
+          <div>
+            <span class="text-samana-1 text-xs font-mono tracking-[0.4em] uppercase block mb-4">
+              Horarios
+            </span>
+            <p class="text-white/80 text-lg">Lunes a Viernes</p>
+            <p class="text-white/60">08:00 — 19:00 hs</p>
+            <p class="text-white/60 mt-2">Sábados: 09:00 — 13:00 hs</p>
+          </div>
+
+          <div>
+            <span class="text-samana-1 text-xs font-mono tracking-[0.4em] uppercase block mb-4">
+              Contacto Directo
+            </span>
+            <a
+              href="https://wa.me/5491179982004?text=Hola%20Samana%2C%20me%20interesa%20un%20presupuesto"
+              class="text-samana-1 text-lg hover:underline underline-offset-4 block mb-2"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp →
+            </a>
+            <a
+              href="mailto:samanatransformaciones@gmail.com"
+              class="text-white/80 text-lg hover:text-samana-1 transition-colors block"
+            >
+              samanatransformaciones@gmail.com
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

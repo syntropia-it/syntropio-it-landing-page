@@ -85,10 +85,25 @@
         }, { once: true });
     }
 
-    // Ejecución solo cuando el navegador está inactivo para no bloquear el LCP
-    if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(() => setTimeout(initWebGL, 200));
+    // No cargar Three.js en móviles, tablets o conexiones lentas
+    function shouldLoadWebGL(): boolean {
+        // Dispositivos táctiles sin mouse
+        if ('ontouchstart' in window && window.innerWidth < 768) return false;
+        // Conexiones lentas o modo ahorro de datos
+        const conn = (navigator as any).connection;
+        if (conn && (conn.saveData || ['slow-2g', '2g'].includes(conn.effectiveType))) return false;
+        return true;
+    }
+
+    if (shouldLoadWebGL()) {
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => setTimeout(initWebGL, 200));
+        } else {
+            document.addEventListener('astro:page-load', () => setTimeout(initWebGL, 300));
+        }
     } else {
-        document.addEventListener('astro:page-load', () => setTimeout(initWebGL, 300));
+        // Ocultar el canvas en dispositivos que no cargan WebGL
+        const canvas = document.querySelector('#webgl-canvas') as HTMLCanvasElement;
+        if (canvas) canvas.style.display = 'none';
     }
 </script>

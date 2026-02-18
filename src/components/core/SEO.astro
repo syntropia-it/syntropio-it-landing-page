@@ -3,7 +3,7 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
-  schemaType?: "home" | "projects" | "service" | "faq";
+  schemaType?: "home" | "projects" | "service" | "faq" | "blog";
   canonical?: string;
   alternates?: Record<string, string>;
   additionalSchema?: Array<Record<string, any>>;
@@ -11,6 +11,10 @@ interface Props {
     ratingValue: number;
     ratingCount: number;
   } | null;
+  // Blog-specific props
+  publishDate?: Date;
+  author?: string;
+  tags?: string[];
 }
 
 const {
@@ -22,6 +26,9 @@ const {
   alternates = undefined,
   additionalSchema = undefined,
   ratings = null,
+  publishDate,
+  author,
+  tags,
 } = Astro.props as Props;
 
 const siteUrl = Astro.site?.href ?? "https://www.samanatransformaciones.com";
@@ -40,10 +47,10 @@ if (schemaType === "home") {
     description: description,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Defensa 767",
-      addressLocality: "Buenos Aires",
+      streetAddress: "Nicaragua 4817",
+      addressLocality: "Palermo Soho",
       addressRegion: "CABA",
-      postalCode: "1065",
+      postalCode: "C1414BWM",
       addressCountry: "AR",
     },
     openingHoursSpecification: {
@@ -58,7 +65,7 @@ if (schemaType === "home") {
       longitude: -58.3689,
     },
     priceRange: "$$$",
-    telephone: "+5491112345678",
+    telephone: "+5491179982004",
     url: siteUrl,
   };
 } else if (schemaType === "projects") {
@@ -80,6 +87,34 @@ if (schemaType === "home") {
       "@type": "Organization",
       name: "Samana Transformaciones",
       url: siteUrl,
+    },
+  };
+} else if (schemaType === "blog") {
+  schemaData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description: description,
+    image: socialImageURL,
+    url: canonicalURL,
+    ...(publishDate && { datePublished: publishDate.toISOString() }),
+    ...(publishDate && { dateModified: publishDate.toISOString() }),
+    author: {
+      "@type": "Person",
+      name: author || "Equipo Samana",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Samana Transformaciones",
+      logo: {
+        "@type": "ImageObject",
+        url: new URL("/iso.png", siteUrl).toString(),
+      },
+    },
+    ...(tags && tags.length > 0 && { keywords: tags.join(", ") }),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonicalURL,
     },
   };
 }
@@ -115,7 +150,7 @@ if (schemaData && ratings) {
 }
 
 <!-- Open Graph -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={schemaType === "blog" ? "article" : "website"} />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

@@ -1,0 +1,97 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Aviso Legal | Samana Transformaciones';
+const description = 'Aviso legal y condiciones de uso del sitio web de Samana Transformaciones. Información corporativa y datos del responsable.';
+---
+
+<Layout title={title} description={description}>
+  <main class="bg-black text-white pt-32 pb-20 min-h-screen">
+    <div class="container mx-auto px-6 max-w-4xl">
+
+      <nav aria-label="breadcrumb" class="mb-12">
+        <ol class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400">
+          <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
+          <li>/</li>
+          <li class="text-samana-1">Aviso Legal</li>
+        </ol>
+      </nav>
+
+      <h1 class="text-5xl md:text-7xl font-serif font-bold uppercase tracking-tighter mb-12 leading-[0.9]">
+        Aviso <span class="text-samana-1 italic">Legal</span>
+      </h1>
+
+      <div class="prose prose-invert prose-samana max-w-none space-y-8 text-white/80">
+
+        <section>
+          <h2 class="text-2xl font-bold text-white uppercase tracking-wide border-b border-white/10 pb-3 mb-4">
+            1. Datos del Responsable
+          </h2>
+          <ul class="list-none space-y-2 pl-0">
+            <li><strong class="text-white">Denominación:</strong> Samana Obras & Proyectos S.A</li>
+            <li><strong class="text-white">Dirección:</strong> Nicaragua 4817, Palermo Soho, CABA, C1414BWM, Argentina</li>
+            <li><strong class="text-white">Email:</strong> samanatransformaciones@gmail.com</li>
+            <li><strong class="text-white">Teléfono:</strong> +54 11 7998-2004</li>
+            <li><strong class="text-white">Sitio web:</strong> www.samanatransformaciones.com</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-white uppercase tracking-wide border-b border-white/10 pb-3 mb-4">
+            2. Objeto
+          </h2>
+          <p>
+            El presente aviso legal regula el uso del sitio web www.samanatransformaciones.com, 
+            del que es titular Samana Transformaciones. La navegación por el sitio web atribuye 
+            la condición de usuario e implica la aceptación plena de las disposiciones incluidas 
+            en este aviso legal.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-white uppercase tracking-wide border-b border-white/10 pb-3 mb-4">
+            3. Propiedad Intelectual
+          </h2>
+          <p>
+            Todos los contenidos del sitio web (textos, fotografías, gráficos, imágenes, 
+            tecnología, software, diseños, renders 3D, así como el diseño gráfico y código fuente) 
+            son propiedad intelectual de Samana Transformaciones o de terceros que han autorizado 
+            su uso, sin que puedan entenderse cedidos al usuario ningún derecho de explotación 
+            sobre los mismos.
+          </p>
+          <p>
+            Queda expresamente prohibida la reproducción, distribución, comunicación pública y 
+            transformación de los contenidos sin autorización expresa de Samana Transformaciones.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-white uppercase tracking-wide border-b border-white/10 pb-3 mb-4">
+            4. Responsabilidad
+          </h2>
+          <p>
+            Samana Transformaciones no se hace responsable de los daños y perjuicios que se 
+            pudieran derivar de interferencias, omisiones, interrupciones, virus informáticos, 
+            averías o desconexiones en el funcionamiento del sistema electrónico, motivadas por 
+            causas ajenas a nuestra voluntad.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-white uppercase tracking-wide border-b border-white/10 pb-3 mb-4">
+            5. Legislación Aplicable
+          </h2>
+          <p>
+            Las relaciones establecidas entre Samana Transformaciones y el usuario se regirán 
+            por la normativa vigente de la República Argentina. Cualquier controversia se someterá 
+            a los juzgados y tribunales de la Ciudad Autónoma de Buenos Aires.
+          </p>
+        </section>
+
+        <p class="text-sm text-white/40 border-t border-white/10 pt-8 mt-12">
+          Última actualización: Febrero 2026
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>

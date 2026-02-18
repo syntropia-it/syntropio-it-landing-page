@@ -1,0 +1,275 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+interface Props {
+  service: CollectionEntry<'services'>;
+}
+
+const { service } = Astro.props;
+const { Content } = await service.render();
+const { title, description, image, features, icon, priceRange } = service.data;
+
+const site = Astro.site?.origin ?? 'https://www.samanatransformaciones.com';
+const canonicalURL = new URL(`/servicios/${service.slug}`, site).toString();
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: site },
+    { '@type': 'ListItem', position: 2, name: 'Servicios', item: `${site}/servicios` },
+    { '@type': 'ListItem', position: 3, name: title, item: canonicalURL },
+  ],
+};
+
+const additionalSchema = [breadcrumbSchema];
+---
+
+<Layout
+  title={`${title} | Samana Transformaciones`}
+  description={description}
+  schemaType="service"
+  canonical={canonicalURL}
+  additionalSchema={additionalSchema}
+>
+  <main class="bg-linear-to-b from-transparent via-black to-amber-900/20 text-white">
+    <!-- HERO -->
+    <header
+      data-hero
+      class="relative min-h-[80vh] flex flex-col justify-between py-12 overflow-hidden"
+    >
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="px-6 mt-16 mb-2 animate-fadeIn z-20">
+        <ol
+          class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400"
+        >
+          <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
+          <li>/</li>
+          <li>
+            <a href="/servicios" class="hover:text-samana-1">Servicios</a>
+          </li>
+          <li>/</li>
+          <li class="text-samana-1">{title}</li>
+        </ol>
+      </nav>
+
+      <!-- Título -->
+      <div class="px-10 z-20 border-t border-white/20 pt-6 mix-blend-difference">
+        <h1
+          class="hero-title text-[12vw] lg:text-[8vw] font-serif font-black leading-[0.9] uppercase tracking-tighter"
+        >
+          {title}
+        </h1>
+      </div>
+
+      <!-- Meta -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-12 gap-8 px-10 pt-8 z-20 border-t border-white/20 mt-4 md:mt-12"
+      >
+        <div class="md:col-span-6">
+          <p class="text-[10px] uppercase tracking-widest text-gray-400">
+            Descripción
+          </p>
+          <p class="text-lg text-gray-200 font-light mt-1">{description}</p>
+        </div>
+        {priceRange && (
+          <div class="md:col-span-3">
+            <p class="text-[10px] uppercase tracking-widest text-gray-400">
+              Precio
+            </p>
+            <p class="text-lg uppercase text-samana-1">{priceRange}</p>
+          </div>
+        )}
+        <div class="md:col-span-3">
+          <p class="text-[10px] uppercase tracking-widest text-gray-400">
+            Categoría
+          </p>
+          <p class="text-lg uppercase">Servicio</p>
+        </div>
+      </div>
+
+      <!-- Overlay -->
+      <div
+        class="absolute inset-0 bg-linear-to-b from-black/90 via-black/70 to-black z-10"
+      >
+      </div>
+
+      <!-- Imagen Parallax -->
+      <div
+        id="hero-parallax-img"
+        class="absolute inset-0 z-0 h-[130%] will-change-transform"
+      >
+        <Image
+          src={image}
+          alt={title}
+          class="w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </header>
+
+    <!-- FEATURES -->
+    <section class="py-24 px-6 relative z-20 border-t border-white/10">
+      <div class="container mx-auto max-w-5xl">
+        <span
+          data-reveal
+          class="text-samana-1 text-xs font-mono tracking-[0.4em] uppercase"
+        >
+          Qué incluye
+        </span>
+        <h2
+          data-reveal-text
+          class="text-4xl md:text-5xl font-bold mt-4 mb-16 tracking-tight"
+        >
+          Todo lo que necesitás
+        </h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 reveal-group">
+          {features.map((feature) => (
+            <div class="border border-white/10 p-6 hover:border-samana-1/50 transition-colors duration-500 group">
+              <div class="w-10 h-10 border border-samana-1/30 flex items-center justify-center mb-4 group-hover:bg-samana-1/10 transition-colors duration-500">
+                <span class="text-samana-1 text-sm">✦</span>
+              </div>
+              <p class="text-white/90 text-lg">{feature}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTENIDO MD -->
+    <section class="py-24 px-6 relative z-20">
+      <article
+        class="container mx-auto max-w-4xl prose prose-invert prose-samana"
+      >
+        <Content />
+      </article>
+    </section>
+
+    <!-- CTA -->
+    <section
+      class="relative bg-linear-to-t from-amber-900/20 to-black text-white py-20 border-t border-white/10"
+    >
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+          ¿Te interesa este servicio?
+        </h2>
+        <p class="text-gray-300 max-w-xl mx-auto text-lg mb-10">
+          Contactanos para recibir un presupuesto personalizado sin compromiso.
+        </p>
+        <a
+          href="/contacto"
+          class="inline-block border border-samana-1 text-samana-1 px-10 py-4 uppercase tracking-widest text-lg hover:bg-samana-1 hover:text-black transition-all duration-300"
+        >
+          Solicitar Presupuesto
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import Lenis from 'lenis';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initSmoothScroll() {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    return lenis;
+  }
+
+  function initHeroParallax() {
+    const hero = document.querySelector('[data-hero]');
+    const image = document.getElementById('hero-parallax-img');
+    if (!hero || !image) return;
+
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+
+    gsap.fromTo(
+      image,
+      { yPercent: -15 },
+      {
+        yPercent: 15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: hero,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      }
+    );
+  }
+
+  function initScrollReveals() {
+    const contentElements = document.querySelectorAll(
+      '.prose-samana h2, .prose-samana p, .prose-samana li'
+    );
+
+    contentElements.forEach((el) => {
+      gsap.from(el, {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 90%',
+          toggleActions: 'play none none none',
+        },
+      });
+    });
+
+    const images = document.querySelectorAll('.prose-samana img');
+    images.forEach((img) => {
+      gsap.from(img, {
+        scale: 1.1,
+        opacity: 0,
+        y: 30,
+        duration: 1.5,
+        ease: 'expo.out',
+        scrollTrigger: {
+          trigger: img,
+          start: 'top 85%',
+          scrub: false,
+        },
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    const lenisInstance = initSmoothScroll();
+    initHeroParallax();
+    initScrollReveals();
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => { lenisInstance.destroy(); },
+      { once: true }
+    );
+  });
+</script>

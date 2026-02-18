@@ -17,6 +17,10 @@ interface Props {
   alternates?: Record<string, string>;
   additionalSchema?: Array<Record<string, any>>;
   ratings?: { ratingValue: number; ratingCount: number } | null;
+  // Blog-specific props
+  publishDate?: Date;
+  author?: string;
+  tags?: string[];
 }
 
 const {
@@ -27,6 +31,9 @@ const {
   canonical,
   alternates,
   additionalSchema,
+  publishDate,
+  author,
+  tags,
 } = Astro.props;
 
 // 1. Configuración de URLs seguras
@@ -82,16 +89,31 @@ if (!ratingsProp) {
       alternates={alternates}
       additionalSchema={additionalSchema}
       ratings={ratingsProp}
+      publishDate={publishDate}
+      author={author}
+      tags={tags}
     />
 
-    <!-- Fonts -->
+    <!-- Fonts (async loading para no bloquear LCP) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
-      rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap"
+      />
+    </noscript>
 
     <ClientRouter />
   </head>
@@ -110,32 +132,19 @@ if (!ratingsProp) {
 
     <CustomCursor />
     <BtnWhatsApp />
-  </body><!-- Google Analytics 4 Initialization -->
-  <script>
-    // Initialize GA4 with your tracking ID (replace GA_ID with your actual ID)
-    const GA_ID = "G_XXXXXXXX"; // TODO: Replace with actual GA4 Measurement ID
+  </body>
+</html>
 
-    if (typeof window !== "undefined") {
-      // Inject GA4 script dynamically
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-      document.head.appendChild(script);
+<script>
+  import { initializeAnalytics } from "../scripts/analytics";
 
-      // Initialize gtag function
-      window.dataLayer = window.dataLayer || [];
-      function gtag(...args: any[]) {
-        window.dataLayer.push(arguments);
-      }
-      (window as any).gtag = gtag;
-      gtag("js", new Date());
-      gtag("config", GA_ID, {
-        page_path: window.location.pathname,
-        page_title: document.title,
-      });
-    }
-  </script>
-</html><script>
+  document.addEventListener("astro:page-load", () => {
+    initializeAnalytics(
+      import.meta.env.PUBLIC_GA_ID || undefined,
+      import.meta.env.PUBLIC_CLARITY_ID || undefined
+    );
+  });
+</script><script>
   import Lenis from "lenis";
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -143,26 +152,31 @@ if (!ratingsProp) {
   gsap.registerPlugin(ScrollTrigger);
 
   let lenis: Lenis | null = null;
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
   const initScroll = () => {
     // Limpieza de instancias previas para evitar memory leaks en View Transitions
     if (lenis) lenis.destroy();
     ScrollTrigger.getAll().forEach((t) => t.kill());
 
-    lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      touchMultiplier: 0, // Optimización Performance Mobile
-    });
+    // Solo inicializar Lenis en dispositivos con mouse (desktop)
+    if (!isTouchDevice) {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 0,
+      });
 
-    lenis.on("scroll", ScrollTrigger.update);
+      lenis.on("scroll", ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
-      lenis?.raf(time * 1000);
-    });
+      gsap.ticker.add((time) => {
+        lenis?.raf(time * 1000);
+      });
 
-    gsap.ticker.lagSmoothing(0);
+      gsap.ticker.lagSmoothing(0);
+    }
+
     ScrollTrigger.refresh();
   };
 
@@ -183,33 +197,4 @@ if (!ratingsProp) {
   });
 </script>
 
-<style is:global>
-  html.lenis {
-    height: auto;
-  }
 
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-  }
-
-  .lenis.lenis-smooth [data-lenis-prevent] {
-    overscroll-behavior: contain;
-  }
-
-  .lenis.lenis-stopped {
-    overflow: hidden;
-  }
-
-  .lenis.lenis-scrolling iframe {
-    pointer-events: none;
-  }
-
-  html {
-    scroll-behavior: auto !important;
-  }
-
-  .noise-overlay {
-    will-change: transform;
-    transform: translateZ(0);
-  }
-</style>
