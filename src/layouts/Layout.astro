@@ -155,6 +155,9 @@ if (!ratingsProp) {
   const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
   const initScroll = () => {
+    // Restaurar el scroll arriba apenas cambia la página o se actualiza
+    window.scrollTo(0, 0);
+
     // Limpieza de instancias previas para evitar memory leaks en View Transitions
     if (lenis) lenis.destroy();
     ScrollTrigger.getAll().forEach((t) => t.kill());
