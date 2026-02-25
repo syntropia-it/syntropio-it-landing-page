@@ -69,11 +69,15 @@
           .to(mesh.position, { x: 3, y: -1, z: 0, ease: "power1.inOut" })
           .to(mesh.scale, { x: 0.5, y: 0.5, z: 0.5, ease: "power1.inOut" }, '<');
 
-        // 6. Resize optimizado con Debounce
+        // 6. Resize with actual debounce (300ms)
+        let resizeTimer: ReturnType<typeof setTimeout>;
         window.addEventListener('resize', () => {
-            camara.aspect = window.innerWidth / window.innerHeight;
-            camara.updateProjectionMatrix();
-            render.setSize(window.innerWidth, window.innerHeight);
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                camara.aspect = window.innerWidth / window.innerHeight;
+                camara.updateProjectionMatrix();
+                render.setSize(window.innerWidth, window.innerHeight);
+            }, 300);
         }, { passive: true });
 
         // Limpieza para evitar memory leaks en Astro

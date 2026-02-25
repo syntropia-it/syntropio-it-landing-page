@@ -179,97 +179,125 @@ const additionalSchema = [breadcrumbSchema];
   </main>
 </Layout>
 
+<!-- GSAP: Parallax hero + Prose reveals (Lenis lo maneja Layout.astro) -->
 <script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import Lenis from 'lenis';
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-  gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger);
 
-  function initSmoothScroll() {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
+    let localTriggers: globalThis.ScrollTrigger[] = [];
+
+    function cleanupLocal() {
+        localTriggers.forEach(t => t.kill());
+        localTriggers = [];
+    }
+
+    function initHeroParallax() {
+        const hero = document.querySelector('[data-hero]');
+        const image = document.getElementById('hero-parallax-img');
+        if (!hero || !image) return;
+
+        gsap.set(image, { yPercent: -15 });
+
+        const tween = gsap.to(image, {
+            yPercent: 15,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: hero,
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true,
+            },
+        });
+        if (tween.scrollTrigger) localTriggers.push(tween.scrollTrigger);
+    }
+
+    function initScrollReveals() {
+        document.querySelectorAll('.prose-samana h2, .prose-samana p, .prose-samana li')
+            .forEach(el => {
+                gsap.set(el, { y: 50, opacity: 0 });
+                const tween = gsap.to(el, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 90%',
+                        toggleActions: 'play none none none',
+                    },
+                });
+                if (tween.scrollTrigger) localTriggers.push(tween.scrollTrigger);
+            });
+
+        document.querySelectorAll('.prose-samana img').forEach(img => {
+            gsap.set(img, { scale: 1.1, opacity: 0, y: 30 });
+            const tween = gsap.to(img, {
+                scale: 1,
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: 'expo.out',
+                scrollTrigger: {
+                    trigger: img,
+                    start: 'top 85%',
+                },
+            });
+            if (tween.scrollTrigger) localTriggers.push(tween.scrollTrigger);
+        });
+    }
+
+    document.addEventListener('astro:page-load', () => {
+        cleanupLocal();
+        initHeroParallax();
+        initScrollReveals();
     });
 
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-    gsap.ticker.lagSmoothing(0);
-
-    return lenis;
-  }
-
-  function initHeroParallax() {
-    const hero = document.querySelector('[data-hero]');
-    const image = document.getElementById('hero-parallax-img');
-    if (!hero || !image) return;
-
-    ScrollTrigger.getAll().forEach((t) => t.kill());
-
-    gsap.fromTo(
-      image,
-      { yPercent: -15 },
-      {
-        yPercent: 15,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: hero,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-        },
-      }
-    );
-  }
-
-  function initScrollReveals() {
-    const contentElements = document.querySelectorAll(
-      '.prose-samana h2, .prose-samana p, .prose-samana li'
-    );
-
-    contentElements.forEach((el) => {
-      gsap.from(el, {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 90%',
-          toggleActions: 'play none none none',
-        },
-      });
-    });
-
-    const images = document.querySelectorAll('.prose-samana img');
-    images.forEach((img) => {
-      gsap.from(img, {
-        scale: 1.1,
-        opacity: 0,
-        y: 30,
-        duration: 1.5,
-        ease: 'expo.out',
-        scrollTrigger: {
-          trigger: img,
-          start: 'top 85%',
-          scrub: false,
-        },
-      });
-    });
-  }
-
-  document.addEventListener('astro:page-load', () => {
-    const lenisInstance = initSmoothScroll();
-    initHeroParallax();
-    initScrollReveals();
-
-    document.addEventListener(
-      'astro:before-swap',
-      () => { lenisInstance.destroy(); },
-      { once: true }
-    );
-  });
+    document.addEventListener('astro:before-swap', cleanupLocal);
 </script>
+
+<style is:global>
+    .prose-samana h2,
+    .prose-samana p,
+    .prose-samana img {
+        will-change: transform, opacity;
+    }
+    .prose-samana h2 {
+        font-size: 3rem;
+        font-family: serif;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+    }
+
+    .prose-samana p {
+        font-size: 1.25rem;
+        line-height: 1.8;
+        color: #9ca3af;
+    }
+
+    .prose-samana img {
+        margin: 6rem 0;
+        width: 100%;
+    }
+    html.lenis,
+    html.lenis body {
+        height: auto;
+    }
+
+    .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+    }
+
+    .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+    }
+
+    .lenis.lenis-stopped {
+        overflow: hidden;
+    }
+
+    .lenis.lenis-scrolling iframe {
+        pointer-events: none;
+    }
+</style>

@@ -1,21 +1,23 @@
+---
+const { title="Diseñamos y transformamos espacios para la vida que querés vivir.", paragraph="Samana Transformaciones es compromiso, responsabilidad y paz en cada etapa del proceso.", buttonText="Hablemos de tu proyecto", buttonLink="/contacto" } = Astro.props;
+---
 <section
     class="relative bg-linear-to-t from-amber-900/20 to-black text-white py-20 border-t border-white/10"
 >
     <div class="container mx-auto px-6">
         <h2 class="text-4xl md:text-6xl font-serif mb-8">
-            Diseñamos y transformamos espacios<br />
-            para la vida que querés vivir.
+            {title}
         </h2>
 
         <p class="text-gray-300 max-w-2xl mx-auto mb-12">
-            Samana Transformaciones es compromiso, responsabilidad y paz en cada etapa del proceso.
+            {paragraph}
         </p>
 
         <a
-            href="/contacto"
+            href={buttonLink}
             class=" flex align-middle justify-center border border-samana-1 text-samana-1 px-10 py-4 uppercase tracking-widest text-xl hover:bg-samana-1 hover:text-black transition"
         >
-            Hablemos de tu proyecto
+            {buttonText}
         </a>
     </div>
     <div class="absolute -bottom-5 sm:-bottom-10 md:-bottom-25 left-0 w-full pointer-events-none select-none">

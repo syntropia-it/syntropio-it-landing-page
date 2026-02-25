@@ -7,6 +7,7 @@ const navLinks = [
     { name: 'Servicios', href: '/servicios' },
     { name: 'Proyectos', href: '/proyectos' },
     { name: 'Blog', href: '/blog' },
+    { name: 'FAQ', href: '/faq' },
     { name: 'Nosotros', href: '/nosotros' },
 ];
 ---
@@ -99,9 +100,16 @@ const navLinks = [
 
         let isOpen = false;
 
+        // Focusable elements inside the menu for focus trap
+        const focusableElements = menu?.querySelectorAll('a, button') || [];
+        const firstFocusable = focusableElements[0] as HTMLElement | undefined;
+        const lastFocusable = focusableElements[focusableElements.length - 1] as HTMLElement | undefined;
+
         function toggle() {
             isOpen = !isOpen;
             if (!menu || !iconMenu || !iconClose || !navbar) return;
+
+            btn?.setAttribute('aria-expanded', String(isOpen));
 
             if (isOpen) {
                 // ABRIR
@@ -115,6 +123,11 @@ const navLinks = [
 
                 navbar.classList.remove('mix-blend-difference');
                 document.body.style.overflow = 'hidden';
+
+                // Focus trap: focus first link after animation completes
+                setTimeout(() => {
+                    firstFocusable?.focus();
+                }, 500);
             } else {
                 // CERRAR
                 menu.style.pointerEvents = 'none';
@@ -127,6 +140,9 @@ const navLinks = [
 
                 document.body.style.overflow = '';
 
+                // Return focus to the toggle button
+                btn?.focus();
+
                 setTimeout(() => {
                     if (window.scrollY < 100 && !isOpen) {
                         navbar.classList.add('mix-blend-difference');
@@ -137,6 +153,32 @@ const navLinks = [
 
         btn?.addEventListener('click', toggle);
         links.forEach(l => l.addEventListener('click', toggle));
+
+        // Escape key to close menu
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                toggle();
+            }
+        });
+
+        // Focus trap: cycle focus within menu when open
+        menu?.addEventListener('keydown', (e) => {
+            if (e.key !== 'Tab' || !isOpen) return;
+
+            if (e.shiftKey) {
+                // Shift+Tab: if on first element, wrap to last
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable?.focus();
+                }
+            } else {
+                // Tab: if on last element, wrap to first
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable?.focus();
+                }
+            }
+        });
 
         // Scroll
         window.addEventListener(

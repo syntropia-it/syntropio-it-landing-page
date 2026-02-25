@@ -1,0 +1,428 @@
+/* ═══════════════════════════════════════════════════════════════
+   prose-project.css
+   Estilos del contenido MDX para páginas de proyecto individual.
+   Se importa desde ProjectContent.astro.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Custom properties ── */
+:root {
+  --gold: #ffd700;
+  --gold-alpha: #ffd900c3;
+  --border: rgba(255, 255, 255, 0.1);
+  --col-text: 65ch;
+  --col-wide: 1200px;
+}
+
+/* ── Base ── */
+.prose-project {
+  color: #d1d5db;
+}
+
+.prose-project > * {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Headings ── */
+.prose-project h2 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--gold-alpha);
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding-top: 0;
+}
+
+.prose-project h2::before {
+  content: "";
+  display: block;
+  width: 5rem;
+  height: 1px;
+  background: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.prose-project h3 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gold-alpha);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Paragraphs ── */
+.prose-project p {
+  font-size: 1.125rem;
+  line-height: 1.85;
+  color: #d1d5dc;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Lists ── */
+.prose-project ul,
+.prose-project ol {
+  max-width: 60ch;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 3rem;
+  padding-right: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose-project ul li,
+.prose-project ol li {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #d1d5dc;
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.prose-project ul li::marker,
+.prose-project ol li::marker {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* ── Inline elements ── */
+.prose-project strong {
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.prose-project a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s;
+}
+
+.prose-project a:hover {
+  text-decoration-color: var(--gold);
+}
+
+/* ── Blockquote ── */
+.prose-project blockquote {
+  max-width: 60ch;
+  margin: 6rem auto;
+  padding: 4rem;
+  background: #0f0f0f;
+  border-left: 3px solid var(--gold);
+  position: relative;
+}
+
+.prose-project blockquote::before {
+  content: '"';
+  position: absolute;
+  top: -1rem;
+  left: 3rem;
+  font-weight: 900;
+  font-size: 8rem;
+  font-family: "Playfair Display", serif;
+  color: var(--gold);
+  opacity: 0.3;
+  padding-bottom: 1rem;
+  line-height: 1;
+}
+
+.prose-project blockquote p {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  font-style: italic;
+  color: #d1d5db;
+  margin: 0;
+}
+
+/* ── Horizontal rule ── */
+.prose-project hr {
+  max-width: var(--col-text);
+  margin: 5rem auto;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Images ── */
+.prose-project figure,
+.prose-project p:has(> img) {
+  max-width: none !important;
+  width: 100%;
+  margin: 5rem 0;
+  padding: 0;
+}
+
+.prose-project img {
+  display: block;
+  width: 100%;
+  max-width: var(--col-wide);
+  margin-left: auto;
+  margin-right: auto;
+  height: auto;
+  object-fit: cover;
+}
+
+.prose-project figure figcaption,
+.prose-project p > em {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4b5563;
+  margin-top: 1rem;
+}
+
+/* ── Full-bleed image ── */
+.prose-project .img-full {
+  max-width: none;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 6rem;
+  margin-bottom: 6rem;
+  padding: 0;
+}
+
+.prose-project .img-full img {
+  width: 100%;
+  max-width: none;
+  height: 70vh;
+  object-fit: cover;
+}
+
+/* ── Gallery grid (2 cols) ── */
+.prose-project .gallery-grid {
+  max-width: none;
+  width: min(var(--col-wide), 100%);
+  margin: 5rem auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  padding: 0 2rem;
+}
+
+.prose-project .gallery-grid img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  margin: 0;
+}
+
+/* ── Gallery grid (3 cols) ── */
+.prose-project .gallery-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.prose-project .gallery-3 img {
+  height: 280px;
+}
+
+/* ── Text + Image side by side ── */
+.prose-project .text-wrap {
+  max-width: none;
+  width: min(var(--col-wide), 100%);
+  margin: 4rem auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+  padding: 0 2rem;
+}
+
+.prose-project .text-wrap img {
+  margin: 0;
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+.prose-project .text-wrap .text-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.prose-project .text-wrap .text-side p {
+  margin: 0;
+}
+
+/* ── Video ── */
+.prose-project video,
+.prose-project .video-embed {
+  display: block;
+  width: min(var(--col-wide), 100%);
+  margin: 5rem auto;
+  max-width: none;
+}
+
+.prose-project video {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: cover;
+  background: #000;
+}
+
+.prose-project .video-embed {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+
+.prose-project .video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  max-width: none;
+}
+
+/* ── Video full-bleed ── */
+.prose-project .video-full {
+  max-width: none;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  margin-top: 6rem;
+  margin-bottom: 6rem;
+}
+
+.prose-project .video-full video {
+  width: 100%;
+  height: 70vh;
+  object-fit: cover;
+}
+
+/* ── Stats grid ── */
+.prose-project .stats-grid {
+  margin: 2rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+}
+
+.prose-project .stat-card {
+  background: #0a0a0a;
+  padding: 2rem;
+  text-align: center;
+}
+
+.prose-project .stat-card .stat-number {
+  font-size: 3rem;
+  font-family: Georgia, serif;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.prose-project .stat-card .stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #6b7280;
+}
+
+/* GPU hints removed — GSAP handles will-change dynamically during animations */
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Tablet (≤ 768px) ── */
+@media (max-width: 768px) {
+  .prose-project .gallery-grid,
+  .prose-project .gallery-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .prose-project .gallery-grid img,
+  .prose-project .gallery-3 img {
+    height: 260px;
+  }
+
+  .prose-project .text-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .prose-project .text-wrap img {
+    height: 300px;
+  }
+
+  .prose-project blockquote {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .prose-project blockquote::before {
+    left: 1rem;
+  }
+}
+
+/* ── Mobile (≤ 640px) ── */
+@media (max-width: 640px) {
+  .prose-project h2 {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    margin-top: 2rem;
+  }
+
+  .prose-project h2::before {
+    width: 3rem;
+  }
+
+  .prose-project p {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .prose-project ul,
+  .prose-project ol {
+    padding-left: 1.5rem;
+    padding-right: 0;
+  }
+
+  .prose-project .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 1rem;
+  }
+
+  .prose-project .stat-card .stat-number {
+    font-size: 2rem;
+  }
+
+  .prose-project .video-full video {
+    height: 40vh;
+  }
+
+  .prose-project .img-full img {
+    height: 40vh;
+  }
+
+  .prose-project .gallery-grid,
+  .prose-project .gallery-3 {
+    padding: 0 1rem;
+  }
+
+  .prose-project .text-wrap {
+    padding: 0 1rem;
+    gap: 1.5rem;
+  }
+
+  .prose-project figure,
+  .prose-project p:has(> img) {
+    margin: 3rem 0;
+  }
+}

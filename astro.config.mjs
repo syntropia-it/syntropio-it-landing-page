@@ -5,6 +5,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 import sitemap from "@astrojs/sitemap";
 
+import mdx from "@astrojs/mdx";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.samanatransformaciones.com",
@@ -23,11 +25,9 @@ export default defineConfig({
     },
   },
 
-  integrations: [
-    sitemap({
-      filter: (page) => !page.includes("/404"),
-    }),
-  ],
+  integrations: [sitemap({
+    filter: (page) => !page.includes("/404"),
+  }), mdx()],
   compressHTML: true,
   build: {
     inlineStylesheets: "auto",

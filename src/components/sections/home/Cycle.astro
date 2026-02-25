@@ -1,24 +1,27 @@
 ---
 import { Image } from 'astro:assets';
+import disenoImg from '../../../assets/cycle/diseno.jpg';
+import reformasImg from '../../../assets/cycle/reformas.jpg';
+import materialesImg from '../../../assets/cycle/materiales.jpg';
 
 const cycleData = [
     {
         id: '01',
         title: 'Diseño y Renderizado',
-        desc: 'Asesoramiento en el diseño de los ambientes para que se adapten a tu estilo, ayudando a plasmar e imaginar la idea final.', // Basado en texto oficial [cite: 10]
-        img: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=2000&auto=format&fit=crop',
+        desc: 'Asesoramiento en el diseño de los ambientes para que se adapten a tu estilo, ayudando a plasmar e imaginar la idea final.',
+        img: disenoImg,
     },
     {
         id: '02',
         title: 'Reformas y Proyectos',
-        desc: 'Planificación, dirección y ejecución de remodelaciones integrales con personal certificado y altamente capacitado.', // Basado en texto oficial [cite: 8, 11]
-        img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2000&auto=format&fit=crop',
+        desc: 'Planificación, dirección y ejecución de remodelaciones integrales con personal certificado y altamente capacitado.',
+        img: reformasImg,
     },
     {
         id: '03',
         title: 'Provisión de Materiales',
-        desc: 'Venta y suministro de materiales de primera línea con logística propia, mejorando los costos de tu refacción.', // Basado en texto oficial [cite: 9, 14]
-        img: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2000&auto=format&fit=crop',
+        desc: 'Venta y suministro de materiales de primera línea con logística propia, mejorando los costos de tu refacción.',
+        img: materialesImg,
     },
 ];
 ---
@@ -59,7 +62,7 @@ const cycleData = [
                 {
                     cycleData.map((item, i) => (
                         <Image                            
-                            src={`${item.img}&w=900&q=70&auto=format&fit=crop`}
+                            src={item.img}
                             alt={item.title}
                             width={900}
                             height={600}

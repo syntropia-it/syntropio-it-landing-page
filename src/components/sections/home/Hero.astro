@@ -1,6 +1,9 @@
 ---
 import heroImg from "../../../assets/haedo.jpg";
 import { Image } from "astro:assets";
+
+const heroTitle = "SAMANA";
+const heroSubtitle = "Transformaciones";
 ---
 
 <header class="relative w-full h-screen flex items-center justify-center overflow-hidden z-20">
@@ -8,7 +11,7 @@ import { Image } from "astro:assets";
     <div class="absolute inset-0 bg-linear-to-b from-black/80 via-black/20 to-black z-10"></div>
     <Image
       src={heroImg}
-      alt="Samana Interior"
+      alt="Interior de reforma integral por Samana Transformaciones — diseño premium de alta gama"
       class="hero-img w-full h-full object-cover scale-125 opacity-0 grayscale brightness-110"
       widths={[400, 800, 1200, 2000]}
       loading="eager"
@@ -20,17 +23,35 @@ import { Image } from "astro:assets";
     <div class="overflow-hidden py-2">
       <h1
         id="hero-title"
-        class="text-[14vw] font-serif md:text-[12vw] leading-[0.8] font-bold text-shadow-lg text-shadow-black tracking-tighter will-change-transform"
+        class="text-[14vw] font-serif md:text-[12vw] leading-[0.8] font-bold text-shadow-lg text-shadow-black tracking-tighter"
+        aria-label={heroTitle}
       >
-        SAMANA
+        {heroTitle.split("").map((letter, i) => (
+          <span
+            class="hero-letter inline-block"
+            style={`--letter-index: ${i}`}
+            aria-hidden="true"
+          >
+            {letter}
+          </span>
+        ))}
       </h1>
     </div>
     <div class="overflow-hidden">
       <p
         id="hero-subtitle"
-        class="text-sm sm:text-xl font-medium tracking-[0.5em] text-white/90 uppercase will-change-transform"
+        class="text-sm sm:text-xl font-medium tracking-[0.5em] text-white/90 uppercase"
+        aria-label={heroSubtitle}
       >
-        Transformaciones
+        {heroSubtitle.split("").map((char, i) => (
+          <span
+            class="hero-sub-char inline-block"
+            style={`--char-index: ${i}`}
+            aria-hidden="true"
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        ))}
       </p>
     </div>
   </div>
@@ -40,28 +61,49 @@ import { Image } from "astro:assets";
   import gsap from "gsap";
 
   function initHeroAnimation() {
+    const letters = document.querySelectorAll('.hero-letter');
+    const subChars = document.querySelectorAll('.hero-sub-char');
+
+    if (!letters.length) return;
+
+    // Set initial state to prevent FOUC
+    gsap.set(letters, { yPercent: 110, opacity: 0 });
+    gsap.set(subChars, { yPercent: 100, opacity: 0 });
+
     const tl = gsap.timeline({ 
       defaults: { ease: "expo.out" } 
     });
 
-    // Seteamos estado inicial para evitar flashes (FOUC)
-    gsap.set(["#hero-title", "#hero-subtitle"], { yPercent: 100 });
-
+    // Hero image reveal
     tl.to(".hero-img", {
       scale: 1,
       opacity: 0.5,
       duration: 2.5,
     })
-    .to("#hero-title", {
+    // Letter-by-letter stagger reveal
+    .to(letters, {
       yPercent: 0,
-      duration: 1.8,
-    }, "-=2") // Solapamiento elegante
-    .to("#hero-subtitle", {
+      opacity: 1,
+      duration: 1.4,
+      stagger: 0.06,
+      ease: "power4.out",
+    }, "-=2")
+    // Subtitle character reveal
+    .to(subChars, {
       yPercent: 0,
-      duration: 1.5,
-    }, "-=1.4");
+      opacity: 1,
+      duration: 0.8,
+      stagger: 0.02,
+      ease: "power3.out",
+    }, "-=0.8");
   }
 
-  // Escuchamos el evento de Astro para que funcione siempre, incluso al navegar
   document.addEventListener("astro:page-load", initHeroAnimation);
 </script>
+
+<style>
+  .hero-letter, .hero-sub-char {
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+</style>

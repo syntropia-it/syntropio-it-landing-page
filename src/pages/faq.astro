@@ -1,0 +1,217 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Preguntas Frecuentes | Samana Transformaciones';
+const description =
+    'Respondemos tus dudas sobre reformas integrales, tiempos de obra, presupuestos, materiales y todo lo que necesitás saber antes de transformar tu espacio.';
+
+const site = Astro.site?.origin ?? 'https://www.samanatransformaciones.com';
+const canonicalURL = new URL('/faq', site).toString();
+
+const faqs = [
+    {
+        question: '¿Cuánto cuesta una reforma integral en Buenos Aires?',
+        answer: 'El costo varía según la superficie, los materiales elegidos y la complejidad del proyecto. Una reforma integral puede arrancar desde USD 500/m² para acabados estándar hasta USD 1.500/m² o más para terminaciones premium. Ofrecemos presupuestos personalizados sin compromiso para darte un número exacto.',
+    },
+    {
+        question: '¿Cuánto tiempo tarda una reforma integral?',
+        answer: 'Los tiempos dependen del alcance del proyecto. Una reforma de un departamento de 60-80 m² suele llevar entre 3 y 4 meses. Proyectos más grandes o construcciones desde cero pueden extenderse de 6 a 12 meses. Siempre entregamos un cronograma detallado antes de arrancar.',
+    },
+    {
+        question: '¿Qué incluye una reforma integral?',
+        answer: 'Incluye el diseño del proyecto, renders 3D, demoliciones, instalaciones eléctricas y sanitarias, albañilería, revestimientos, carpintería, pintura y limpieza final. Nos encargamos de todo para que no tengas que coordinar múltiples proveedores.',
+    },
+    {
+        question: '¿Trabajan con materiales de primera línea?',
+        answer: 'Sí. Contamos con provisión propia de materiales de las mejores marcas del mercado. Al comprar en volumen y tener logística propia, podemos ofrecerte precios competitivos en porcelanatos, griferías, sanitarios, iluminación y más.',
+    },
+    {
+        question: '¿Puedo vivir en mi casa durante la reforma?',
+        answer: 'Es posible en reformas parciales o por etapas, aunque recomendamos mudarse temporalmente en reformas integrales para mayor comodidad y eficiencia en los tiempos de obra. Te asesoramos según cada caso particular.',
+    },
+    {
+        question: '¿Cómo es el proceso de contratación?',
+        answer: 'El proceso arranca con una reunión inicial (presencial o virtual) para entender tu visión. Luego elaboramos un diseño con renders 3D, presentamos un presupuesto detallado y, una vez aprobado, firmamos contrato y arrancamos obra con un cronograma claro.',
+    },
+    {
+        question: '¿Ofrecen garantía sobre los trabajos realizados?',
+        answer: 'Sí. Todos nuestros trabajos cuentan con garantía. La duración varía según el tipo de trabajo: instalaciones (12 meses), terminaciones (6 meses) y estructura (24 meses). Además, realizamos controles post-obra para asegurarnos de que todo esté perfecto.',
+    },
+    {
+        question: '¿En qué zonas de Buenos Aires trabajan?',
+        answer: 'Trabajamos en toda la Ciudad Autónoma de Buenos Aires y Zona Norte del Gran Buenos Aires (San Isidro, Vicente López, Tigre, Nordelta, Pilar, entre otros). Para proyectos especiales, evaluamos la zona caso por caso.',
+    },
+];
+
+// JSON-LD FAQPage Schema para Rich Snippets
+const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+            '@type': 'Answer',
+            text: faq.answer,
+        },
+    })),
+};
+
+const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: site },
+        { '@type': 'ListItem', position: 2, name: 'Preguntas Frecuentes', item: canonicalURL },
+    ],
+};
+---
+
+<Layout
+    title={title}
+    description={description}
+    canonical={canonicalURL}
+    additionalSchema={[faqSchema, breadcrumbSchema]}
+>
+    <section class="bg-black text-white pt-24 pb-20 overflow-hidden min-h-screen">
+        <!-- Breadcrumb -->
+        <div class="container mx-auto px-6 pt-12 pb-8">
+            <nav aria-label="breadcrumb" class="mb-8">
+                <ol class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400">
+                    <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
+                    <li>/</li>
+                    <li class="text-samana-1">Preguntas Frecuentes</li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- Header -->
+        <div class="container mx-auto px-6 mb-16">
+            <span
+                class="text-samana-1 text-xs font-mono tracking-[0.5em] uppercase mb-6 block"
+                data-reveal-text
+            >
+                FAQ
+            </span>
+            <h1
+                class="text-5xl md:text-7xl font-serif font-bold leading-[0.9] uppercase tracking-tighter mb-6"
+                data-reveal-text
+            >
+                Preguntas<br />
+                <span class="italic text-samana-1">Frecuentes</span>
+            </h1>
+            <p class="text-gray-400 max-w-2xl text-lg" data-reveal>
+                Respondemos las dudas más comunes sobre reformas integrales, tiempos, costos y
+                nuestro proceso de trabajo.
+            </p>
+        </div>
+
+        <!-- FAQ Accordion -->
+        <div class="container mx-auto px-6 max-w-4xl">
+            {
+                faqs.map((faq, i) => (
+                    <div
+                        class="faq-item border-t border-white/10 group"
+                        data-reveal
+                    >
+                        <button
+                            class="faq-toggle w-full text-left py-8 flex justify-between items-start gap-6 hoverable"
+                            aria-expanded="false"
+                            aria-controls={`faq-answer-${i}`}
+                        >
+                            <span class="text-lg md:text-xl font-medium text-white group-hover:text-samana-1 transition-colors pr-4">
+                                {faq.question}
+                            </span>
+                            <span class="faq-icon text-samana-1 text-2xl font-light shrink-0 transition-transform duration-500 mt-1">
+                                +
+                            </span>
+                        </button>
+                        <div
+                            id={`faq-answer-${i}`}
+                            class="faq-content overflow-hidden"
+                            role="region"
+                            aria-labelledby={`faq-question-${i}`}
+                        >
+                            <p class="text-gray-400 leading-relaxed pb-8 pr-12 max-w-3xl">
+                                {faq.answer}
+                            </p>
+                        </div>
+                    </div>
+                ))
+            }
+            <!-- Last border -->
+            <div class="border-t border-white/10"></div>
+        </div>
+
+        <!-- CTA -->
+        <div class="container mx-auto px-6 mt-20 text-center" data-reveal>
+            <p class="text-gray-400 mb-6 text-lg">¿No encontrás la respuesta que buscás?</p>
+            <a
+                href="/contacto"
+                class="inline-block border border-samana-1 text-samana-1 px-8 py-4 font-bold text-sm uppercase tracking-wider hover:bg-samana-1 hover:text-black transition-all duration-500 hoverable"
+            >
+                Consultanos directamente →
+            </a>
+        </div>
+    </section>
+</Layout>
+
+<script>
+    import gsap from 'gsap';
+
+    function initFaqAccordion() {
+        const items = document.querySelectorAll('.faq-item');
+
+        items.forEach((item) => {
+            const toggle = item.querySelector('.faq-toggle');
+            const content = item.querySelector('.faq-content') as HTMLElement;
+            const icon = item.querySelector('.faq-icon');
+
+            if (!toggle || !content || !icon) return;
+
+            // Set initial state
+            gsap.set(content, { height: 0, opacity: 0 });
+
+            toggle.addEventListener('click', () => {
+                const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+                if (isOpen) {
+                    // Close
+                    gsap.to(content, {
+                        height: 0,
+                        opacity: 0,
+                        duration: 0.4,
+                        ease: 'power2.inOut',
+                    });
+                    gsap.to(icon, { rotation: 0, duration: 0.3 });
+                    toggle.setAttribute('aria-expanded', 'false');
+                } else {
+                    // Close all others first
+                    items.forEach((other) => {
+                        if (other === item) return;
+                        const otherToggle = other.querySelector('.faq-toggle');
+                        const otherContent = other.querySelector('.faq-content') as HTMLElement;
+                        const otherIcon = other.querySelector('.faq-icon');
+                        if (otherToggle?.getAttribute('aria-expanded') === 'true') {
+                            gsap.to(otherContent, { height: 0, opacity: 0, duration: 0.3 });
+                            gsap.to(otherIcon, { rotation: 0, duration: 0.3 });
+                            otherToggle.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+
+                    // Open this one
+                    gsap.to(content, {
+                        height: 'auto',
+                        opacity: 1,
+                        duration: 0.5,
+                        ease: 'power2.out',
+                    });
+                    gsap.to(icon, { rotation: 45, duration: 0.3 });
+                    toggle.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+    }
+
+    document.addEventListener('astro:page-load', initFaqAccordion);
+</script>

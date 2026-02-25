@@ -1,0 +1,68 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+    title: string;
+    description: string;
+    location: string;
+    year: number;
+    area: number;
+    image: ImageMetadata;
+}
+
+const { title, description, location, year, area, image } = Astro.props;
+---
+
+<header data-hero class="relative min-h-[80vh] flex flex-col justify-between py-12 overflow-hidden">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="px-6 mt-16 mb-2 animate-fadeIn z-20">
+        <ol class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400">
+            <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
+            <li>/</li>
+            <li><a href="/proyectos" class="hover:text-samana-1">Proyectos</a></li>
+            <li>/</li>
+            <li class="text-samana-1">{title}</li>
+        </ol>
+    </nav>
+
+    <!-- Título -->
+    <div class="px-6 sm:px-10 z-20 border-t border-white/20 pt-6 mix-blend-difference">
+        <h1 class="hero-title text-[14vw] sm:text-[12vw] lg:text-[10vw] font-serif font-black leading-[0.85] uppercase tracking-tighter">
+            {title}
+        </h1>
+    </div>
+
+    <!-- Meta -->
+    <div class="grid grid-cols-2 md:grid-cols-12 gap-4 sm:gap-8 px-6 sm:px-10 pt-8 z-20 border-t border-white/20 mt-4 md:mt-12">
+        <div class="md:col-span-3">
+            <p class="text-[10px] uppercase tracking-widest text-gray-400">Ubicación</p>
+            <p class="text-base sm:text-lg uppercase">{location}</p>
+        </div>
+        <div class="md:col-span-3">
+            <p class="text-[10px] uppercase tracking-widest text-gray-400">Año</p>
+            <p class="text-base sm:text-lg uppercase">{year}</p>
+        </div>
+        <div class="md:col-span-3">
+            <p class="text-[10px] uppercase tracking-widest text-gray-400">Superficie</p>
+            <p class="text-base sm:text-lg uppercase">{area} m²</p>
+        </div>
+        <div class="col-span-2 md:col-span-3">
+            <p class="text-[10px] uppercase tracking-widest text-gray-400">Descripción</p>
+            <p class="text-sm text-gray-300">{description}</p>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-linear-to-b from-black/90 via-black/70 to-black z-10"></div>
+
+    <!-- Imagen Parallax -->
+    <div id="hero-parallax-img" class="absolute inset-0 z-0 h-[130%] will-change-transform">
+        <Image
+            src={image}
+            alt={title}
+            class="w-full h-full object-cover"
+            loading="eager"
+            fetchpriority="high"
+        />
+    </div>
+</header>

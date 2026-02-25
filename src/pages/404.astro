@@ -1,12 +1,83 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 ---
-<Layout title="Página no encontrada">
-    <div class="h-screen flex flex-col items-center justify-center text-center p-4">
-        <h1 class="text-[rgb(255,215,0)] text-6xl font-playfair mb-4">404</h1>
-        <p class="text-xl mb-8">Esta página está en construcción o no existe.</p>
-        <a href="/" class="border border-white px-6 py-3 rounded-full hover:bg-white hover:text-black transition-colors">
-            Volver al inicio
-        </a>
+
+<Layout title="404 — Página no encontrada | Samana Transformaciones" description="La página que buscás no existe o fue movida. Volvé al inicio para explorar nuestros proyectos y servicios.">
+  <section class="min-h-screen  bg-black text-white flex items-center justify-center px-6 relative overflow-hidden">
+    <!-- Background animation -->
+    <div class="absolute inset-0 z-0">
+      <Image src="/images/samana-404.webp" alt="image de fondo 404" width={1200} height={800} fetchpriority="high" decoding="async" class="w-full h-full object-cover" loading="eager" format="webp" aria-hidden="true" />
+      <div class="absolute inset-0 bg-black/80"></div>
     </div>
+    <div class="absolute inset-0 bg-radial-[ellipse_at_center] from-amber-900/10 via-transparent to-transparent pointer-events-none"></div>
+
+    <div class="text-center relative z-10 max-w-2xl mx-auto">
+      <!-- 404 number with split text effect -->
+      <div class="overflow-hidden mb-6 ">
+        <h1
+          class="text-5xl md:text-6xl font-serif  font-black leading-none tracking-tighter text-white/15"
+          aria-label="Error 404"
+        >
+          <span class="error-char inline-block">4</span>
+          <span class="error-char inline-block">0</span>
+          <span class="error-char inline-block">4</span>
+        </h1>
+      </div>
+
+      <div class="overflow-hidden mb-4">
+        <h2 class="error-title text-2xl md:text-4xl font-serif font-bold uppercase tracking-tighter">
+          Espacio no encontrado
+        </h2>
+      </div>
+
+      <p class="error-desc text-gray-200 mb-12 max-w-md mx-auto leading-relaxed">
+        Esta página fue demolida o todavía está en obra.<br />
+        Te llevamos de vuelta a un espacio terminado.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/"
+          class="border border-samana-1 text-samana-1 px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-samana-1 hover:text-black transition-all duration-500 hoverable"
+        >
+          Volver al Inicio →
+        </a>
+        <a
+          href="/proyectos"
+          class="border border-white/40 text-white/90 px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-all duration-500 hoverable"
+        >
+          Ver Proyectos
+        </a>
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<script>
+  import gsap from 'gsap';
+
+  function init404() {
+    const chars = document.querySelectorAll('.error-char');
+    const title = document.querySelector('.error-title');
+    const desc = document.querySelector('.error-desc');
+
+    if (!chars.length) return;
+
+    gsap.set(chars, { yPercent: 100, opacity: 0 });
+    gsap.set([title, desc], { y: 30, opacity: 0 });
+
+    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+    tl.to(chars, {
+      yPercent: 0,
+      opacity: 1,
+      duration: 1.2,
+      stagger: 0.15,
+    })
+    .to(title, { y: 0, opacity: 1, duration: 0.8 }, '-=0.5')
+    .to(desc, { y: 0, opacity: 1, duration: 0.8 }, '-=0.5');
+  }
+
+  document.addEventListener('astro:page-load', init404);
+</script>

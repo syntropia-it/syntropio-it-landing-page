@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Gracias — Samana Transformaciones';
+const description = 'Tu solicitud fue recibida exitosamente. Un asesor de Samana Transformaciones se pondrá en contacto con vos en las próximas 24 horas.';
+---
+
+<Layout title={title} description={description}>
+  <section class="min-h-screen bg-black text-white flex items-center  py-20 justify-center px-6 relative overflow-hidden">
+    <!-- Background glow -->
+    <div class="absolute inset-0 bg-radial-[ellipse_at_center] from-amber-900/20 via-transparent to-transparent pointer-events-none"></div>
+
+    <div class="text-center relative z-10 max-w-2xl mx-auto" data-reveal>
+      <!-- Animated checkmark -->
+      <div class="thankyou-icon mb-8 inline-flex items-center justify-center w-24 h-24 border-2 border-samana-1 rounded-full">
+        <span class="text-samana-1 text-5xl font-light">✓</span>
+      </div>
+
+      <h1 class="text-4xl md:text-6xl font-serif font-bold uppercase tracking-tighter leading-[0.9] mb-6">
+        Transformación<br />
+        <span class="text-samana-1 italic">Iniciada</span>
+      </h1>
+
+      <p class="text-gray-300 text-lg mb-4 font-light leading-relaxed">
+        Gracias por confiar en nuestra maestría. Tu solicitud fue recibida exitosamente.
+      </p>
+      <p class="text-gray-400 text-sm mb-12 font-light">
+        Un asesor se pondrá en contacto con vos en las próximas <strong class="text-white">24 horas</strong>.
+      </p>
+
+      <!-- Next steps -->
+      <div class="grid md:grid-cols-3 gap-6 mb-16 text-left">
+        <div class="border border-white/10 p-6">
+          <span class="text-samana-1 text-xs tracking-[0.3em] uppercase block mb-3">01</span>
+          <h3 class="text-sm font-bold uppercase tracking-wider mb-2">Revisión</h3>
+          <p class="text-gray-400 text-xs leading-relaxed">Nuestro equipo analiza tu proyecto y prepara una propuesta personalizada.</p>
+        </div>
+        <div class="border border-white/10 p-6">
+          <span class="text-samana-1 text-xs tracking-[0.3em] uppercase block mb-3">02</span>
+          <h3 class="text-sm font-bold uppercase tracking-wider mb-2">Contacto</h3>
+          <p class="text-gray-400 text-xs leading-relaxed">Te llamamos para coordinar una reunión y entender cada detalle de tu visión.</p>
+        </div>
+        <div class="border border-white/10 p-6">
+          <span class="text-samana-1 text-xs tracking-[0.3em] uppercase block mb-3">03</span>
+          <h3 class="text-sm font-bold uppercase tracking-wider mb-2">Presupuesto</h3>
+          <p class="text-gray-400 text-xs leading-relaxed">Recibís un presupuesto detallado con renders 3D y cronograma de obra.</p>
+        </div>
+      </div>
+
+      <!-- Cross-sell CTAs -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/proyectos"
+          class="border border-samana-1 text-samana-1 px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-samana-1 hover:text-black transition-all duration-500 hoverable"
+        >
+          Ver Proyectos →
+        </a>
+        <a
+          href="/servicios"
+          class="border border-white/20 text-white/70 px-8 py-4 text-sm font-bold uppercase tracking-wider hover:border-white hover:text-white transition-all duration-500 hoverable"
+        >
+          Nuestros Servicios
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import gsap from 'gsap';
+
+  function initThankYou() {
+    const icon = document.querySelector('.thankyou-icon');
+    if (!icon) return;
+
+    gsap.from(icon, {
+      scale: 0,
+      rotation: -180,
+      duration: 1,
+      ease: 'back.out(1.7)',
+    });
+
+    gsap.from('.thankyou-icon span', {
+      opacity: 0,
+      duration: 0.5,
+      delay: 0.5,
+    });
+  }
+
+  document.addEventListener('astro:page-load', initThankYou);
+</script>
