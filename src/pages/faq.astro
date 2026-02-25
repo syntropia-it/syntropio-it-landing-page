@@ -1,4 +1,5 @@
 ---
+import FinalCTA from '../components/shared/FinalCTA.astro';
 import Layout from '../layouts/Layout.astro';
 
 const title = 'Preguntas Frecuentes | Samana Transformaciones';
@@ -73,9 +74,9 @@ const breadcrumbSchema = {
     canonical={canonicalURL}
     additionalSchema={[faqSchema, breadcrumbSchema]}
 >
-    <section class="bg-black text-white pt-24 pb-20 overflow-hidden min-h-screen">
+    <section class="bg-black text-white pt-16 overflow-hidden min-h-screen relative">
         <!-- Breadcrumb -->
-        <div class="container mx-auto px-6 pt-12 pb-8">
+        <div class="container mx-auto px-6 pt-8 pb-4">
             <nav aria-label="breadcrumb" class="mb-8">
                 <ol class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400">
                     <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
@@ -84,6 +85,14 @@ const breadcrumbSchema = {
                 </ol>
             </nav>
         </div>
+        <div class="absolute top-24 w-full overflow-hidden pointer-events-none select-none">
+        <h1
+            data-reveal
+            class="text-[30vw] font-bold leading-none tracking-tighter  opacity-[0.1]"
+        >
+            FAQs
+        </h1>
+    </div>
 
         <!-- Header -->
         <div class="container mx-auto px-6 mb-16">
@@ -144,15 +153,7 @@ const breadcrumbSchema = {
         </div>
 
         <!-- CTA -->
-        <div class="container mx-auto px-6 mt-20 text-center" data-reveal>
-            <p class="text-gray-400 mb-6 text-lg">¿No encontrás la respuesta que buscás?</p>
-            <a
-                href="/contacto"
-                class="inline-block border border-samana-1 text-samana-1 px-8 py-4 font-bold text-sm uppercase tracking-wider hover:bg-samana-1 hover:text-black transition-all duration-500 hoverable"
-            >
-                Consultanos directamente →
-            </a>
-        </div>
+        <FinalCTA title="¿No encontrás la respuesta que buscás?" paragraph="Asesorate con nuestro equipo, te ayudamos en lo que necesites." buttonText="Consultanos" buttonLink="/contacto" />
     </section>
 </Layout>
 
