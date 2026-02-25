@@ -58,17 +58,17 @@ export const FLOW_TREE: FlowTree = {
   terreno_m2: {
     question: "¿CUÁNTOS M2 TIENE TU TERRENO?",
     options: [
-      { label: "100 a 200 m²", next: "zona", value: "100-200" },
-      { label: "200 a 500 m²", next: "zona", value: "200-500" },
-      { label: "+500 m²", next: "zona", value: "+500" },
+      { label: "-300 m²", next: "zona", value: "-300" },
+      { label: "300 a 700 m²", next: "zona", value: "300-700" },
+      { label: "+700 m²", next: "zona", value: "+700" },
     ],
   },
   terreno_m2_buscar: {
     question: "¿DE CUÁNTOS M2 ESTÁS BUSCANDO?",
     options: [
-      { label: "100 a 200 m²", next: "zona", value: "100-200" },
-      { label: "200 a 500 m²", next: "zona", value: "200-500" },
-      { label: "-500 m²", next: "zona", value: "-500" },
+      { label: "-300 m²", next: "zona", value: "-300" },
+      { label: "300 a 700 m²", next: "zona", value: "300-700" },
+      { label: "+700 m²", next: "zona", value: "+700" },
     ],
   },
   // PASO FINAL COMÚN
