@@ -1,23 +1,91 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import HeroServices from '../components/sections/services/HeroServices.astro';
-import ProcessServices from '../components/sections/services/ProcessServices.astro';
-import GridServices from '../components/sections/services/GridServices.astro';
-import MetricServices from '../components/sections/services/MetricServices.astro';
-import CTAServices from '../components/sections/services/CTAServices.astro';
+import Layout from "../layouts/Layout.astro";
+import HeroServices from "../components/sections/services/HeroServices.astro";
+import ProcessServices from "../components/sections/services/ProcessServices.astro";
+import GridServices from "../components/sections/services/GridServices.astro";
+import MetricServices from "../components/sections/services/MetricServices.astro";
+import CTAServices from "../components/sections/services/CTAServices.astro";
 
-const title = 'Servicios — Samana Transformaciones';
+const title = "Servicios — Samana Transformaciones";
 const description =
-    'Servicios premium de reformas integrales, construcción y diseño para proyectos residenciales y comerciales.';
+  "Servicios premium de reformas integrales, construcción y diseño para proyectos residenciales y comerciales.";
+const site = Astro.site?.origin ?? "https://www.samanatransformaciones.com";
+const canonicalURL = new URL("/servicios", site).toString();
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Inicio", item: site },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Servicios",
+      item: canonicalURL,
+    },
+  ],
+};
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Servicios de Construcción y Reformas Integrales",
+  description:
+    "Servicios profesionales de construcción, reformas integrales, diseño de interiores y arquitectura para proyectos residenciales y comerciales.",
+  provider: {
+    "@type": "Organization",
+    name: "Samana Transformaciones",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Nicaragua 4817",
+      addressLocality: "Palermo Soho",
+      addressRegion: "CABA",
+      postalCode: "C1414BWM",
+      addressCountry: "AR",
+    },
+  },
+  areaServed: [
+    { "@type": "City", name: "Buenos Aires" },
+    { "@type": "City", name: "GBA" },
+    { "@type": "City", name: "San Isidro" },
+    { "@type": "City", name: "Tigre" },
+    { "@type": "City", name: "Vicente López" },
+    { "@type": "City", name: "San Fernando" },
+    { "@type": "City", name: "San Martín" },
+    { "@type": "City", name: "La Matanza" },
+    { "@type": "City", name: "Quilmes" },
+    { "@type": "City", name: "Lomas de Zamora" },
+    { "@type": "City", name: "Avellaneda" },
+    { "@type": "City", name: "Lanús" },
+    { "@type": "City", name: "Berazategui" },
+  ],
+  serviceType: [
+    "Construcción",
+    "Reformas Integrales",
+    "Diseño de Interiores",
+    "Arquitectura",
+    "Remodelaciones",
+    "Ampliaciones",
+    "Construcción en Seco",
+    "Instalaciones Eléctricas",
+    "Instalaciones Sanitarias",
+    "Pintura",
+    "Impermeabilización",
+  ],
+};
 ---
 
-<Layout title={title} description={description} schemaType="service">
-    <section class="bg-black text-white pt-24 overflow-hidden">
-        <HeroServices />
-        <ProcessServices />
-        <GridServices />
-        <MetricServices />
-        <CTAServices />       
-    </section>
+<Layout
+  title={title}
+  description={description}
+  additionalSchema={[breadcrumbSchema, serviceSchema]}
+  schemaType="service"
+>
+  <section class="bg-black text-white pt-24 overflow-hidden">
+    <HeroServices />
+    <ProcessServices />
+    <GridServices />
+    <MetricServices />
+    <CTAServices />
+  </section>
 </Layout>
-
