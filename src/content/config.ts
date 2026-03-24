@@ -81,7 +81,7 @@ const services = defineCollection({
             description: z.string(),
             icon: z.string(), // Nombre del ícono de Lucide
             order: z.number(), // Orden de aparición
-            image: image(),
+            image: z.string(),
 
             // Features del servicio
             features: z.array(z.string()),
