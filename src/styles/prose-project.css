@@ -230,7 +230,10 @@
   transition: opacity 0.5s ease;
   opacity: 0.9;
 }
-
+.prose-project .gallery-vertical img {
+  aspect-ratio: 3 / 4 !important; /* Molde vertical perfecto */
+  height: 100% !important; /* Obliga a que la 3ra foto no quede enana */
+}
 .prose-project .gallery-grid img:hover {
   opacity: 1;
 }
