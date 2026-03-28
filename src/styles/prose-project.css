@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
    prose-project.css
-   Estilos del contenido MDX para páginas de proyecto individual.
-   Se importa desde ProjectContent.astro.
+   Estilos definitivos del contenido MDX - Sistema Proporcional (No Recorte)
+   Actualizado por Morena - Respetando la apreciación total de las imágenes.
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Custom properties ── */
@@ -16,6 +16,10 @@
 /* ── Base ── */
 .prose-project {
   color: #d1d5db;
+  max-width: var(--col-wide); 
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
 }
 
 .prose-project > * {
@@ -65,48 +69,10 @@
   margin-bottom: 1.5rem;
 }
 
-/* ── Lists ── */
-.prose-project ul,
-.prose-project ol {
-  max-width: 60ch;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 3rem;
-  padding-right: 2rem;
-  margin-bottom: 1rem;
-}
-
-.prose-project ul li,
-.prose-project ol li {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: #d1d5dc;
-  margin-bottom: 0.5rem;
-  padding-left: 0.5rem;
-}
-
-.prose-project ul li::marker,
-.prose-project ol li::marker {
-  color: var(--gold);
-  font-weight: 700;
-}
-
 /* ── Inline elements ── */
 .prose-project strong {
   color: #e5e7eb;
   font-weight: 600;
-}
-
-.prose-project a {
-  color: var(--gold);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: transparent;
-  transition: text-decoration-color 0.2s;
-}
-
-.prose-project a:hover {
-  text-decoration-color: var(--gold);
 }
 
 /* ── Blockquote ── */
@@ -117,6 +83,7 @@
   background: #0f0f0f;
   border-left: 3px solid var(--gold);
   position: relative;
+  border-radius: 1rem;
 }
 
 .prose-project blockquote::before {
@@ -149,10 +116,9 @@
   border-top: 1px solid var(--border);
 }
 
-/* ── Images ── */
+/* ── Images Generales (CORREGIDO: No recortar) ── */
 .prose-project figure,
 .prose-project p:has(> img) {
-  max-width: none !important;
   width: 100%;
   margin: 5rem 0;
   padding: 0;
@@ -164,8 +130,11 @@
   max-width: var(--col-wide);
   margin-left: auto;
   margin-right: auto;
-  height: auto;
-  object-fit: cover;
+  /* MODIFICADO: Mantenemos la altura automática y object-contain 
+     para que NUNCA se recorte ni un píxel de la foto. */
+  height: auto !important; 
+  object-fit: contain !important;
+  border-radius: 1rem;
 }
 
 .prose-project figure figcaption,
@@ -179,71 +148,43 @@
   margin-top: 1rem;
 }
 
-/* ── Full-bleed image ── */
+/* ── Full-bleed image (CORREGIDO: Usamos h-auto para no recortar) ── */
 .prose-project .img-full {
-  max-width: none;
-  width: 100vw;
+  width: min(var(--col-wide), 100%);
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  margin-top: 6rem;
-  margin-bottom: 6rem;
-  padding: 0;
+  margin: 5rem auto;
+  padding: 0 1rem;
 }
 
 .prose-project .img-full img {
   width: 100%;
-  max-width: none;
-  height: 70vh;
-  object-fit: cover;
+  /* MODIFICADO: Eliminamos altura fija, usamos h-auto y contain. 
+     Se acabó el desorden visual en la segunda imagen. */
+  height: auto !important; 
+  object-fit: contain !important;
+  border-radius: 1rem;
 }
 
-/* ── Gallery grid (2 cols) ── */
-.prose-project .gallery-grid {
-  max-width: none;
-  width: min(var(--col-wide), 100%);
-  margin: 5rem auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  padding: 0 2rem;
-}
-
-.prose-project .gallery-grid img {
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
-  margin: 0;
-}
-
-/* ── Gallery grid (3 cols) ── */
-.prose-project .gallery-3 {
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-.prose-project .gallery-3 img {
-  height: 280px;
-}
-
-/* ── Text + Image side by side ── */
+/* ── Text + Image side by side (CORREGIDO: Molde nativo perfecto) ── */
 .prose-project .text-wrap {
-  max-width: none;
   width: min(var(--col-wide), 100%);
-  margin: 4rem auto;
+  margin: 6rem auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: start;
-  padding: 0 2rem;
+  gap: 4rem;
+  align-items: center; /* Centramos verticalmente */
+  padding: 0 1rem;
 }
 
 .prose-project .text-wrap img {
   margin: 0;
   width: 100%;
-  height: 500px;
-  object-fit: cover;
+  /* MODIFICADO: h-auto max-h para no recortar y contain. 
+     La foto se adapta y se aprecia completa. */
+  height: auto !important;
+  max-height: 70vh; 
+  object-fit: contain !important;
+  border-radius: 1rem;
 }
 
 .prose-project .text-wrap .text-side {
@@ -257,172 +198,120 @@
   margin: 0;
 }
 
+/* ── Gallery grid/Masonry (BLOQUE REESCRITO DEFINITIVO - MORENA'S FIX) ── */
+/* Reemplazamos la grilla fija por CSS Columns para un efecto Masonry.
+   Esto permite que cada foto mantenga su altura y proporción original 
+   sin recortar nada (imprescindible para la foto de la cocina DESPUÉS). */
+.prose-project .gallery-grid {
+  width: min(var(--col-wide), 100%);
+  margin: 6rem auto;
+  display: block; /* No grid */
+  /* Forzamos 1 columna en mobile, 3 en desktop */
+  column-count: 1; 
+  column-gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .prose-project .gallery-grid {
+    column-count: 3;
+  }
+}
+
+.prose-project .gallery-grid img {
+  width: 100%;
+  /* MODIFICADO: Altura automática yobject-cover. Al no haber altura fija del 
+     contenedor, no se recorta la foto, solo se adaptan unas a otras Masonry style. */
+  height: auto !important;
+  object-fit: cover !important; 
+  margin-bottom: 1.5rem; /* Espacio vertical entre fotos Masonry */
+  border-radius: 1rem;
+  /* Mantenemos un hover muy sutil */
+  transition: opacity 0.5s ease;
+  opacity: 0.9;
+}
+
+.prose-project .gallery-grid img:hover {
+  opacity: 1;
+}
+
 /* ── Video ── */
 .prose-project video,
 .prose-project .video-embed {
   display: block;
   width: min(var(--col-wide), 100%);
   margin: 5rem auto;
-  max-width: none;
+  padding: 0 1rem;
 }
 
 .prose-project video {
   width: 100%;
   height: auto;
   max-height: 80vh;
-  object-fit: cover;
+  object-fit: contain; /* Contain para videos también */
   background: #000;
+  border-radius: 1rem;
 }
 
-.prose-project .video-embed {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
-  height: 0;
-}
-
-.prose-project .video-embed iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-  margin: 0;
-  max-width: none;
-}
-
-/* ── Video full-bleed ── */
+/* ── Video full-bleed (CORREGIDO) ── */
 .prose-project .video-full {
-  max-width: none;
-  width: 100vw;
+  width: min(var(--col-wide), 100%);
   position: relative;
-  left: 50%;
-  margin-left: -50vw;
-  margin-top: 6rem;
-  margin-bottom: 6rem;
+  margin: 6rem auto;
+  padding: 0 1rem;
 }
 
-.prose-project .video-full video {
+.prose-project .video-full video,
+.prose-project .video-full img {
   width: 100%;
-  height: 70vh;
-  object-fit: cover;
+  height: auto; 
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 1rem;
 }
 
 /* ── Stats grid ── */
 .prose-project .stats-grid {
-  margin: 2rem 0;
+  margin: 4rem auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1px;
+  gap: 2px;
+  max-width: var(--col-wide);
 }
 
 .prose-project .stat-card {
   background: #0a0a0a;
-  padding: 2rem;
+  padding: 3rem 2rem;
   text-align: center;
+  border-radius: 0.5rem;
 }
 
 .prose-project .stat-card .stat-number {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-family: Georgia, serif;
   font-weight: 900;
   color: var(--gold);
   line-height: 1;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .prose-project .stat-card .stat-label {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   color: #6b7280;
 }
 
-/* GPU hints removed — GSAP handles will-change dynamically during animations */
-
-/* ═══════════════════════════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════════════════════════ */
-
-/* ── Tablet (≤ 768px) ── */
-@media (max-width: 768px) {
-  .prose-project .gallery-grid,
-  .prose-project .gallery-3 {
-    grid-template-columns: 1fr;
-  }
-
-  .prose-project .gallery-grid img,
-  .prose-project .gallery-3 img {
-    height: 260px;
-  }
-
-  .prose-project .text-wrap {
-    grid-template-columns: 1fr;
-  }
-
-  .prose-project .text-wrap img {
-    height: 300px;
-  }
-
-  .prose-project blockquote {
-    padding: 2.5rem 1.5rem;
-  }
-
-  .prose-project blockquote::before {
-    left: 1rem;
-  }
-}
-
-/* ── Mobile (≤ 640px) ── */
+/* ── Responsive Headings/Text (Modificado para que el texto sea coherente) ── */
 @media (max-width: 640px) {
   .prose-project h2 {
     font-size: clamp(1.75rem, 8vw, 2.5rem);
-    margin-top: 2rem;
   }
-
-  .prose-project h2::before {
-    width: 3rem;
-  }
-
   .prose-project p {
     font-size: 1rem;
     line-height: 1.75;
   }
-
-  .prose-project ul,
-  .prose-project ol {
-    padding-left: 1.5rem;
-    padding-right: 0;
-  }
-
   .prose-project .stats-grid {
     grid-template-columns: 1fr 1fr;
-    padding: 0 1rem;
-  }
-
-  .prose-project .stat-card .stat-number {
-    font-size: 2rem;
-  }
-
-  .prose-project .video-full video {
-    height: 40vh;
-  }
-
-  .prose-project .img-full img {
-    height: 40vh;
-  }
-
-  .prose-project .gallery-grid,
-  .prose-project .gallery-3 {
-    padding: 0 1rem;
-  }
-
-  .prose-project .text-wrap {
-    padding: 0 1rem;
-    gap: 1.5rem;
-  }
-
-  .prose-project figure,
-  .prose-project p:has(> img) {
-    margin: 3rem 0;
   }
 }
