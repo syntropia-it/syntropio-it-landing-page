@@ -126,12 +126,10 @@
 
 .prose-project img {
   display: block;
-  width: 100%;
+  width: 90%;
   max-width: var(--col-wide);
   margin-left: auto;
   margin-right: auto;
-  /* MODIFICADO: Mantenemos la altura automática y object-contain 
-     para que NUNCA se recorte ni un píxel de la foto. */
   height: auto !important; 
   object-fit: contain !important;
   border-radius: 1rem;
@@ -148,18 +146,15 @@
   margin-top: 1rem;
 }
 
-/* ── Full-bleed image (CORREGIDO: Usamos h-auto para no recortar) ── */
 .prose-project .img-full {
-  width: min(var(--col-wide), 100%);
+  width: min(var(--col-wide), 90%);
   position: relative;
   margin: 5rem auto;
-  padding: 0 1rem;
+  padding: 0.5rem;
 }
 
 .prose-project .img-full img {
   width: 100%;
-  /* MODIFICADO: Eliminamos altura fija, usamos h-auto y contain. 
-     Se acabó el desorden visual en la segunda imagen. */
   height: auto !important; 
   object-fit: contain !important;
   border-radius: 1rem;
@@ -220,19 +215,15 @@
 
 .prose-project .gallery-grid img {
   width: 100%;
-  /* MODIFICADO: Altura automática yobject-cover. Al no haber altura fija del 
-     contenedor, no se recorta la foto, solo se adaptan unas a otras Masonry style. */
   height: auto !important;
   object-fit: cover !important; 
-  margin-bottom: 1.5rem; /* Espacio vertical entre fotos Masonry */
-  border-radius: 1rem;
-  /* Mantenemos un hover muy sutil */
+  margin-bottom: 1.5rem; 
   transition: opacity 0.5s ease;
   opacity: 0.9;
 }
 .prose-project .gallery-vertical img {
-  aspect-ratio: 3 / 4 !important; /* Molde vertical perfecto */
-  height: 100% !important; /* Obliga a que la 3ra foto no quede enana */
+  aspect-ratio: 3 / 4 !important; 
+  height: 100% !important; 
 }
 .prose-project .gallery-grid img:hover {
   opacity: 1;
@@ -285,8 +276,7 @@
 .prose-project .stat-card {
   background: #0a0a0a;
   padding: 3rem 2rem;
-  text-align: center;
-  border-radius: 0.5rem;
+  text-align: center; 
 }
 
 .prose-project .stat-card .stat-number {

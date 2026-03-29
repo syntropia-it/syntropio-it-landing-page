@@ -2,6 +2,8 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import '../../styles/prose-project.css';
+import CTAServices from '../../components/sections/services/CTAServices.astro';
 
 export async function getStaticPaths() {
   const services = await getCollection('services');
@@ -82,15 +84,7 @@ const additionalSchema = [breadcrumbSchema];
           </p>
           <p class="text-lg text-gray-200 font-light mt-1">{description}</p>
         </div>
-        {priceRange && (
-          <div class="md:col-span-3">
-            <p class="text-[10px] uppercase tracking-widest text-gray-400">
-              Precio
-            </p>
-            <p class="text-lg uppercase text-samana-1">{priceRange}</p>
-          </div>
-        )}
-        <div class="md:col-span-3">
+        <div class="md:col-span-3 border-l border-white/20 pl-6">
           <p class="text-[10px] uppercase tracking-widest text-gray-400">
             Categoría
           </p>
@@ -149,37 +143,17 @@ const additionalSchema = [breadcrumbSchema];
     </section>
 
     <!-- CONTENIDO MD -->
-    <section class="py-24 px-6 relative z-20">
-      <article
-        class="container mx-auto max-w-4xl prose prose-invert prose-samana"
-      >
+    <section class="px-6 relative z-20">
+      <article class="container mx-auto max-w-4xl prose-project">
         <Content />
       </article>
     </section>
 
     <!-- CTA -->
-    <section
-      class="relative bg-linear-to-t from-amber-900/20 to-black text-white py-20 border-t border-white/10"
-    >
-      <div class="container mx-auto px-6 text-center">
-        <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
-          ¿Te interesa este servicio?
-        </h2>
-        <p class="text-gray-300 max-w-xl mx-auto text-lg mb-10">
-          Contactanos para recibir un presupuesto personalizado sin compromiso.
-        </p>
-        <a
-          href="/contacto"
-          class="inline-block border border-samana-1 text-samana-1 px-10 py-4 uppercase tracking-widest text-lg hover:bg-samana-1 hover:text-black transition-all duration-300"
-        >
-          Solicitar Presupuesto
-        </a>
-      </div>
-    </section>
+    <CTAServices />
   </main>
 </Layout>
 
-<!-- GSAP: Parallax hero + Prose reveals (Lenis lo maneja Layout.astro) -->
 <script>
     import { gsap } from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';

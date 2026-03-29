@@ -1,0 +1,166 @@
+---
+import { Image } from "astro:assets";
+
+// 1. IMPORTA LAS IMÁGENES PRIMERO
+// Asignamos nombres de variable descriptivos (ej: cocinarender, escaleraimg)
+import cocinarender from "../../../assets/projects/Juncal/cocinarender.jpg";
+import escaleraimg from "../../../assets/projects/Montes-de-oca/after/living.webp";
+
+const {
+  headline = "Nuestra estructura ágil nos permite un acompañamiento cercano y la flexibilidad para adaptarnos a los escenarios cambiantes en el diseño y la construcción.",
+  services = [
+    "Diseño estructural",
+    "Diseño de interiores",
+    "Diseño de paisaje",
+    "Optimización de instalaciones",
+    "Utilización del espacio",
+    "Arquitectónico",
+    "Diseño innovador",
+    "Licitación de contratistas",
+    "Planificación espacial",
+    "Residencial",
+    "Diseño tecnológico",
+  ],
+  
+  image1 = cocinarender,
+  image2 = escaleraimg,
+  backgroundText = "SAMANA",
+} = Astro.props;
+---
+<section
+  id="about-section"
+  class="relative bg-black py-20 overflow-hidden text-white font-sans selection:bg-samana-1 selection:text-black"
+>
+  <div
+    class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-[0.03]"
+  >
+    <h2
+      class="text-[25vw] font-black text-samana-1 uppercase tracking-tight mix-blend-exclusion"
+    >
+      {backgroundText}
+    </h2>
+  </div>
+
+  <div
+    class="absolute inset-0 z-0 opacity-[0.3] bg-[radial-gradient(#ffd700_1px,transparent_1px)] bg-size:32px pointer-events-none"
+  >
+  </div>
+
+  <div
+    class="container mx-auto max-w-7xl px-6 relative z-10 flex flex-col md:flex-row gap-20"
+  >
+    <div class="w-full md:w-2/3 flex flex-col gap-16">
+      <div class="max-w-3xl" data-reveal-group>
+        <p
+          class="text-3xl md:text-4xl font-light leading-snug tracking-tighter"
+          data-reveal-child
+        >
+          {headline}
+        </p>
+      </div>
+
+      <div class="w-full max-w-3xl" data-reveal-group>
+        <ul
+          class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4 text-base md:text-lg text-gray-400 font-light"
+        >
+          {
+            services.map((service: string) => (
+              <li class="flex text-samana-1/70 items-center gap-2" data-reveal-child>
+                <span class="text-white text-xl font-mono">+</span>
+                {service}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="relative w-full md:w-1/3 h-[70vh] flex items-center justify-center"
+    >
+      <div class="relative w-full h-full max-w-[400px]">
+        <div
+          class="absolute -top-10 -right-10 w-[80%] h-[90%] overflow-hidden  shadow-2xl z-0"
+          data-parallax-container
+        >
+          <Image
+            src={image1}
+            alt="Render arquitectura Samana"
+            quality={100}
+            format="webp"
+            class="w-full h-full object-cover scale-110 will-change-transform"
+            data-parallax
+          />
+        </div>
+
+        <div
+          class="absolute -bottom-10 -left-10 w-[60%] h-[60%] overflow-hidden shadow-2xl z-10"
+          data-parallax-container
+        >
+          <Image
+            src={image2}
+            alt="Detalle interior Samana"
+            quality={100}
+            format="webp"
+            class="w-full h-full object-cover scale-110 will-change-transform"
+            data-parallax
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initAboutSection() {
+    
+    document.querySelectorAll("[data-reveal-group]").forEach((group) => {
+      gsap.from(group.querySelectorAll("[data-reveal-child]"), {
+        y: 60,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: group,
+          start: "top 85%",
+        },
+      });
+    });
+
+    
+    gsap.from("[data-background-reveal]", {
+      scale: 0.95,
+      opacity: 0,
+      duration: 2,
+      delay: 0.5,
+      ease: "expo.out",
+      scrollTrigger: {
+        trigger: "#about-section",
+        start: "top 80%",
+      },
+    });
+
+    
+    document.querySelectorAll("[data-parallax]").forEach((img) => {
+      const isSuperposed = img.parentElement?.classList.contains("z-10");
+
+      gsap.to(img, {
+        yPercent: isSuperposed ? 15 : -15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: img.parentElement,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initAboutSection);
+</script>

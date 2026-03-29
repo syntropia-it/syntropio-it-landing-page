@@ -5,6 +5,7 @@ import ProcessServices from "../components/sections/services/ProcessServices.ast
 import GridServices from "../components/sections/services/GridServices.astro";
 import MetricServices from "../components/sections/services/MetricServices.astro";
 import CTAServices from "../components/sections/services/CTAServices.astro";
+import AboutService from "../components/sections/services/AboutService.astro";
 
 const title = "Servicios — Samana Transformaciones";
 const description =
@@ -81,11 +82,12 @@ const serviceSchema = {
   additionalSchema={[breadcrumbSchema, serviceSchema]}
   schemaType="service"
 >
-  <section class="bg-black text-white pt-24 overflow-hidden">
+  <section class="bg-black text-white pt-16 overflow-hidden">
     <HeroServices />
     <ProcessServices />
     <GridServices />
     <MetricServices />
+    <AboutService />
     <CTAServices />
   </section>
 </Layout>
