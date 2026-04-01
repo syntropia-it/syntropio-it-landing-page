@@ -1,4 +1,4 @@
----
+<!-- ---
 import { Image } from "astro:assets";
 
 // 1. IMPORTA LAS IMÁGENES PRIMERO
@@ -163,4 +163,78 @@ const {
   }
 
   document.addEventListener("astro:page-load", initAboutSection);
+</script> -->
+
+---
+import { Image } from "astro:assets";
+// Volvemos a la foto del render de la cocina que elegiste
+import cocinarender from "../../../assets/projects/Juncal/cocinarender.jpg";
+
+const headline = "Nuestra estructura ágil nos permite un acompañamiento cercano y la flexibilidad para adaptarnos a los escenarios cambiantes en el diseño y la construcción.";
+const services = [
+  "Diseño estructural", "Diseño de interiores", "Diseño de paisaje", 
+  "Optimización de instalaciones", "Utilización del espacio", "Arquitectónico", 
+  "Diseño innovador", "Licitación de contratistas", "Planificación espacial", 
+  "Residencial", "Diseño tecnológico"
+];
+---
+
+<section id="about-section" class="bg-black py-32 border-t border-white/10 text-white overflow-hidden">
+  <div class="container mx-auto px-6 max-w-7xl">
+    <div class="grid lg:grid-cols-2 gap-20 items-center">
+      
+      {/* Columna de Texto */}
+      <div data-reveal-group>
+        <h2 class="text-samana-1 text-xs tracking-[0.4em] uppercase font-mono mb-8" data-reveal-child>
+          Filosofía Samana
+        </h2>
+        
+        <p class="text-3xl md:text-4xl font-serif font-light leading-snug mb-12 text-gray-200" data-reveal-child>
+          {headline}
+        </p>
+        
+        {/* Tags minimalistas */}
+        <div class="flex flex-wrap gap-3" data-reveal-child>
+          {services.map((service) => (
+            <span class="px-5 py-2 border border-white/10 rounded-full text-[10px] md:text-xs uppercase tracking-widest text-gray-400 hover:border-samana-1 hover:text-samana-1 transition-colors duration-300">
+              {service}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Columna de Imagen (Con el render de la cocina) */}
+      <div class="relative h-[600px] w-full rounded-sm overflow-hidden shadow-2xl">
+        <div class="absolute inset-0 bg-black/10 z-10 pointer-events-none"></div>
+        <Image 
+          src={cocinarender} 
+          alt="Estructura y Diseño Samana" 
+          class="w-full h-full object-cover transition-transform duration-[2s] hover:scale-105"
+        />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll("[data-reveal-group]").forEach((group) => {
+      gsap.from(group.querySelectorAll("[data-reveal-child]"), {
+        y: 40,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: group,
+          start: "top 80%",
+        },
+      });
+    });
+  });
 </script>
