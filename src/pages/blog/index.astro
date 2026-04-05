@@ -17,10 +17,21 @@ const pageTitle = "Articulos — Samana";
   description="Artículos, guías y tendencias sobre reformas integrales, diseño de interiores y construcción de alta gama. Tips y casos de estudio por Samana Transformaciones."
   schemaType="blog"
 >
-  <main class="bg-black relative mt-18 text-white overflow-hidden">
-    <header class="fixed top-20 w-full pointer-events-none select-none">
+  <main class="bg-black relative mt-16 text-white overflow-hidden">
+    <div class="container mx-auto px-6 pt-8 pb-4">
+      <nav aria-label="breadcrumb" class="mb-8">
+        <ol
+          class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-300"
+        >
+          <li><a href="/" class="hover:text-samana-1">Inicio</a></li>
+          <li>/</li>
+          <li class="text-samana-1">Articulos</li>
+        </ol>
+      </nav>
+    </div>
+    <header class="fixed top-30 w-full pointer-events-none select-none z-10">
       <span
-        class="text-samana-1 pt-8 px-[10vw] text-xs font-mono tracking-[0.5em] uppercase block"
+        class="text-samana-1 pt-8 px-15 text-xs font-mono tracking-[0.5em] uppercase block"
         data-reveal-text
       >
         Blog Samana
@@ -36,23 +47,23 @@ const pageTitle = "Articulos — Samana";
 
     <section
       id="horizontal-wrapper"
-      class="h-screen flex items-center relative"
+      class="h-screen flex items-center relative z-20"
     >
-      <div id="blog-container" class="flex gap-[10vw] px-[10vw] items-center">
+      <div id="blog-container" class="flex gap-[8vw] px-[10vw] items-center">
         {
           allArticles.map((p, i) => (
-            <article class="blog-item shrink-0 w-[80vw] sm:w-[50vw] lg:w-[35vw] group">
+            <article class="project-item shrink-0 w-[85vw] md:w-[60vw] lg:w-[45vw] group">
               <a href={`/blog/${String(p.slug)}`} class="block">
-                <div class="relative h-[40vh] overflow-hidden bg-neutral-900 mb-2">
+                <div class="relative aspect-video overflow-hidden bg-[#0a0a0a] mb-6 rounded-sm">
                   <Image
                     src={p.data.image}
                     alt={p.data.title}
                     width={900}
                     height={600}
-                    sizes="(min-width: 768px) 35vw, 60vw"
+                    sizes="(min-width: 768px) 45vw, 85vw"
                     loading={i === 0 ? "eager" : "lazy"}
                     priority={i === 0}
-                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
                   />
                 </div>
                 <div class="flex flex-col md:flex-row justify-between z-30 items-start pt-4 border-t border-white/10">
@@ -116,14 +127,14 @@ const pageTitle = "Articulos — Samana";
 
     if (!container || !wrapper) return;
 
-    // 1. Scroll Horizontal Principal
+   
     const scrollTween = gsap.to(container, {
       x: () => -(container.scrollWidth - window.innerWidth),
       ease: "none",
       scrollTrigger: {
         trigger: wrapper,
         pin: true,
-        scrub: 1, // Sincronizado con Lenis
+        scrub: 1, 
         start: "top top",
         end: () => "+=" + container.scrollWidth,
         invalidateOnRefresh: true,
@@ -135,26 +146,7 @@ const pageTitle = "Articulos — Samana";
       },
     });
 
-    // 2. Parallax de Imágenes (El Wow Factor)
     projectItems.forEach((item) => {
-      const img = item.querySelector("img");
-      gsap.fromTo(
-        img,
-        { x: "-10%" },
-        {
-          x: "10%",
-          ease: "none",
-          scrollTrigger: {
-            trigger: item,
-            containerAnimation: scrollTween, // Se activa con el scroll horizontal
-            start: "left right",
-            end: "right left",
-            scrub: true,
-          },
-        },
-      );
-
-      // 3. Cursor Dinámico: Cambiar texto al entrar a un proyecto
       item.addEventListener("mouseenter", () => {
         const globalCursorText = document.getElementById("cursor-text");
         if (globalCursorText) globalCursorText.innerText = "VER";

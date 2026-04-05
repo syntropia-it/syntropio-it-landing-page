@@ -2,15 +2,10 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
-// Obtener solo proyectos destacados
-const proyectosDestacados = await getCollection('projects', ({ data }) => {
-  return data.featured === true;
-});
+const proyectosDestacados = await getCollection('projects');
 
-// Ordenar por año (más reciente primero)
 proyectosDestacados.sort((a, b) => b.data.year - a.data.year);
 
-// Limitar a 6 proyectos
 const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
 ---
 
@@ -22,13 +17,13 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
   <div class="px-6 container mx-auto mb-12">
     <div class="flex justify-between items-end">
       <div>
-        <span class="text-xs font-bold tracking-[0.3em] text-samana-1 uppercase block mb-4">
+        <span class="text-xs font-serif font-bold tracking-[0.3em] text-samana-1 uppercase block mb-4">
           Portfolio
         </span>
         <h2 class="text-4xl md:text-6xl font-bold text-white font-serif">
           Proyectos Destacados
         </h2>
-        <p class="text-gray-400 max-w-md mt-4">
+        <p class="text-gray-300 max-w-md mt-4">
           Desliza para ver nuestras transformaciones más emblemáticas.
         </p>
       </div>
@@ -56,7 +51,7 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
         >
           <!-- Número grande de fondo -->
           <div 
-            class="absolute -top-20 z-50 -left-15 text-[8rem] leading-none font-bold text-transparent opacity-20  font-serif pointer-events-none"
+            class="absolute -top-20 z-50 -left-15 text-[8rem] leading-none font-bold text-transparent opacity-50  font-serif pointer-events-none"
             style={`-webkit-text-stroke:2px #ffd700;`}
             aria-hidden="true"
           >
@@ -66,11 +61,11 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
           <!-- Link al proyecto -->
           <a 
             href={`/proyectos/${String(p.slug)}`}
-            class="block w-full h-full"
+            class="block"
             data-cta={`project-${p.slug}`}
           >
             <!-- Imagen -->
-            <div class="w-full h-[85%] overflow-hidden relative z-10 border border-white/10 group-hover:border-samana-1 transition-colors duration-500">
+            <div class="aspect-video overflow-hidden relative z-10 border border-white/10 group-hover:border-samana-1/40 transition-colors duration-500">
               <Image
                     src={p.data.image}
                     alt={p.data.title}
@@ -79,7 +74,7 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
                     sizes="(min-width: 768px) 35vw, 60vw"
                     loading={i === 0 ? "eager" : "lazy"}
                     priority={i === 0}
-                    class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
                   />
             </div>
 
@@ -120,106 +115,77 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
 
   gsap.registerPlugin(ScrollTrigger);
 
-  let ctx; // Variable para almacenar el contexto de GSAP
+  let ctx: gsap.Context; 
 
   function initHorizontalScroll() {
-    // 1. Limpieza preventiva: Si existe una instancia previa, la matamos
     if (ctx) ctx.revert();
 
-    // 2. Selección de elementos
     const track = document.querySelector('[data-projects-track]');
     const section = document.querySelector('#proyectos-preview');
 
     if (!track || !section) return;
 
-    // 3. Contexto de GSAP (Encapsula todas las animaciones para limpieza fácil)
     ctx = gsap.context(() => {
       
-      // Cálculo del ancho real (ScrollAmount)
       const getScrollAmount = () => {
         let trackWidth = track.scrollWidth;
         return -(trackWidth - window.innerWidth);
       };
 
-      // Animación Principal del Track
       const tween = gsap.to(track, {
         x: getScrollAmount,
         ease: 'none',
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          // Calculamos la duración basada en el ancho real
           end: () => `+=${track.scrollWidth - window.innerWidth}`, 
           pin: true,
           scrub: 1,
-          invalidateOnRefresh: true, // Recalcula si cambia el tamaño de ventana
-          anticipatePin: 1, // Suaviza el inicio del pin
+          invalidateOnRefresh: true, 
+          anticipatePin: 1, 
         },
       });
 
-      // Efecto Parallax en las imágenes internas
-      const images = track.querySelectorAll('img');
-      images.forEach(img => {
-        gsap.to(img, {
-          x: -40, // Aumenté el parallax para que sea más notable y fluido
-          ease: 'none',
-          scrollTrigger: {
-            trigger: img,
-            containerAnimation: tween, // Vinculado al scroll horizontal
-            start: 'left right',
-            end: 'right left',
-            scrub: true,
-          }
-        });
-      });
-
-    }, section); // Scopeamos el contexto a la sección
+    }, section); 
   }
 
-  // 4. Ciclo de Vida de Astro (Manejo de Transiciones)
-  
-  // Al cargar la página (inicial o navegación)
   document.addEventListener('astro:page-load', () => {
-    // Usamos requestAnimationFrame para asegurar que el DOM esté pintado
     requestAnimationFrame(() => {
        initHorizontalScroll();
-       // Forzamos un refresh después de un pequeño delay para asegurar carga de imágenes
        setTimeout(() => ScrollTrigger.refresh(), 500); 
     });
   });
-
-  // Antes de cambiar de página (Limpieza CRÍTICA)
+ 
   document.addEventListener('astro:before-swap', () => {
-    if (ctx) ctx.revert(); // Elimina pin-spacers y eventos
+    if (ctx) ctx.revert(); 
     ScrollTrigger.getAll().forEach(t => t.kill());
   });
 </script>
 
 <style>
-  /* Fix para evitar parpadeos en Safari/Mobile */
   #proyectos-preview {
     will-change: transform;
-    overflow: hidden; /* Mantenemos hidden para recortar bordes */
+    overflow: hidden; 
   }
 
-  /* El track debe tener ancho dinámico */
+ 
   [data-projects-track] {
     display: flex;
-    width: max-content; /* Asegura que tome el ancho de los hijos */
+    width: max-content; 
     height: 100%;
     will-change: transform;
   }
 
-  /* Estilos de imagen */
   img {
     filter: grayscale(100%);
-    transform: translateZ(0); /* Aceleración GPU */
+    opacity: 0.5;
+    transform: translateZ(0); 
     transition: filter 0.6s ease-out, transform 1s ease-out;
     backface-visibility: hidden;
   }
 
   .group:hover img {
     filter: grayscale(0%);
-    transform: scale(1.05); /* Efecto zoom sutil */
+    transform: scale(1.05); 
   }
 </style>

@@ -4,19 +4,39 @@ import Layout from '../layouts/Layout.astro';
 import WhoWeAre from '../components/sections/about/WhoWeAre.astro';
 import Services from '../components/shared/Services.astro';
 import FinalCTA from '../components/shared/FinalCTA.astro';
-import Values from '../components/shared/Values.astro';
 import MeetTheTeam from '../components/sections/about/MeetTheTeam.astro';
+
+const title = "Nosotros | Samana Transformaciones — Reformas de Alta Gama en Buenos Aires";
+const description =
+  "Conocé al equipo de Samana Transformaciones. Especialistas en reformas integrales, construcción y diseño de alta gama en Buenos Aires con compromiso y calidad.";
+const site = Astro.site?.origin ?? "https://www.samanatransformaciones.com";
+const canonicalURL = new URL("/nosotros", site).toString();
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Inicio", item: site },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Nosotros",
+      item: canonicalURL,
+    },
+  ],
+};
 ---
 
 <Layout
-  title="Nosotros | Samana Transformaciones — Reformas de Alta Gama en Buenos Aires"
-  description="Conocé al equipo de Samana Transformaciones. Especialistas en reformas integrales, construcción y diseño de alta gama en Buenos Aires con compromiso y calidad."
+  title={title}
+  description={description}
+  additionalSchema={[breadcrumbSchema]}
+  schemaType="about"
 >
-    <section class="bg-black text-white pt-24 overflow-hidden">
+    <section class="bg-black text-white pt-16 overflow-hidden">
         <AboutHero />
         <WhoWeAre />
         <Services />
-        <Values />
         <MeetTheTeam/>
         <FinalCTA />
     </section>
