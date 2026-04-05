@@ -145,6 +145,20 @@ const proyectosParaMostrar = proyectosDestacados.slice(0, 6);
           anticipatePin: 1, 
         },
       });
+       const images = track.querySelectorAll('img');
+      images.forEach(img => {
+        gsap.to(img, {
+          
+          ease: 'none',
+          scrollTrigger: {
+            trigger: img,
+            containerAnimation: tween,
+            start: 'left right',
+            end: 'right left',
+            scrub: true,
+          }
+        });
+      });
 
     }, section); 
   }
