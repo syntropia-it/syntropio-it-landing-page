@@ -102,7 +102,7 @@ const pageTitle = "Articulos — Samana";
       </div>
 
       <div
-        class="hidden md:flex gap-12 p-3 text-[10px] uppercase tracking-widest text-gray-400"
+        class="hidden md:flex gap-12 p-3 text-[10px] uppercase tracking-widest text-gray-300"
       >
         <span>Buenos Aires / AR</span>
         <a href="/proyectos" class="hover:text-samana-1 transition-colors"
@@ -127,14 +127,13 @@ const pageTitle = "Articulos — Samana";
 
     if (!container || !wrapper) return;
 
-   
     const scrollTween = gsap.to(container, {
       x: () => -(container.scrollWidth - window.innerWidth),
       ease: "none",
       scrollTrigger: {
         trigger: wrapper,
         pin: true,
-        scrub: 1, 
+        scrub: 1,
         start: "top top",
         end: () => "+=" + container.scrollWidth,
         invalidateOnRefresh: true,

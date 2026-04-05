@@ -55,7 +55,7 @@ export class SamanaForm {
           data-value="${opt.value}" 
           class="step-opt group border border-white/5 p-8 hover:bg-white/5 text-left transition-all border-l-2 border-l-transparent hover:border-l-samana-1"
         >
-          <span class="text-sm tracking-widest uppercase text-gray-400 group-hover:text-white">${opt.label}</span>
+          <span class="text-sm tracking-widest uppercase text-gray-300 group-hover:text-white">${opt.label}</span>
         </button>`;
       });
       html += `</div>`;
