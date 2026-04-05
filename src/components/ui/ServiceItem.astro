@@ -1,5 +1,5 @@
 ---
-const { number, title, description } = Astro.props;
+const { number, title, description, href } = Astro.props;
 ---
 
 <div
@@ -29,8 +29,10 @@ const { number, title, description } = Astro.props;
     <div
         class="hidden md:flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pr-4"
     >
+    <a href={href}>
         <div class="w-12 h-12 rounded-full border border-samana-1 flex items-center justify-center">
-            <span class="text-xl">↗</span>
+            <span class="text-xl group-hover:font-bold transition-all duration-700 group-hover:rotate-45">↗</span>
         </div>
+    </a>
     </div>
 </div>
