@@ -69,7 +69,7 @@ const cycleData = [
                             format="webp"
                             quality="mid"
                             data-cycle-img={i}
-                            class="cycle-img absolute inset-0 w-full h-full object-cover opacity-0 scale-110 transition-all duration-1000 ease-in-out will-change-transform"
+                            class="cycle-img absolute inset-0 w-full h-full object-cover opacity-0 scale-110 transition-all duration-1000 ease-in-out"
                             loading={i === 0 ? 'eager' : 'lazy'}                           
                         />
                     ))
@@ -179,11 +179,5 @@ const cycleData = [
 <style>
     .font-serif {
         font-family: 'Playfair Display', serif;
-    }
-
-    /* Optimización de hardware para animaciones fluidas */
-    .cycle-text-item,
-    .cycle-img {
-        will-change: transform, opacity;
     }
 </style>
